@@ -14,7 +14,7 @@ from transformers import (
     set_seed, 
 )
 
-from configure_copy import *
+from configure import *
 from preprocess import *
 from postprocessing import *
 
