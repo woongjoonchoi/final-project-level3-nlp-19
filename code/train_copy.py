@@ -3,7 +3,11 @@ import os
 import sys
 
 from typing import List, NoReturn, NewType, Any
-from datasets import load_metric, load_from_disk, Dataset, DatasetDict
+
+from dataclasses import field
+from datasets import load_metric, load_from_disk, Dataset, DatasetDict, load_dataset
+
+import pandas as pd
 
 from transformers import (
     DataCollatorWithPadding,
@@ -52,7 +56,10 @@ def main():
     # 모델을 초기화하기 전에 난수를 고정합니다.
     set_seed(training_args.seed)
 
-    datasets = load_from_disk(data_args.dataset_name)
+    # datasets = load_from_disk(data_args.dataset_name)
+    TRAIN_Dataset = load_dataset('csv', data_files='../Real_data/Real_data/train/train.csv')
+    VALID_Dataset = load_dataset('csv', data_files='../Real_data/Real_data/train/valid.csv')
+    datasets = {'train': TRAIN_Dataset, 'validation': VALID_Dataset}
     print(datasets)
 
     model, tokenizer =cofngiure_model(model_args, training_args, data_args)
@@ -83,10 +90,13 @@ def run_extraction_mrc(
 
     # dataset을 전처리합니다.
     # training과 evaluation에서 사용되는 전처리는 아주 조금 다른 형태를 가집니다.
+    
     if training_args.do_train:
         column_names = datasets["train"].column_names
+        print(column_names)
     else:
         column_names = datasets["validation"].column_names
+        print(column_names)
 
     # 오류가 있는지 확인합니다.
     last_checkpoint, max_seq_length = check_no_error(
@@ -192,18 +202,12 @@ def run_generation_mrc(
     tokenizer,
     model,
 ) -> NoReturn:
-
-    # Training Arguments를 Seq2Seq로 바꿔준다. 이 때, predict_with_generate만 True로 변경해주고 나머지는 Default 사용
-    training_args = Seq2SeqTrainingArguments(
-        predict_with_generate=True
-    )
-
     # dataset을 전처리합니다.
     # training과 evaluation에서 사용되는 전처리는 아주 조금 다른 형태를 가집니다.
     if training_args.do_train:
-        column_names = datasets["train"].column_names
+        column_names = datasets["train"].columns
     else:
-        column_names = datasets["validation"].column_names
+        column_names = datasets["validation"].columns
     
     print(data_args.pad_to_max_length)
     print(tokenizer)

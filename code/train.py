@@ -518,7 +518,6 @@ def run_generation_mrc(
             tokenizer=tokenizer,
             data_collator=data_collator,
             compute_metrics=compute_metrics,
-            
         )
 
     if training_args.do_train:
