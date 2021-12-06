@@ -1,7 +1,7 @@
 from transformers import AutoConfig, AutoModelForQuestionAnswering, AutoTokenizer , Seq2SeqTrainingArguments , EncoderDecoderModel
 
 
-def cofngiure_model(model_args , training_args ,data_args):
+def configure_model(model_args , training_args ,data_args):
     if model_args.run_extraction:
         config = AutoConfig.from_pretrained(
             model_args.config_name

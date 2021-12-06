@@ -1,4 +1,4 @@
-from typing import Tuple
+from typing import Dict, Tuple
 import numpy as np
 
 from utils_qa import postprocess_qa_predictions
@@ -43,7 +43,7 @@ def post_processing_function(
         )
 
     
-def compute_metrics(p: EvalPrediction):
+def compute_metrics(p: EvalPrediction) -> Dict:
     metric = load_metric("squad")
 
     return metric.compute(predictions=p.predictions, references=p.label_ids)
