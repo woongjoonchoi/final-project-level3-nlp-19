@@ -103,7 +103,7 @@ class DataTrainingArguments:
         default=False, metadata={"help": "Whether to build with faiss"}
     )
     sparse_name: Optional[str] = field(
-        default='elastic',
+        default='None',
         metadata={
             "help": "Sparse module option. (None, elastic)"
         },
@@ -118,3 +118,14 @@ class DataTrainingArguments:
     run_seq2seq : bool = field(
         default=False, metadata={"help": "Whether to seq2seq or EncoderDecoder"}
     )
+
+'''
+학습 방법
+python train_copy.py --output_dir ./models/train_dataset --do_train --overwrite_cache --overwrite_output_dir
+
+평가 방법
+python train_copy.py --output_dir ./outputs/train_dataset --model_name_or_path ./models/train_dataset/ --do_eval --overwrite_cache --overwrite_output_dir
+
+추론 방법
+python inference_copy.py --output_dir ./outputs/test_dataset/ --dataset_name ../data/test_dataset/ --model_name_or_path ./models/train_dataset/ --do_predict  --overwrite_cache --overwrite_output_dir
+'''
