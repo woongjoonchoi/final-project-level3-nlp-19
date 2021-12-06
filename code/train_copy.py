@@ -5,20 +5,18 @@ import sys
 from typing import List, NoReturn, NewType, Any
 from datasets import load_metric, load_from_disk, Dataset, DatasetDict
 
-from transformers import AutoConfig, AutoModelForQuestionAnswering, AutoTokenizer
-
-from configure import *
-from preprocess import *
 from transformers import (
     DataCollatorWithPadding,
     Seq2SeqTrainer,
-    Seq2SeqTrainingArguments,
     EvalPrediction,
     HfArgumentParser,
     TrainingArguments,
     set_seed, 
-    EncoderDecoderModel,
 )
+
+from configure import *
+from preprocess import *
+from postprocessing import *
 
 from utils_qa import postprocess_qa_predictions, check_no_error
 from trainer_qa import QuestionAnsweringTrainer
@@ -32,18 +30,11 @@ logger = logging.getLogger(__name__)
 
 
 def main():
-    # 가능한 arguments 들은 ./arguments.py 나 transformer package 안의 src/transformers/training_args.py 에서 확인 가능합니다.
-    # --help flag 를 실행시켜서 확인할 수 도 있습니다.
-
     parser = HfArgumentParser(
         (ModelArguments, DataTrainingArguments, TrainingArguments)
     )
     model_args, data_args, training_args = parser.parse_args_into_dataclasses()
     print(model_args.model_name_or_path)
-
-    # [참고] argument를 manual하게 수정하고 싶은 경우에 아래와 같은 방식을 사용할 수 있습니다
-    # training_args.per_device_train_batch_size = 4
-    # print(training_args.per_device_train_batch_size)
 
     print(f"model is from {model_args.model_name_or_path}")
     print(f"data is from {data_args.dataset_name}")
@@ -60,10 +51,11 @@ def main():
 
     # 모델을 초기화하기 전에 난수를 고정합니다.
     set_seed(training_args.seed)
+
     datasets = load_from_disk(data_args.dataset_name)
     print(datasets)
 
-    model,tokenizer =cofngiure_model(model_args,training_args ,  data_args)
+    model, tokenizer =cofngiure_model(model_args, training_args, data_args)
     print(
         type(training_args),
         type(model_args),
@@ -96,20 +88,11 @@ def run_extraction_mrc(
     else:
         column_names = datasets["validation"].column_names
 
-    question_column_name = "question" if "question" in column_names else column_names[0]
-    context_column_name = "context" if "context" in column_names else column_names[1]
-    answer_column_name = "answers" if "answers" in column_names else column_names[2]
-
-    # Padding에 대한 옵션을 설정합니다.
-    # (question|context) 혹은 (context|question)로 세팅 가능합니다.
-    pad_on_right = tokenizer.padding_side == "right"
-
     # 오류가 있는지 확인합니다.
     last_checkpoint, max_seq_length = check_no_error(
         data_args, training_args, datasets, tokenizer
     )
 
-    
     if training_args.do_train:
         if "train" not in datasets:
             raise ValueError("--do_train requires a train dataset")
@@ -117,7 +100,7 @@ def run_extraction_mrc(
         
         # prepare_train_features = preprocess_gen(tokenizer)
         # dataset에서 train feature를 생성합니다.
-        prepare_train_features = preprocess_extract_train(tokenizer ,data_args,column_names,max_seq_length)
+        prepare_train_features = preprocess_extract_train(tokenizer, data_args, column_names, max_seq_length)
         train_dataset = train_dataset.map(
             prepare_train_features,
             batched=True,
@@ -126,11 +109,10 @@ def run_extraction_mrc(
             load_from_cache_file=not data_args.overwrite_cache,
         )
 
-    # Validation preprocessing
-
     if training_args.do_eval:
         eval_dataset = datasets["validation"]
-        prepare_valid_features = preprocess_extract_valid(tokenizer,data_args,column_names,max_seq_length)
+
+        prepare_valid_features = preprocess_extract_valid(tokenizer, data_args, column_names, max_seq_length)
         # Validation Feature 생성
         eval_dataset = eval_dataset.map(
             prepare_valid_features,
@@ -139,46 +121,13 @@ def run_extraction_mrc(
             remove_columns=column_names,
             load_from_cache_file=not data_args.overwrite_cache,
         )
-    print('----------------------------------')
-    print('validation_end')
-    exit()
+
     # Data collator
     # flag가 True이면 이미 max length로 padding된 상태입니다.
     # 그렇지 않다면 data collator에서 padding을 진행해야합니다.
     data_collator = DataCollatorWithPadding(
         tokenizer, pad_to_multiple_of=8 if training_args.fp16 else None
     )
-
-    # Post-processing:
-    def post_processing_function(examples, features, predictions, training_args):
-        # Post-processing: start logits과 end logits을 original context의 정답과 match시킵니다.
-        predictions = postprocess_qa_predictions(
-            examples=examples,
-            features=features,
-            predictions=predictions,
-            max_answer_length=data_args.max_answer_length,
-            output_dir=training_args.output_dir,
-        )
-        # Metric을 구할 수 있도록 Format을 맞춰줍니다.
-        formatted_predictions = [
-            {"id": k, "prediction_text": v} for k, v in predictions.items()
-        ]
-        if training_args.do_predict:
-            return formatted_predictions
-
-        elif training_args.do_eval:
-            references = [
-                {"id": ex["id"], "answers": ex[answer_column_name]}
-                for ex in datasets["validation"]
-            ]
-            return EvalPrediction(
-                predictions=formatted_predictions, label_ids=references
-            )
-
-    metric = load_metric("squad")
-
-    def compute_metrics(p: EvalPrediction):
-        return metric.compute(predictions=p.predictions, references=p.label_ids)
 
     # Trainer 초기화
     trainer = QuestionAnsweringTrainer( 
@@ -244,6 +193,11 @@ def run_generation_mrc(
     model,
 ) -> NoReturn:
 
+    # Training Arguments를 Seq2Seq로 바꿔준다. 이 때, predict_with_generate만 True로 변경해주고 나머지는 Default 사용
+    training_args = Seq2SeqTrainingArguments(
+        predict_with_generate=True
+    )
+
     # dataset을 전처리합니다.
     # training과 evaluation에서 사용되는 전처리는 아주 조금 다른 형태를 가집니다.
     if training_args.do_train:
@@ -256,20 +210,18 @@ def run_generation_mrc(
 
     max_seq_length = data_args.max_seq_length
     max_length = data_args.max_answer_length
-    preprocessing_num_workers=12
-
-
-
 
     if training_args.do_train:
         if "train" not in datasets:
             raise ValueError("--do_train requires a train dataset")
+
         train_dataset = datasets["train"]
+
         preprocess_function = preprocess_gen(tokenizer)
         train_dataset = train_dataset.map(
             preprocess_function,
             batched=True,
-            num_proc=preprocessing_num_workers,
+            num_proc=data_args.preprocessing_num_workers,
             remove_columns=column_names,
             load_from_cache_file=False,
         )
@@ -280,13 +232,14 @@ def run_generation_mrc(
         eval_dataset = eval_dataset.map(
             preprocess_function,
             batched=True,
-            num_proc=preprocessing_num_workers,
+            num_proc=data_args.preprocessing_num_workers,
             remove_columns=column_names,
             load_from_cache_file=False,
         )
 
     data_collator = DataCollatorWithPadding(
-        tokenizer, pad_to_multiple_of=8 if training_args.fp16 else None
+        tokenizer, 
+        pad_to_multiple_of=8 if training_args.fp16 else None
     )
 
     def postprocess_text(preds, labels):
@@ -323,9 +276,6 @@ def run_generation_mrc(
         return result
     
 
-    num_train_epochs=2
-    batch_size=training_args.per_device_train_batch_size
-    
     trainer = Seq2SeqTrainer(
             model=model,
             args=training_args,
@@ -333,8 +283,7 @@ def run_generation_mrc(
             eval_dataset=eval_dataset,
             tokenizer=tokenizer,
             data_collator=data_collator,
-            compute_metrics=compute_metrics,
-            
+            compute_metrics=compute_metrics,   
         )
 
     if training_args.do_train:
