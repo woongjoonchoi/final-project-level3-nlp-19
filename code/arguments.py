@@ -103,7 +103,7 @@ class DataTrainingArguments:
         default=False, metadata={"help": "Whether to build with faiss"}
     )
     sparse_name: Optional[str] = field(
-        default='elastic',
+        default='None',
         metadata={
             "help": "Sparse module option. (None, elastic)"
         },
