@@ -13,7 +13,9 @@ from datasets import (
 )
 
 from transformers import (
+    Seq2SeqTrainer,
     DataCollatorWithPadding,
+    DataCollatorForSeq2Seq,
     TrainingArguments,
 )
 
@@ -182,7 +184,12 @@ def run_generation_mrc(
 
     # Training Arguments를 Seq2Seq로 바꿔준다. 이 때, predict_with_generate만 True로 변경해주고 나머지는 Default 사용
     training_args = Seq2SeqTrainingArguments(
-        predict_with_generate=True
+        predict_with_generate=True,
+        output_dir = training_args.output_dir,
+        do_train = training_args.do_train,
+        do_eval = training_args.do_eval,
+        eval_steps = 10,
+        evaluation_strategy = 'steps',
     )
 
     # dataset을 전처리합니다.
@@ -204,7 +211,7 @@ def run_generation_mrc(
 
         train_dataset = datasets["train"]
 
-        preprocess_function = preprocess_gen(tokenizer)
+        preprocess_function = preprocess_gen(tokenizer,model.__class__.__name__)
         train_dataset = train_dataset.map(
             preprocess_function,
             batched=True,
@@ -224,17 +231,18 @@ def run_generation_mrc(
             load_from_cache_file=False,
         )
 
-    data_collator = DataCollatorWithPadding(
+    data_collator = DataCollatorForSeq2Seq(
         tokenizer, 
-        pad_to_multiple_of=8 if training_args.fp16 else None
+        model = model,
+        # pad_to_multiple_of=8 if training_args.fp16 else None
     )
 
     def postprocess_text(preds, labels):
         preds = [pred.strip() for pred in preds]
         labels = [label.strip() for label in labels]
         
-        preds = ["\n".join(tokenizer.tokenize(pred)) for pred in preds]
-        labels = ["\n".join(tokenizer.tokenize(label)) for label in labels]
+        # preds = ["\n".join(tokenizer.tokenize(pred)) for pred in preds]
+        # labels = ["\n".join(tokenizer.tokenize(label)) for label in labels]
 
         return preds, labels
 
@@ -242,26 +250,35 @@ def run_generation_mrc(
     metric = load_metric("squad")
 
     def compute_metrics(eval_preds):
+        import numpy as np
         preds, labels = eval_preds
 
         if isinstance(preds, tuple):
             preds = preds[0]
 
         max_val_samples = 16
+        # breakpoint()
+
+        # print(preds)
+        # print(labels)
 
         decoded_preds = tokenizer.batch_decode(preds, skip_special_tokens=True)
+        labels = np.where(labels != -100, labels, tokenizer.pad_token_id)
+        
         decoded_labels = tokenizer.batch_decode(labels, skip_special_tokens=True)
 
         decoded_preds, decoded_labels = postprocess_text(decoded_preds, decoded_labels)
-
+        
         formatted_predictions = [{"id": ex["id"], "prediction_text": decoded_preds[i]} for i, ex in         
                                  enumerate(datasets["validation"].select(range(max_val_samples)))]
         references = [{"id": ex["id"], "answers": ex["answers"]} for ex in datasets["validation"].select(range(max_val_samples))]
-
+ 
         result = metric.compute(predictions=formatted_predictions, references=references)
 
         return result
     
+    
+    print(train_dataset)
 
     trainer = Seq2SeqTrainer(
             model=model,
@@ -272,8 +289,9 @@ def run_generation_mrc(
             data_collator=data_collator,
             compute_metrics=compute_metrics,   
         )
-
+ 
     if training_args.do_train:
+        
         train_result = trainer.train()
         trainer.save_model()  # Saves the tokenizer too for easy upload
 
