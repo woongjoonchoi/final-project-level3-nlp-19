@@ -1,25 +1,29 @@
-def preprocess_gen(tokenizer):
+def preprocess_gen(tokenizer,model_name):
     #data argument 처리 해줘야 할것들
     padding= False
     doc_stride = 128
     max_length =384
     target_length = 128
     pad_on_right = tokenizer.padding_side == "right"
+    encoder_decoder = True if model_name =='EncoderDecoderModel' else False
     def tokenized_samples(examples):
         print(len(examples['question']))
         tokenized_examples = tokenizer( examples['question'],examples['context'],
             max_length=max_length,
-            truncation="only_second",
+            truncation="only_second" if pad_on_right else "only_first",
             return_overflowing_tokens=True,
             return_offsets_mapping=True,
             stride=doc_stride )   
-        
         sample_mapping = tokenized_examples.pop("overflow_to_sample_mapping")
         # The offset mappings will give us a map from token to character position in the original context. This will
         # help us compute the start_positions and end_positions.
         offset_mapping = tokenized_examples.pop("offset_mapping")
         # Let's label those examples!
         tokenized_examples['labels']=[]
+        # decoder_ids=[]
+        # if encoder_decoder : 
+        #     tokenized_examples['decoder_input_ids'] = []
+        #     decoder_ids=tokenized_examples['decoder_input_ids']
         for i, offsets in enumerate(offset_mapping):
             # We will label impossible answers with the index of the CLS token.
             input_ids = tokenized_examples["input_ids"][i]
@@ -33,11 +37,15 @@ def preprocess_gen(tokenizer):
             with tokenizer.as_target_tokenizer():
                 tokenized_lables = tokenizer(answers['text'],
                     max_length=target_length,
-                    padding=padding,
-                    truncation=True)   
+                    truncation= True,
+                    # padding="max_length"clear
+                    )   
             # If no answers are given, set the cls_index as answer.)
             if len(answers["answer_start"]) == 0:
-                tokenized_examples['labels'].append([''])
+                labels_id = tokenized_lables['input_ids'][0]
+                tokenized_examples['labels'].append(labels_id)
+                # if encoder_decoder : decoder_ids.append(labels_id)
+
             else:
                 # Start/end character index of the answer in the text.
                 start_char = answers["answer_start"][0]
@@ -54,7 +62,12 @@ def preprocess_gen(tokenizer):
 
                 # Detect if the answer is out of the span (in which case this feature is labeled with the CLS index).
                 if not (offsets[token_start_index][0] <= start_char and offsets[token_end_index][1] >= end_char):
-                    tokenized_examples['labels'].append([2])
+                    with tokenizer.as_target_tokenizer():
+                        labels_id = tokenizer('',max_length=target_length,
+                            truncation= True,)['input_ids']
+                        tokenized_examples['labels'].append(labels_id)
+                        # if encoder_decoder :  
+                        #     decoder_ids.append(labels_id)
                 else:
                     # Otherwise move the token_start_index and token_end_index to the two ends of the answer.
                     # Note: we could go after the last offset if the answer is the last word (edge case).
@@ -62,7 +75,11 @@ def preprocess_gen(tokenizer):
                         token_start_index += 1
                     while offsets[token_end_index][1] >= end_char:
                         token_end_index -= 1
-                    tokenized_examples['labels'].append(tokenized_lables['input_ids'][0])
+                    labels_id = tokenized_lables['input_ids'][0]
+                    tokenized_examples['labels'].append(labels_id)
+                    # if encoder_decoder : 
+                    #         decoder_ids.append(labels_id)
+   
         return tokenized_examples
     return tokenized_samples
 
