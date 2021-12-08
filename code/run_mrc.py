@@ -51,8 +51,6 @@ def run_combine_mrc(
     # dataset을 전처리합니다.
     # training과 evaluation에서 사용되는 전처리는 아주 조금 다른 형태를 가집니다.
     if training_args.do_train:
-
-        print("anjdieffffffffffffffffffeff")
         column_names = datasets["train"].column_names
     else:
         column_names = datasets["validation"].column_names

@@ -3,7 +3,7 @@ import os
 import sys
 
 from typing import List, NoReturn, NewType, Any
-from datasets import load_metric, load_from_disk, Dataset, DatasetDict
+from datasets import load_metric, load_from_disk, Dataset, DatasetDict, load_dataset
 
 from transformers import (
     DataCollatorWithPadding,
@@ -36,6 +36,10 @@ def main():
         (ModelArguments, DataTrainingArguments, TrainingArguments)
     )
     model_args, data_args, training_args = parser.parse_args_into_dataclasses()
+    
+    training_args.logging_steps = 20000
+    training_args.save_steps = 20000
+    training_args.save_total_limit = 10
     print(model_args.model_name_or_path)
 
     print(f"model is from {model_args.model_name_or_path}")
@@ -54,7 +58,9 @@ def main():
     # 모델을 초기화하기 전에 난수를 고정합니다.
     set_seed(training_args.seed)
 
-    datasets = load_from_disk(data_args.dataset_name)
+    # datasets = load_from_disk(data_args.dataset_name)
+    PATH = data_args.dataset_name
+    datasets = load_dataset('csv', data_files={'train':os.path.join(PATH, 'train_ver1.csv'), 'validation': os.path.join(PATH, 'valid_ver1.csv')})
     print(datasets)
 
     model, tokenizer = configure_model(model_args, training_args, data_args)
