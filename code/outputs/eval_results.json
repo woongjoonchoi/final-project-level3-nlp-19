@@ -1,0 +1,6 @@
+{
+    "epoch": 4.0,
+    "eval_samples": 474,
+    "exact_match": 97.5,
+    "f1": 98.125
+}

@@ -1,0 +1,16 @@
+program : train_copy.py
+
+metric :
+  name : eval/em
+  goal : maximize
+
+method : grid 
+parameters :
+  output_dir :
+      value: "./outputs"
+  learning_rate :
+    values :
+      - 1e-2
+      - 1e-3
+      - 1e-4
+      - 1e-5

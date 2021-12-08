@@ -1,3 +1,18 @@
 # final-project-level3-nlp-19
 
-hello
+
+## Responsibilities
+
+### 박별이
+
+### 이준수
+
+### 최웅준
+#### ml_pipeline
+> extraction_pre_process  
+> generation_pre_process  
+> generation_compute_metrics  
+> configuration  
+
+### 추창한
+
