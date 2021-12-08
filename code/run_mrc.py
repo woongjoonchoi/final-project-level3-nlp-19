@@ -20,15 +20,12 @@ from transformers import (
     DataCollatorWithPadding,
     DataCollatorForSeq2Seq,
     TrainingArguments,
-<<<<<<< HEAD
     PrinterCallback,
     TrainerCallback,
-    Trainer
-=======
+    Trainer,
     TrainerCallback,
     default_data_collator
     # PrinterCallback,
->>>>>>> wjc
 )
 
 class PrinterCallback(TrainerCallback):
@@ -53,7 +50,6 @@ from arguments import (
 )
 
 logger = logging.getLogger(__name__)
-<<<<<<< HEAD
 
 import wandb
 
@@ -67,7 +63,6 @@ defaults = dict(
 
 wandb.init(config=defaults , tags =["baseline"])
 config = wandb.config
-=======
 # class MyCallback(TrainerCallback):
 #     "A callback that prints a message at the beginning of training"
 
@@ -86,7 +81,6 @@ class PrinterCallback(TrainerCallback):
         _ = logs.pop("total_flos", None)
         if state.is_local_process_zero:
             print(logs)
->>>>>>> wjc
 # run_extraction_mrc, run_mrc 합침
 def run_combine_mrc(
     data_args: DataTrainingArguments,

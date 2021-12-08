@@ -38,7 +38,9 @@ def gen_metrics(tokenizer , valid_datasets) :
         formatted_predictions = [{"id": ex["id"], "prediction_text": decoded_preds[i]} for i, ex in         
                                  enumerate(valid_datasets.select(range(max_val_samples)))]
         references = [{"id": ex["id"], "answers": ex["answers"]} for ex in valid_datasets.select(range(max_val_samples))]
- 
+        breakpoint()
+        print(preds)
+        print(labels)
         result = metric.compute(predictions=formatted_predictions, references=references)
 
         return result
