@@ -1,5 +1,6 @@
 from transformers import AutoConfig,   AutoModel,AutoModelForQuestionAnswering, AutoTokenizer , Seq2SeqTrainingArguments , EncoderDecoderModel , AutoModelForSeq2SeqLM
 import datasets
+from transformers.trainer_utils import IntervalStrategy
 model_name='klue/bert-base'
 # model = EncoderDecoderModel.from_encoder_decoder_pretrained(model_name, model_name)
 
@@ -7,6 +8,10 @@ model_name='klue/bert-base'
 
 # model = AutoModel.from_pretrained('my-model')
 print(datasets.__version__)
+
+breakpoint()
+
+print(IntervalStrategy.STEPS == "steps")
 
 # model.save_pretrained('wjcmodel' , push_to_hub= True ,repo_name = 'double_klue')
 # print(model)

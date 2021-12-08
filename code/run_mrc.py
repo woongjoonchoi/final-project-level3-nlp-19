@@ -18,9 +18,23 @@ from transformers import (
     DataCollatorWithPadding,
     DataCollatorForSeq2Seq,
     TrainingArguments,
+    PrinterCallback,
+    TrainerCallback,
+    Trainer
 )
 
+class PrinterCallback(TrainerCallback):
+    """
+    A bare :class:`~transformers.TrainerCallback` that just prints the logs.
+    """
 
+    def on_log(self, args, state, control, logs=None, **kwargs):
+
+        print(state.log_history)
+        _ = logs.pop("total_flos", None)
+        print(logs)
+        if state.is_local_process_zero:
+            print(logs)
 from utils_qa import postprocess_qa_predictions, check_no_error
 from trainer_qa import QuestionAnsweringTrainer
 from postprocessing import post_processing_function, compute_metrics
@@ -32,6 +46,18 @@ from arguments import (
 
 logger = logging.getLogger(__name__)
 
+import wandb
+
+# WANDB_PROJECT='final_mrc'
+WANDB_WATCH=all
+defaults = dict(
+    learning_rate = 1e-4,
+    # dropout=0.2,
+)
+
+
+wandb.init(config=defaults , tags =["baseline"])
+config = wandb.config
 # run_extraction_mrc, run_mrc 합침
 def run_combine_mrc(
     data_args: DataTrainingArguments,
@@ -42,16 +68,10 @@ def run_combine_mrc(
     model,
 ) -> NoReturn:
 
-    # print(training_args.do_train)
-    # print(training_args.do_eval)
-    # print(training_args.do_predict)
 
-    # if training_args.do_predict == True:
-    #     training_args.do_train = False
-    # elif training_args.do_train == True:
-    #     training_args.do_predict = False
-
-
+    output_dir = './outputs'
+    do_train = True
+    do_eval =True
     # dataset을 전처리합니다.
     # training과 evaluation에서 사용되는 전처리는 아주 조금 다른 형태를 가집니다.
     if training_args.do_train:
@@ -65,12 +85,23 @@ def run_combine_mrc(
     last_checkpoint, max_seq_length = check_no_error(
         data_args, training_args, datasets, tokenizer
     )
+    
+    training_args = TrainingArguments(
+        output_dir = output_dir,
+        do_train = do_train,
+        do_eval = do_eval,
+        learning_rate = config.learning_rate,
+        eval_steps = 20,
+        evaluation_strategy='steps',
+        num_train_epochs = 4,
+        logging_steps= 20
+    )
 
     if training_args.do_train:
         if "train" not in datasets:
             raise ValueError("--do_train requires a train dataset")
         train_dataset = datasets["train"]
-        
+        train_dataset = datasets["validation"]
         # prepare_train_features = preprocess_gen(tokenizer)
         # dataset에서 train feature를 생성합니다.
         prepare_train_features = preprocess_extract_train(tokenizer, data_args, column_names, max_seq_length)
@@ -87,6 +118,7 @@ def run_combine_mrc(
         eval_dataset = datasets["validation"]
 
         prepare_valid_features = preprocess_extract_valid(tokenizer, data_args, column_names, max_seq_length)
+        # prepare_valid_features = preprocess_extract_train(tokenizer, data_args, column_names, max_seq_length)
         # Validation Feature 생성
         eval_dataset = eval_dataset.map(
             prepare_valid_features,
@@ -96,6 +128,7 @@ def run_combine_mrc(
             load_from_cache_file=not data_args.overwrite_cache,
         )
 
+
     # Data collator
     # flag가 True이면 이미 max length로 padding된 상태입니다.
     # 그렇지 않다면 data collator에서 padding을 진행해야합니다.
@@ -104,7 +137,9 @@ def run_combine_mrc(
     )
 
     print("init trainer...")
+    print(training_args)
     # Trainer 초기화
+
     trainer = QuestionAnsweringTrainer( 
         model=model,
         args=training_args,
@@ -117,6 +152,7 @@ def run_combine_mrc(
         compute_metrics=compute_metrics,
     )
 
+    # trainer.add_callback(PrinterCallback)
     # Training
     if training_args.do_train:
         if last_checkpoint is not None:
@@ -126,7 +162,7 @@ def run_combine_mrc(
         else:
             checkpoint = None
         train_result = trainer.train(resume_from_checkpoint=checkpoint)
-        trainer.save_model()  # Saves the tokenizer too for easy upload
+        # trainer.save_model()  # Saves the tokenizer too for easy upload
 
         metrics = train_result.metrics
         metrics["train_samples"] = len(train_dataset)

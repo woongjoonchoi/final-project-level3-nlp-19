@@ -61,6 +61,7 @@ def main():
     print(datasets)
 
     model, tokenizer = configure_model(model_args, training_args, data_args)
+
     print(
         type(training_args),
         type(model_args),
@@ -69,6 +70,12 @@ def main():
         type(model),
     )
 
+    # breakpoint()
+    # print(training_args.do_train)
+    # print(training_args.do_eval)
+    training_args.do_train = True
+    training_args.do_eval = True
+    training_args.overwrite_output_dir = True
     # do_train mrc model 혹은 do_eval mrc model
     if training_args.do_train or training_args.do_eval:
         if model_args.run_extraction:

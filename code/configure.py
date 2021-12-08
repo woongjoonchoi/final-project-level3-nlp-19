@@ -14,6 +14,7 @@ def configure_model(model_args , training_args ,data_args):
             else model_args.model_name_or_path,
             use_fast=True,
         )
+
         model = AutoModelForQuestionAnswering.from_pretrained(
             model_args.model_name_or_path,
             from_tf=bool(".ckpt" in model_args.model_name_or_path),
