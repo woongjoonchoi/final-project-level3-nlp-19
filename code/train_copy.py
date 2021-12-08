@@ -3,7 +3,7 @@ import os
 import sys
 
 from typing import List, NoReturn, NewType, Any
-from datasets import load_metric, load_from_disk, Dataset, DatasetDict
+from datasets import load_metric, load_from_disk, Dataset, DatasetDict , load_dataset
 
 from transformers import (
     DataCollatorForSeq2Seq,
@@ -58,8 +58,10 @@ def main():
     set_seed(training_args.seed)
 
     datasets = load_from_disk(data_args.dataset_name)
-    print(datasets)
-
+    # datasets = 
+    # datasets = datasets.
+    # print(datasets)
+    # datasets= load_dataset(data_args.dataset_name)
     model, tokenizer = configure_model(model_args, training_args, data_args)
     print(
         type(training_args),
@@ -68,6 +70,7 @@ def main():
         type(tokenizer),
         type(model),
     )
+    # exit()
 
     # do_train mrc model 혹은 do_eval mrc model
     if training_args.do_train or training_args.do_eval:

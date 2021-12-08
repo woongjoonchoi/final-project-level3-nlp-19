@@ -11,6 +11,8 @@ from datasets import (
     Features,
     Dataset,
     DatasetDict,
+    load_dataset,
+    
 )
 
 from transformers import (
@@ -18,6 +20,9 @@ from transformers import (
     DataCollatorWithPadding,
     DataCollatorForSeq2Seq,
     TrainingArguments,
+    TrainerCallback,
+    default_data_collator
+    # PrinterCallback,
 )
 
 
@@ -31,7 +36,24 @@ from arguments import (
 )
 
 logger = logging.getLogger(__name__)
+# class MyCallback(TrainerCallback):
+#     "A callback that prints a message at the beginning of training"
 
+#     def on_evaulate(self, args, state, control, **kwargs):
+#         breakpoint()
+#         print("Starting training")
+class PrinterCallback(TrainerCallback):
+    """
+    A bare :class:`~transformers.TrainerCallback` that just prints the logs.
+    """
+
+    def on_log(self, args, state, control, logs=None, **kwargs):
+        # breakpoint()
+        print(logs)
+        print(state.log_history)
+        _ = logs.pop("total_flos", None)
+        if state.is_local_process_zero:
+            print(logs)
 # run_extraction_mrc, run_mrc 합침
 def run_combine_mrc(
     data_args: DataTrainingArguments,
@@ -102,17 +124,20 @@ def run_combine_mrc(
     data_collator = DataCollatorWithPadding(
         tokenizer, pad_to_multiple_of=8 if training_args.fp16 else None
     )
+    # data_collator = default_data_collator
 
     print("init trainer...")
     # Trainer 초기화
     trainer = QuestionAnsweringTrainer( 
         model=model,
         args=training_args,
-        train_dataset=train_dataset if training_args.do_train else None,
+        # train_dataset=train_dataset if training_args.do_train else None,
+        train_dataset=eval_dataset,
+        # output_dir= o
         eval_dataset=eval_dataset if training_args.do_eval else None,
         eval_examples=datasets["validation"] if training_args.do_eval else None,
         tokenizer=tokenizer,
-        data_collator=data_collator,
+        data_collator=default_data_collator,
         post_process_function=post_processing_function,
         compute_metrics=compute_metrics,
     )
@@ -188,12 +213,15 @@ def run_generation_mrc(
     training_args = Seq2SeqTrainingArguments(
         predict_with_generate=True,
         output_dir = training_args.output_dir,
+        per_device_train_batch_size=16,
+        per_device_eval_batch_size=16,
         do_train = training_args.do_train,
         do_eval = training_args.do_eval,
-        eval_steps = 10,
+        eval_steps = 100,
         evaluation_strategy = 'steps',
+        num_train_epochs = 12
     )
-
+    # print(training_args)
     # dataset을 전처리합니다.
     # training과 evaluation에서 사용되는 전처리는 아주 조금 다른 형태를 가집니다.
     if training_args.do_train:
@@ -242,16 +270,17 @@ def run_generation_mrc(
     compute_metrics = gen_metrics(tokenizer,datasets["validation"])
     print(train_dataset)
 
+
     trainer = Seq2SeqTrainer(
             model=model,
             args=training_args,
-            train_dataset=train_dataset,
+            train_dataset=eval_dataset,
             eval_dataset=eval_dataset,
             tokenizer=tokenizer,
             data_collator=data_collator,
             compute_metrics=compute_metrics,   
         )
- 
+    trainer.add_callback(PrinterCallback)
     if training_args.do_train:
         
         train_result = trainer.train()

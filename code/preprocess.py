@@ -24,6 +24,7 @@ def preprocess_gen(tokenizer,model_name):
         # if encoder_decoder : 
         #     tokenized_examples['decoder_input_ids'] = []
         #     decoder_ids=tokenized_examples['decoder_input_ids']
+        # breakpoint()
         for i, offsets in enumerate(offset_mapping):
             # We will label impossible answers with the index of the CLS token.
             input_ids = tokenized_examples["input_ids"][i]
@@ -35,14 +36,20 @@ def preprocess_gen(tokenizer,model_name):
             sample_index = sample_mapping[i]
             answers = examples["answers"][sample_index]
             with tokenizer.as_target_tokenizer():
-                tokenized_lables = tokenizer(answers['text'],
+
+                temp_answer = answers['text'][0] + '[SEP]'
+
+                tokenized_lables = tokenizer(temp_answer,
                     max_length=target_length,
                     truncation= True,
+                    add_special_tokens=False,
                     # padding="max_length"clear
                     )   
+
             # If no answers are given, set the cls_index as answer.)
             if len(answers["answer_start"]) == 0:
                 labels_id = tokenized_lables['input_ids'][0]
+
                 tokenized_examples['labels'].append(labels_id)
                 # if encoder_decoder : decoder_ids.append(labels_id)
 
@@ -63,8 +70,8 @@ def preprocess_gen(tokenizer,model_name):
                 # Detect if the answer is out of the span (in which case this feature is labeled with the CLS index).
                 if not (offsets[token_start_index][0] <= start_char and offsets[token_end_index][1] >= end_char):
                     with tokenizer.as_target_tokenizer():
-                        labels_id = tokenizer('',max_length=target_length,
-                            truncation= True,)['input_ids']
+                        labels_id = tokenizer('[SEP]',max_length=target_length,
+                            truncation= True,add_special_tokens=False)['input_ids']
                         tokenized_examples['labels'].append(labels_id)
                         # if encoder_decoder :  
                         #     decoder_ids.append(labels_id)
@@ -75,11 +82,13 @@ def preprocess_gen(tokenizer,model_name):
                         token_start_index += 1
                     while offsets[token_end_index][1] >= end_char:
                         token_end_index -= 1
-                    labels_id = tokenized_lables['input_ids'][0]
+                    labels_id = tokenized_lables['input_ids']
+
                     tokenized_examples['labels'].append(labels_id)
                     # if encoder_decoder : 
                     #         decoder_ids.append(labels_id)
-   
+
+
         return tokenized_examples
     return tokenized_samples
 
@@ -93,6 +102,7 @@ def preprocess_extract_train(tokenizer , data_args,column_names ,max_seq_length)
     question_column_name = "question" if "question" in column_names else column_names[0]
     context_column_name = "context" if "context" in column_names else column_names[1]
     answer_column_name = "answers" if "answers" in column_names else column_names[2]
+    data_args.pad_to_max_length = True
     def extract_tokenized(examples):
         # truncation과 padding(length가 짧을때만)을 통해 toknization을 진행하며, stride를 이용하여 overflow를 유지합니다.
         # 각 example들은 이전의 context와 조금씩 겹치게됩니다.
@@ -108,6 +118,8 @@ def preprocess_extract_train(tokenizer , data_args,column_names ,max_seq_length)
             padding="max_length" if data_args.pad_to_max_length else False,
         )
 
+        # breakpoint()
+        # print(data_args.pad_to_max_length)
         # 길이가 긴 context가 등장할 경우 truncate를 진행해야하므로, 해당 데이터셋을 찾을 수 있도록 mapping 가능한 값이 필요합니다.
         sample_mapping = tokenized_examples.pop("overflow_to_sample_mapping")
         # token의 캐릭터 단위 position를 찾을 수 있도록 offset mapping을 사용합니다.
