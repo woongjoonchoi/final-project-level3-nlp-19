@@ -141,6 +141,7 @@ def preprocess_extract_train(tokenizer , data_args,column_names ,max_seq_length)
             sample_index = sample_mapping[i]
             answers = examples[answer_column_name][sample_index]
 
+
             # answer가 없을 경우 cls_index를 answer로 설정합니다(== example에서 정답이 없는 경우 존재할 수 있음).
             if len(answers["answer_start"]) == 0:
                 tokenized_examples["start_positions"].append(cls_index)

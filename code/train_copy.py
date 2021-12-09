@@ -1,7 +1,7 @@
 import logging
 import os
 import sys
-
+import ast
 from typing import List, NoReturn, NewType, Any
 from datasets import load_metric, load_from_disk, Dataset, DatasetDict , load_dataset
 
@@ -35,6 +35,7 @@ logger = logging.getLogger(__name__)
 def main():
 
     # print(datasets.__version__)
+
     parser = HfArgumentParser(
         (ModelArguments, DataTrainingArguments, TrainingArguments)
     )
@@ -57,13 +58,30 @@ def main():
     # 모델을 초기화하기 전에 난수를 고정합니다.
     set_seed(training_args.seed)
 
-    datasets = load_from_disk(data_args.dataset_name)
-    # datasets = 
-    # datasets = datasets.
-    # print(datasets)
-    # datasets= load_dataset(data_args.dataset_name)
-    model, tokenizer = configure_model(model_args, training_args, data_args)
+    # datasets = load_from_disk(data_args.dataset_name)
+    # print(datasets['validation'][0])
+    # breakpoint()
+    print(data_args)
+    # breakpoint()
+    PATH = data_args.dataset_name
+    def eval_json(example) :
+        return { "answers" : ast.literal_eval(example["answers"]) , "id" : str(example["id"])}
+    data_args.hyp_search = True
+    if not data_args.hyp_search :
+        datasets = load_dataset('csv', data_files={'train':os.path.join(PATH, 'train_ver1.csv'), 
+                            'validation': os.path.join(PATH, 'valid_ver1.csv')})
+    else :
+        datasets =  load_dataset('csv', data_files={ 
+                    'train': os.path.join(PATH, 'train_ver1.csv') ,
+                    'validation' :os.path.join(PATH, 'valid_ver1.csv') })
+        datasets['train'] = datasets['train'].shuffle().select(range(10000)).map(eval_json)
+        datasets['validation'] = datasets['validation'].shuffle().select(range(1000)).map(eval_json)
 
+    print(type(datasets['train'][0]["answers"]))
+    print(type(datasets['train'][0]["id"]))
+    breakpoint()
+    model, tokenizer = configure_model(model_args, training_args, data_args)
+    
     print(
         type(training_args),
         type(model_args),
@@ -71,15 +89,12 @@ def main():
         type(tokenizer),
         type(model),
     )
-    # exit()
 
-    # breakpoint()
-    # print(training_args.do_train)
-    # print(training_args.do_eval)
     training_args.do_train = True
     training_args.do_eval = True
     training_args.overwrite_output_dir = True
     # do_train mrc model 혹은 do_eval mrc model
+    
     if training_args.do_train or training_args.do_eval:
         if model_args.run_extraction:
             run_combine_mrc(data_args, training_args, model_args, datasets, tokenizer, model)
