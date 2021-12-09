@@ -60,7 +60,7 @@ def main():
 
     # datasets = load_from_disk(data_args.dataset_name)
     PATH = data_args.dataset_name
-    datasets = load_dataset('csv', data_files={'train':os.path.join(PATH, 'train_ver1.csv'), 'validation': os.path.join(PATH, 'valid_ver1.csv')})
+    datasets = load_dataset('csv', data_files={'train':os.path.join(PATH, 'train_small.csv'), 'validation': os.path.join(PATH, 'valid_small.csv')})
     print(datasets)
 
     model, tokenizer = configure_model(model_args, training_args, data_args)
