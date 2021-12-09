@@ -44,6 +44,7 @@ class QuestionAnsweringTrainer(Trainer):
 
         # 일시적으로 metric computation를 불가능하게 한 상태이며, 해당 코드에서는 loop 내에서 metric 계산을 수행합니다.
         compute_metrics = self.compute_metrics
+
         # self.compute_metrics = None
         try:
             output = self.prediction_loop(
@@ -67,6 +68,8 @@ class QuestionAnsweringTrainer(Trainer):
             eval_preds = self.post_process_function(
                 eval_examples, eval_dataset, output.predictions, self.args
             )
+
+
             metrics = self.compute_metrics(eval_preds)
 
             self.log(metrics)
@@ -90,7 +93,7 @@ class QuestionAnsweringTrainer(Trainer):
         # evaluate 함수와 동일하게 구성되어있습니다
         compute_metrics = self.compute_metrics
         # self.compute_metrics = None
-        # breakpoint()
+
         try:
             output = self.prediction_loop(
                 test_dataloader,

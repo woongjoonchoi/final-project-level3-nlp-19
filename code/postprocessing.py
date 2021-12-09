@@ -29,6 +29,7 @@ def post_processing_function(
     formatted_predictions = [
         {"id": k, "prediction_text": v} for k, v in predictions.items()
     ]
+
     if training_args.do_predict:
         return formatted_predictions
 
@@ -45,7 +46,6 @@ def post_processing_function(
     
 def compute_metrics(p: EvalPrediction) -> Dict:
     metric = load_metric("squad")
-
     return metric.compute(predictions=p.predictions, references=p.label_ids)
 
 """

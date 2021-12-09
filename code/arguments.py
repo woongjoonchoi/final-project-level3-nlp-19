@@ -50,6 +50,10 @@ class DataTrainingArguments:
         default="../data/train_dataset",
         metadata={"help": "The name of the dataset to use."},
     )
+    hyp_search : bool = field(
+        default = False,
+        metadata={"help": "The name of the news_csv_dataset to use."},
+    )
     overwrite_cache: bool = field(
         default=False,
         metadata={"help": "Overwrite the cached training and evaluation sets"},

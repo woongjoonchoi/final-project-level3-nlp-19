@@ -9,15 +9,7 @@ model = EncoderDecoderModel.from_encoder_decoder_pretrained(model_name, model_na
 # model = AutoModel.from_pretrained('my-model')
 print(datasets.__version__)
 
-<<<<<<< HEAD
-breakpoint()
-
-print(IntervalStrategy.STEPS == "steps")
-
-# model.save_pretrained('wjcmodel' , push_to_hub= True ,repo_name = 'double_klue')
-=======
 # model.save_pretrained('wjcmodelc')
->>>>>>> wjc
 # print(model)
 
 # model = AutoModelForSeq2SeqLM.from_pretrained('wjcmodel')

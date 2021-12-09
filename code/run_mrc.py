@@ -20,15 +20,12 @@ from transformers import (
     DataCollatorWithPadding,
     DataCollatorForSeq2Seq,
     TrainingArguments,
-<<<<<<< HEAD
     PrinterCallback,
     TrainerCallback,
-    Trainer
-=======
+    Trainer,
     TrainerCallback,
     default_data_collator
     # PrinterCallback,
->>>>>>> wjc
 )
 
 class PrinterCallback(TrainerCallback):
@@ -53,7 +50,6 @@ from arguments import (
 )
 
 logger = logging.getLogger(__name__)
-<<<<<<< HEAD
 
 import wandb
 
@@ -67,7 +63,6 @@ defaults = dict(
 
 wandb.init(config=defaults , tags =["baseline"])
 config = wandb.config
-=======
 # class MyCallback(TrainerCallback):
 #     "A callback that prints a message at the beginning of training"
 
@@ -80,13 +75,11 @@ class PrinterCallback(TrainerCallback):
     """
 
     def on_log(self, args, state, control, logs=None, **kwargs):
-        # breakpoint()
         print(logs)
         print(state.log_history)
         _ = logs.pop("total_flos", None)
         if state.is_local_process_zero:
             print(logs)
->>>>>>> wjc
 # run_extraction_mrc, run_mrc 합침
 def run_combine_mrc(
     data_args: DataTrainingArguments,
@@ -104,8 +97,6 @@ def run_combine_mrc(
     # dataset을 전처리합니다.
     # training과 evaluation에서 사용되는 전처리는 아주 조금 다른 형태를 가집니다.
     if training_args.do_train:
-
-        print("anjdieffffffffffffffffffeff")
         column_names = datasets["train"].column_names
     else:
         column_names = datasets["validation"].column_names
@@ -120,18 +111,18 @@ def run_combine_mrc(
         do_train = do_train,
         do_eval = do_eval,
         learning_rate = config.learning_rate,
-        eval_steps = 20,
+        eval_steps = 200,
         evaluation_strategy='steps',
+        per_device_train_batch_size = 16,
+        per_device_eval_batch_size = 16,
         num_train_epochs = 4,
-        logging_steps= 20
+        logging_steps= 100
     )
 
     if training_args.do_train:
         if "train" not in datasets:
             raise ValueError("--do_train requires a train dataset")
         train_dataset = datasets["train"]
-        train_dataset = datasets["validation"]
-        # prepare_train_features = preprocess_gen(tokenizer)
         # dataset에서 train feature를 생성합니다.
         prepare_train_features = preprocess_extract_train(tokenizer, data_args, column_names, max_seq_length)
         train_dataset = train_dataset.map(
@@ -145,9 +136,7 @@ def run_combine_mrc(
     # Validation preprocessing / 전처리를 진행합니다.
     if training_args.do_eval or training_args.do_predict:
         eval_dataset = datasets["validation"]
-
         prepare_valid_features = preprocess_extract_valid(tokenizer, data_args, column_names, max_seq_length)
-        # prepare_valid_features = preprocess_extract_train(tokenizer, data_args, column_names, max_seq_length)
         # Validation Feature 생성
         eval_dataset = eval_dataset.map(
             prepare_valid_features,
@@ -167,15 +156,18 @@ def run_combine_mrc(
     # data_collator = default_data_collator
 
     print("init trainer...")
-    print(training_args)
+    # print(training_args)
+    print(train_dataset)
+    print(eval_dataset)
+    
     # Trainer 초기화
+
 
     trainer = QuestionAnsweringTrainer( 
         model=model,
         args=training_args,
-        # train_dataset=train_dataset if training_args.do_train else None,
-        train_dataset=eval_dataset,
-        # output_dir= o
+        train_dataset=train_dataset if training_args.do_train else None,
+        # train_dataset=eval_dataset,
         eval_dataset=eval_dataset if training_args.do_eval else None,
         eval_examples=datasets["validation"] if training_args.do_eval else None,
         tokenizer=tokenizer,
