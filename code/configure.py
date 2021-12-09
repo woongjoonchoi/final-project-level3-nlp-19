@@ -1,4 +1,4 @@
-from transformers import AutoConfig, AutoModelForQuestionAnswering, AutoTokenizer , Seq2SeqTrainingArguments , EncoderDecoderModel
+from transformers import AutoConfig, AutoModelForQuestionAnswering, AutoTokenizer , Seq2SeqTrainingArguments , EncoderDecoderModel ,AutoModelForSeq2SeqLM
 
 
 def configure_model(model_args , training_args ,data_args):
@@ -20,7 +20,8 @@ def configure_model(model_args , training_args ,data_args):
             config=config,
         )
     elif model_args.run_generation:
-        model_name='klue/bert-base'
+        model_name='wjc123/dobule_klue'
+        tokenizer_name = 'klue/bert-base'
         training_args = Seq2SeqTrainingArguments(
             do_train=True, 
             do_eval=True, 
@@ -37,12 +38,14 @@ def configure_model(model_args , training_args ,data_args):
             fp16 = True,
             save_total_limit=2
         )
-        tokenizer = AutoTokenizer.from_pretrained(model_name)
-        model = EncoderDecoderModel.from_encoder_decoder_pretrained(model_name, model_name)
+        tokenizer = AutoTokenizer.from_pretrained(tokenizer_name)
+        model = AutoModelForSeq2SeqLM.from_pretrained(model_name)
 
+        
+        
         model.config.decoder_start_token_id = tokenizer.cls_token_id
         model.config.pad_token_id = tokenizer.pad_token_id
         model.config.vocab_size = model.config.decoder.vocab_size  if not data_args.run_seq2seq   else model.config.vocab_size
-
+        
 
     return model , tokenizer 
