@@ -47,7 +47,7 @@ class DataTrainingArguments:
     """
 
     dataset_name: Optional[str] = field(
-        default='../data/train', # "../data/train_dataset",
+        default='../data/train', #"../data/train/train_data",
         metadata={"help": "The name of the dataset to use."},
     )
     overwrite_cache: bool = field(

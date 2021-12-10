@@ -3,6 +3,8 @@ import os
 import sys
 
 from typing import List, NoReturn, NewType, Any
+
+from dataclasses import field
 from datasets import load_metric, load_from_disk, Dataset, DatasetDict, load_dataset
 
 from transformers import (
@@ -63,8 +65,11 @@ def main():
 
     # datasets = load_from_disk(data_args.dataset_name)
     PATH = data_args.dataset_name
-    datasets = load_dataset('csv', data_files={'train':os.path.join(PATH, 'train_small.csv'), 'validation': os.path.join(PATH, 'valid_small.csv')})
+    datasets = load_dataset('json', data_files={'train':os.path.join(PATH, 'train.json'), 'validation': os.path.join(PATH, 'valid.json')}, field='data')
     print(datasets)
+
+    datasets['train'] = datasets['train'].shuffle().select(range(10000))
+    datasets['validation'] = datasets['validation'].shuffle().select(range(1000))
 
     model, tokenizer = configure_model(model_args, training_args, data_args)
     print(
