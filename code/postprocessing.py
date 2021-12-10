@@ -18,6 +18,8 @@ def post_processing_function(
     # Post-processing: start logits과 end logits을 original context의 정답과 match시킵니다.
     answer_column_name = "answers" if "answers" in examples.column_names else examples.column_names[2]
 
+    print('log1')
+
     predictions = postprocess_qa_predictions(
         examples=examples,
         features=features,
@@ -25,19 +27,25 @@ def post_processing_function(
         max_answer_length=DataTrainingArguments.max_answer_length,
         output_dir=training_args.output_dir,
     )
+
+    print('log2')
         # Metric을 구할 수 있도록 Format을 맞춰줍니다.
     formatted_predictions = [
         {"id": k, "prediction_text": v} for k, v in predictions.items()
     ]
+    print(formatted_predictions[:5])
     if training_args.do_predict:
         return formatted_predictions
 
     # inference.py 실행 시 post_processing 합치면서 확실하지 않음
     elif training_args.do_eval:
+        print('log3')
         references = [
             {"id": ex["id"], "answers": ex[answer_column_name]}
             for ex in examples # for ex in datasets["validation"]
         ]
+        print('log4')
+        print(references[:5])
         return EvalPrediction(
             predictions=formatted_predictions, label_ids=references
         )
