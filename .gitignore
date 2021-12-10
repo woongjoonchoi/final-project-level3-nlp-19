@@ -6,3 +6,4 @@ wjcmodel/
 __pycache__/
 models/
 outputs/
+runs/
