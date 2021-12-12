@@ -71,4 +71,4 @@ def configure_model(model_args , training_args ,data_args):
         model.config.vocab_size = model.config.decoder.vocab_size  if not data_args.run_seq2seq   else model.config.vocab_size
         
 
-    return model , tokenizer 
+    return model , tokenizer ,training_args

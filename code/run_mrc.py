@@ -61,7 +61,7 @@ defaults = dict(
 )
 
 
-wandb.init(config=defaults , tags =["baseline"])
+wandb.init(config=defaults , tags =["roberta"])
 config = wandb.config
 # class MyCallback(TrainerCallback):
 #     "A callback that prints a message at the beginning of training"
@@ -91,9 +91,6 @@ def run_combine_mrc(
 ) -> NoReturn:
 
 
-    output_dir = './outputs'
-    do_train = True
-    do_eval =True
     # dataset을 전처리합니다.
     # training과 evaluation에서 사용되는 전처리는 아주 조금 다른 형태를 가집니다.
     if training_args.do_train:
@@ -106,19 +103,22 @@ def run_combine_mrc(
         data_args, training_args, datasets, tokenizer
     )
     
-    training_args = TrainingArguments(
-        output_dir = output_dir,
-        do_train = do_train,
-        do_eval = do_eval,
-        learning_rate = config.learning_rate,
-        eval_steps = 200,
-        evaluation_strategy='steps',
-        per_device_train_batch_size = 16,
-        per_device_eval_batch_size = 16,
-        num_train_epochs = 4,
-        logging_steps= 100
-    )
+    # training_args = TrainingArguments(
+    #     output_dir = output_dir,
+    #     do_train = do_train,
+    #     do_eval = do_eval,
+    #     learning_rate = config.learning_rate,
+    #     eval_steps = 200,
+    #     evaluation_strategy='steps',
+    #     per_device_train_batch_size = 16,
+    #     per_device_eval_batch_size = 16,
+    #     num_train_epochs = 4,
+    #     logging_steps= 100
+    # )
+    training_args.learning_rate = config.learning_rate
 
+    print(training_args)
+    breakpoint()
     if training_args.do_train:
         if "train" not in datasets:
             raise ValueError("--do_train requires a train dataset")

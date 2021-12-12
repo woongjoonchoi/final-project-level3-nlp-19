@@ -4,7 +4,7 @@ import sys
 import ast
 from typing import List, NoReturn, NewType, Any
 from datasets import load_metric, load_from_disk, Dataset, DatasetDict , load_dataset
-
+import copy
 from transformers import (
     DataCollatorForSeq2Seq,
     DataCollatorWithPadding,
@@ -74,14 +74,19 @@ def main():
         datasets =  load_dataset('csv', data_files={ 
                     'train': os.path.join(PATH, 'train_ver1.csv') ,
                     'validation' :os.path.join(PATH, 'valid_ver1.csv') })
-        datasets['train'] = datasets['train'].shuffle().select(range(10000)).map(eval_json)
-        datasets['validation'] = datasets['validation'].shuffle().select(range(1000)).map(eval_json)
+        datasets['train'] = datasets['train'].shuffle(seed = 42).select(range(1000)).map(eval_json)
+        datasets['validation'] =copy.deepcopy(datasets['train'].select(range(100)))
+        # datasets['validation'] = datasets['validation'].shuffle(seed = 42).select(range(50)).map(eval_json)
 
-    print(type(datasets['train'][0]["answers"]))
+    print(datasets['train'][0]["answers"])
     print(type(datasets['train'][0]["id"]))
+    print(datasets['validation'][0]["answers"])
+    print(type(datasets['validation'][0]["id"]))
+    print(id(datasets['train']))
+    print(id(datasets['validation']))
+    # breakpoint()
+    model, tokenizer , training_args= configure_model(model_args, training_args, data_args)
     breakpoint()
-    model, tokenizer = configure_model(model_args, training_args, data_args)
-    
     print(
         type(training_args),
         type(model_args),
@@ -89,9 +94,6 @@ def main():
         type(tokenizer),
         type(model),
     )
-
-    training_args.do_train = True
-    training_args.do_eval = True
     training_args.overwrite_output_dir = True
     # do_train mrc model 혹은 do_eval mrc model
     
