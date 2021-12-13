@@ -25,11 +25,11 @@ def post_processing_function(
         max_answer_length=DataTrainingArguments.max_answer_length,
         output_dir=training_args.output_dir,
     )
-        # Metric을 구할 수 있도록 Format을 맞춰줍니다.
+
+    # Metric을 구할 수 있도록 Format을 맞춰줍니다.
     formatted_predictions = [
         {"id": k, "prediction_text": v} for k, v in predictions.items()
     ]
-
     if training_args.do_predict:
         return formatted_predictions
 

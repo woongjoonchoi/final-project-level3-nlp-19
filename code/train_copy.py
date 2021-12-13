@@ -5,6 +5,8 @@ import ast
 from typing import List, NoReturn, NewType, Any
 from datasets import load_metric, load_from_disk, Dataset, DatasetDict , load_dataset
 import copy
+from dataclasses import field
+
 from transformers import (
     DataCollatorForSeq2Seq,
     DataCollatorWithPadding,
@@ -40,6 +42,10 @@ def main():
         (ModelArguments, DataTrainingArguments, TrainingArguments)
     )
     model_args, data_args, training_args = parser.parse_args_into_dataclasses()
+    
+    training_args.logging_steps = 20000
+    training_args.save_steps = 20000
+    training_args.save_total_limit = 10
     print(model_args.model_name_or_path)
 
     print(f"model is from {model_args.model_name_or_path}")
@@ -63,30 +69,15 @@ def main():
     # breakpoint()
     print(data_args)
     # breakpoint()
-    PATH = data_args.dataset_name
-    def eval_json(example) :
-        return { "answers" : ast.literal_eval(example["answers"]) , "id" : str(example["id"])}
-    data_args.hyp_search = True
-    if not data_args.hyp_search :
-        datasets = load_dataset('csv', data_files={'train':os.path.join(PATH, 'train_ver1.csv'), 
-                            'validation': os.path.join(PATH, 'valid_ver1.csv')})
-    else :
-        datasets =  load_dataset('csv', data_files={ 
-                    'train': os.path.join(PATH, 'train_ver1.csv') ,
-                    'validation' :os.path.join(PATH, 'valid_ver1.csv') })
-        datasets['train'] = datasets['train'].shuffle(seed = 42).select(range(1000)).map(eval_json)
-        datasets['validation'] =copy.deepcopy(datasets['train'].select(range(100)))
-        # datasets['validation'] = datasets['validation'].shuffle(seed = 42).select(range(50)).map(eval_json)
 
-    print(datasets['train'][0]["answers"])
-    print(type(datasets['train'][0]["id"]))
-    print(datasets['validation'][0]["answers"])
-    print(type(datasets['validation'][0]["id"]))
-    print(id(datasets['train']))
-    print(id(datasets['validation']))
-    # breakpoint()
-    model, tokenizer , training_args= configure_model(model_args, training_args, data_args)
-    breakpoint()
+    PATH = data_args.dataset_name
+    datasets = load_dataset('json', data_files={'train':os.path.join(PATH, 'train.json'), 'validation': os.path.join(PATH, 'valid.json')}, field='data')
+    print(datasets)
+
+    datasets['train'] = datasets['train'].shuffle().select(range(10000))
+    datasets['validation'] = datasets['validation'].shuffle().select(range(1000))
+
+    model, tokenizer = configure_model(model_args, training_args, data_args)
     print(
         type(training_args),
         type(model_args),
