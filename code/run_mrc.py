@@ -186,7 +186,7 @@ def run_combine_mrc(
         else:
             checkpoint = None
         train_result = trainer.train(resume_from_checkpoint=checkpoint)
-        # trainer.save_model()  # Saves the tokenizer too for easy upload
+        trainer.save_model()  # Saves the tokenizer too for easy upload
 
         metrics = train_result.metrics
         metrics["train_samples"] = len(train_dataset)

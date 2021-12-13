@@ -47,7 +47,7 @@ class DataTrainingArguments:
     """
 
     dataset_name: Optional[str] = field(
-        default="../data/train_dataset",
+        default="../data/train",
         metadata={"help": "The name of the dataset to use."},
     )
     hyp_search : bool = field(
