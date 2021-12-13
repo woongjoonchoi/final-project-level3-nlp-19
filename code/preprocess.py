@@ -93,12 +93,8 @@ def preprocess_gen(tokenizer,model_name):
     return tokenized_samples
 
 def preprocess_extract_train(tokenizer , data_args,column_names ,max_seq_length):
-    
-    # padding= False
-    doc_stride = 128
-    max_length =384
-    target_length = 128
     pad_on_right = tokenizer.padding_side == "right"
+
     question_column_name = "question" if "question" in column_names else column_names[0]
     context_column_name = "context" if "context" in column_names else column_names[1]
     answer_column_name = "answers" if "answers" in column_names else column_names[2]
@@ -140,6 +136,7 @@ def preprocess_extract_train(tokenizer , data_args,column_names ,max_seq_length)
             # 하나의 example이 여러개의 span을 가질 수 있습니다.
             sample_index = sample_mapping[i]
             answers = examples[answer_column_name][sample_index]
+            # answers = examples[answer_column_name][sample_index]
 
 
             # answer가 없을 경우 cls_index를 answer로 설정합니다(== example에서 정답이 없는 경우 존재할 수 있음).
@@ -186,14 +183,11 @@ def preprocess_extract_train(tokenizer , data_args,column_names ,max_seq_length)
 def preprocess_extract_valid(tokenizer, data_args,column_names ,max_seq_length):
     # truncation과 padding(length가 짧을때만)을 통해 toknization을 진행하며, stride를 이용하여 overflow를 유지합니다.
     # 각 example들은 이전의 context와 조금씩 겹치게됩니다.
-    doc_stride = 128
-    max_length =384
-    target_length = 128
     pad_on_right = tokenizer.padding_side == "right"
+
     question_column_name = "question" if "question" in column_names else column_names[0]
     context_column_name = "context" if "context" in column_names else column_names[1]
-    if len(column_names) >2:
-        answer_column_name = "answers" if "answers" in column_names else column_names[2]
+
     def extract_tokenized(examples):
         tokenized_examples = tokenizer(
             examples[question_column_name if pad_on_right else context_column_name],

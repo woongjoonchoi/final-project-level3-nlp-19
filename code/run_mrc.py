@@ -89,8 +89,6 @@ def run_combine_mrc(
     tokenizer,
     model,
 ) -> NoReturn:
-
-
     # dataset을 전처리합니다.
     # training과 evaluation에서 사용되는 전처리는 아주 조금 다른 형태를 가집니다.
     if training_args.do_train:
@@ -218,7 +216,6 @@ def run_combine_mrc(
         trainer.log_metrics("eval", metrics)
         trainer.save_metrics("eval", metrics)
 
-    logger.info("*** Evaluate ***")
     #### eval dataset & eval example - predictions.json 생성됨
     if training_args.do_predict:
         predictions = trainer.predict(
@@ -228,11 +225,6 @@ def run_combine_mrc(
         print(
             "No metric can be presented because there is no correct answer given. Job done!"
         )
-    if training_args.do_eval:
-        metrics = trainer.evaluate()
-        metrics["eval_samples"] = len(eval_dataset)
-        trainer.log_metrics("test", metrics)
-        trainer.save_metrics("test", metrics)
 
 
 def run_generation_mrc(

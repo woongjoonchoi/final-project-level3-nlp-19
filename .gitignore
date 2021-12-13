@@ -3,6 +3,13 @@ ipynb_checkpoints/
 wandb/
 my-model/
 wjcmodel/
+<<<<<<< HEAD
 ljs_data/
 outputs/
 code/outputs/
+=======
+__pycache__/
+models/
+outputs/
+runs/
+>>>>>>> a236362b791e9d28e9f39975017933df33696f09
