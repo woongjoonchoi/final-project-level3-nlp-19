@@ -180,14 +180,15 @@ def preprocess_extract_train(tokenizer , data_args,column_names ,max_seq_length)
 
         return tokenized_examples
     return extract_tokenized
-def preprocess_extract_valid(tokenizer, data_args,column_names ,max_seq_length):
+
+    
+def preprocess_extract_valid(tokenizer, data_args, column_names, max_seq_length):
     # truncation과 padding(length가 짧을때만)을 통해 toknization을 진행하며, stride를 이용하여 overflow를 유지합니다.
     # 각 example들은 이전의 context와 조금씩 겹치게됩니다.
     pad_on_right = tokenizer.padding_side == "right"
 
     question_column_name = "question" if "question" in column_names else column_names[0]
     context_column_name = "context" if "context" in column_names else column_names[1]
-
     def extract_tokenized(examples):
         tokenized_examples = tokenizer(
             examples[question_column_name if pad_on_right else context_column_name],
@@ -197,6 +198,7 @@ def preprocess_extract_valid(tokenizer, data_args,column_names ,max_seq_length):
             stride=data_args.doc_stride,
             return_overflowing_tokens=True,
             return_offsets_mapping=True,
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
             # return_token_type_ids=False, # roberta모델을 사용할 경우 False, bert를 사용할 경우 True로 표기해야합니다.
@@ -213,6 +215,9 @@ def preprocess_extract_valid(tokenizer, data_args,column_names ,max_seq_length):
 >>>>>>> parent of 47db46b... streamlit
 =======
 >>>>>>> parent of 47db46b... streamlit
+=======
+            #return_token_type_ids=False, # roberta모델을 사용할 경우 False, bert를 사용할 경우 True로 표기해야합니다.            
+>>>>>>> 47db46b8a0e2d1ce5f6021762b5ee75ee8de4713
             padding="max_length" if data_args.pad_to_max_length else False,
 >>>>>>> main
         )
@@ -223,7 +228,7 @@ def preprocess_extract_valid(tokenizer, data_args,column_names ,max_seq_length):
         # evaluation을 위해, prediction을 context의 substring으로 변환해야합니다.
         # corresponding example_id를 유지하고 offset mappings을 저장해야합니다.
         tokenized_examples["example_id"] = []
-
+        
         for i in range(len(tokenized_examples["input_ids"])):
             # sequence id를 설정합니다 (to know what is the context and what is the question).
             sequence_ids = tokenized_examples.sequence_ids(i)

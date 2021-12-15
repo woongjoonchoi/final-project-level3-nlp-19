@@ -12,7 +12,6 @@ from contextlib import contextmanager
 from typing import List, Tuple, NoReturn, Any, Optional, Union
 
 
-from dpr_train_generate import BertEncoder, run_dpr
 from sklearn.feature_extraction.text import TfidfVectorizer
 
 from datasets import (
@@ -22,7 +21,6 @@ from datasets import (
 )
 
 from elasticsearch import Elasticsearch, helpers
-from retrieval_common_part import retrieve_faiss
 
 @contextmanager
 def timer(name):
@@ -36,7 +34,7 @@ class SparseRetrieval:
         self,
         tokenize_fn,
         data_path: Optional[str] = "../data",
-        context_path: Optional[str] = "wikipedia_documents.json",
+        context_path: Optional[str] = "mbn_news_wiki.json",
     ) -> NoReturn:
 
         """
@@ -61,7 +59,7 @@ class SparseRetrieval:
             wiki = json.load(f)
 
         self.contexts = list(
-            dict.fromkeys([v["text"] for v in wiki.values()])
+            dict.fromkeys([v["CONTEXT"] for v in wiki.values()])
         )  # set 은 매번 순서가 바뀌므로
         print(f"Lengths of unique contexts : {len(self.contexts)}")
         self.ids = list(range(len(self.contexts)))
@@ -79,7 +77,7 @@ class SparseRetrieval:
 
     def build_elastic_db(self):
         # db 이름 설정
-        INDEX_NAME = "wiki_index"
+        INDEX_NAME = "news_wiki_index"
 
         # db 셋팅
         INDEX_SETTINGS = {
@@ -132,7 +130,7 @@ class SparseRetrieval:
             for idx in range(1000,len(wikis), 1000):
                 response = helpers.bulk(self.es, wikis[idx-1000:idx])
                 # print ("\nRESPONSE:", response)
-            response = helpers.bulk(self.es, wikis[56000:len(wikis)])
+            response = helpers.bulk(self.es, wikis[836000:len(wikis)])
             print ("\nRESPONSE:", response)
         except Exception as e:
             print("\nERROR:", e)
@@ -143,7 +141,7 @@ class SparseRetrieval:
         ) -> Union[Tuple[List, List], pd.DataFrame]:
 
         
-        INDEX_NAME = "wiki_index"
+        INDEX_NAME = "news_wiki_index"
         if not self.es.indices.exists(INDEX_NAME):
             self.build_elastic_db()
 
@@ -153,11 +151,7 @@ class SparseRetrieval:
             for hit in res['hits']['hits']:
                 doc_indices.append(hit['_id']) 
 
-            for i in range(topk):
-                # print(f"Top-{i+1} passage with score {doc_scores[i]:4f}")
-                print(self.contexts[doc_indices[i]])
-
-            return ([self.contexts[doc_indices[i]] for i in range(topk)])
+            return [self.contexts[int(pid)] for pid in doc_indices]
 
         elif isinstance(query_or_dataset, Dataset):
 
@@ -398,77 +392,3 @@ class SparseRetrieval:
         D, I = self.indexer.search(q_embs, k)
 
         return D.tolist(), I.tolist()
-
-
-# if __name__ == "__main__":
-
-#     import argparse
-
-#     parser = argparse.ArgumentParser(description="")
-#     parser.add_argument(
-#         "--dataset_name", metavar="./data/train_dataset", type=str, help=""
-#     )
-#     parser.add_argument(
-#         "--model_name_or_path",
-#         metavar="bert-base-multilingual-cased",
-#         type=str,
-#         help="",
-#     )
-#     parser.add_argument("--data_path", metavar="./data", type=str, help="")
-#     parser.add_argument(
-#         "--context_path", metavar="wikipedia_documents", type=str, help=""
-#     )
-#     parser.add_argument("--use_faiss", metavar=False, type=bool, help="")
-
-#     args = parser.parse_args()
-
-#     # Test sparse
-#     org_dataset = load_from_disk(args.dataset_name)
-#     full_ds = concatenate_datasets(
-#         [
-#             org_dataset["train"].flatten_indices(),
-#             org_dataset["validation"].flatten_indices(),
-#         ]
-#     )  # train dev 를 합친 4192 개 질문에 대해 모두 테스트
-#     print("*" * 40, "query dataset", "*" * 40)
-#     print(full_ds)
-
-#     from transformers import AutoTokenizer
-
-#     tokenizer = AutoTokenizer.from_pretrained(
-#         args.model_name_or_path,
-#         use_fast=False,
-#     )
-
-#     retriever = SparseRetrieval(
-#         tokenize_fn=tokenizer.tokenize,
-#         data_path=args.data_path,
-#         context_path=args.context_path,
-#     )
-
-#     query = "대통령을 포함한 미국의 행정부 견제권을 갖는 국가 기관은?"
-
-#     if args.use_faiss:
-
-#         # test single query
-#         with timer("single query by faiss"):
-#             scores, indices = retriever.retrieve_faiss(query)
-
-#         # test bulk
-#         with timer("bulk query by exhaustive search"):
-#             df = retriever.retrieve_faiss(full_ds)
-#             df["correct"] = df["original_context"] == df["context"]
-
-#             print("correct retrieval result by faiss", df["correct"].sum() / len(df))
-
-#     else:
-#         with timer("bulk query by exhaustive search"):
-#             df = retriever.retrieve(full_ds)
-#             df["correct"] = df["original_context"] == df["context"]
-#             print(
-#                 "correct retrieval result by exhaustive search",
-#                 df["correct"].sum() / len(df),
-#             )
-
-#         with timer("single query by exhaustive search"):
-#             scores, indices = retriever.retrieve(query)
