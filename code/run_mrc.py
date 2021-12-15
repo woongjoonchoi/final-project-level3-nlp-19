@@ -83,9 +83,6 @@ def run_combine_mrc(
             load_from_cache_file=not data_args.overwrite_cache,
         )
 
-        print('eval_dataset sample')
-        print(eval_dataset[0])
-
     # Data collator
     # flag가 True이면 이미 max length로 padding된 상태입니다.
     # 그렇지 않다면 data collator에서 padding을 진행해야합니다.
@@ -154,7 +151,6 @@ def run_combine_mrc(
         predictions = trainer.predict(
             test_dataset=eval_dataset, test_examples=datasets["validation"]
         )
-        print(predictions)
         # predictions.json 은 postprocess_qa_predictions() 호출시 이미 저장됩니다.
         print(
             "No metric can be presented because there is no correct answer given. Job done!"

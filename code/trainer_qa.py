@@ -23,9 +23,6 @@ from transformers.trainer_utils import PredictionOutput
 if is_datasets_available():
     import datasets
 
-if is_torch_tpu_available():
-    import torch_xla.core.xla_model as xm
-    import torch_xla.debug.metrics as met
 
 # Huggingface의 Trainer를 상속받아 QuestionAnswering을 위한 Trainer를 생성합니다.
 class QuestionAnsweringTrainer(Trainer):
@@ -70,9 +67,6 @@ class QuestionAnsweringTrainer(Trainer):
         else:
             metrics = {}
 
-        if self.args.tpu_metrics_debug or self.args.debug:
-            # tpu-comment: PyTorch/XLA에 대한 Logging debug metrics (compile, execute times, ops, etc.)
-            xm.master_print(met.metrics_report())
 
         self.control = self.callback_handler.on_evaluate(
             self.args, self.state, self.control, metrics
@@ -81,16 +75,6 @@ class QuestionAnsweringTrainer(Trainer):
 
     def predict(self, test_dataset, test_examples, ignore_keys=None):
         test_dataloader = self.get_test_dataloader(test_dataset)
-        print('start predict function')
-        print(test_dataloader)
-
-
-        # for step, inputs in enumerate(test_dataloader):
-        #     print(inputs)
-        #     if step == 4:
-        #         break
-        # assert False
-
 
         # 일시적으로 metric computation를 불가능하게 한 상태이며, 해당 코드에서는 loop 내에서 metric 계산을 수행합니다.
         # evaluate 함수와 동일하게 구성되어있습니다
@@ -105,8 +89,7 @@ class QuestionAnsweringTrainer(Trainer):
                 prediction_loss_only=True if compute_metrics is None else None,
                 ignore_keys=ignore_keys
             )
-            print('print output')
-            print(output)
+
         finally:
             self.compute_metrics = compute_metrics
 
@@ -118,11 +101,7 @@ class QuestionAnsweringTrainer(Trainer):
                 type=test_dataset.format["type"],
                 columns=list(test_dataset.features.keys()),
             )
-        print('prediciton 진행 중')
-        print(output.predictions)
         predictions = self.post_process_function(
             test_examples, test_dataset, output.predictions, self.args
         )
-        print("print predictions")
-        print(predictions)
         return predictions

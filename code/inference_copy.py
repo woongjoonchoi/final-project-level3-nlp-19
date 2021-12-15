@@ -36,9 +36,6 @@ from transformers import (
 from utils_qa import postprocess_qa_predictions, check_no_error
 from trainer_qa import QuestionAnsweringTrainer
 from sparse_retrieval import SparseRetrieval
-from dense_retrieval import DenseRetrieval
-from retrieval_common_part import build_faiss, retrieve_faiss
-import retrieval_common_part
 from postprocessing import post_processing_function
 from run_mrc import run_combine_mrc
 
@@ -98,8 +95,6 @@ def main():
             data_args,
         )
 
-
-
     # eval or predict mrc model
     if training_args.do_eval or training_args.do_predict:
         run_combine_mrc(data_args, training_args, model_args, datasets, tokenizer, model)
@@ -121,67 +116,14 @@ def run_retrieval(
     retriever_sparse = SparseRetrieval(
         tokenize_fn=tokenize_fn.tokenize, data_path=data_path, context_path=context_path
         )
-
-    if data_args.sparse_name == "None":
-        retriever_sparse.get_sparse_embedding()
-        if data_args.use_faiss:
-            # 수정
-            retrieval_common_part.build_faiss(num_clusters=data_args.num_clusters)
-            df_sparse = retrieval_common_part.retrieve_faiss(
-                datasets["validation"], topk=data_args.top_k_retrieval
-            )
-        else:
-            df_sparse = retriever_sparse.retrieve(datasets["validation"], topk=data_args.top_k_retrieval)
         
-    elif data_args.sparse_name == "elastic":
-        df_sparse = retriever_sparse.elastic_retrieve(datasets["validation"], topk=data_args.top_k_retrieval)
+    df_sparse = retriever_sparse.elastic_retrieve(datasets["validation"], topk=data_args.top_k_retrieval)
 
-    # # 테스트
-    # # Dense Passage Retrieval 부분
-    # retriever_dense = DenseRetrieval(
-    #     tokenize_fn=tokenize_fn, datasets=datasets, data_path=data_path, context_path=context_path 
-    # )
-    # if data_args.dense_name == "None":
-    #     retriever_dense.get_dense_embedding(inbatch=False)
-    #     # 수정
-    #     retrieval_common_part.build_faiss(num_clusters=data_args.num_clusters)
-    #     df_dense = retrieval_common_part.retrieve_faiss(
-    #         datasets["validation"], topk=data_args.top_k_retrieval
-    #     )
-    # elif data_args.dense_name == "in-batch":
-    #     retriever_dense.get_dense_embedding(inbatch=True)
-    #     # 수정
-    #     retrieval_common_part.build_faiss(num_clusters=data_args.num_clusters)
-    #     df_dense = retrieval_common_part.retrieve_faiss(
-    #         datasets["validation"], topk=data_args.top_k_retrieval
-    #     )
-
-
-    # sparse만 이용하는 경우
     df = df_sparse
 
     for idx in range(len(df_sparse)):
         df["context"][idx] = " ".join(df_sparse["context"][idx])
 
-    # DPR 미사용으로 해당 코드 주석 처리
-    # df = df_sparse
-    # # Sparse Retrieval 결과와 Dense Retrieval 결과를 병합합니다. 
-    # for idx in range(len(df_sparse)):
-    #     if idx == 10:
-    #         print(df_dense["context"][idx])
-    #     temp = df_sparse["context"][idx] + df_dense["context"][idx]
-    #     df["context"][idx] = " ".join(temp)
-
-    # # Dense Retrieval 결과 일부 출력하기        
-    # df = df_dense
-    # for idx in range(len(df_dense)):
-    #     if idx % 1000 == 0:
-    #         print(df["context_id"][idx])
-    #         print('-----------')
-    #         print(df["question"][idx])
-    #         print('-----------')
-    #         print(df["context"][idx])
-    #     df["context"][idx] = " ".join(df_dense["context"][idx])
 
 
     # test data 에 대해선 정답이 없으므로 id question context 로만 데이터셋이 구성됩니다.
@@ -213,9 +155,6 @@ def run_retrieval(
             }
         )
 
-    # print(df)
-    # print(f)
-    
     datasets = DatasetDict({"validation": Dataset.from_pandas(df, features=f)})
     return datasets
 

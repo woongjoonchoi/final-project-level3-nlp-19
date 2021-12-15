@@ -1,5 +1,5 @@
 import streamlit as st
-from predict import load_model, get_prediction
+from prototype_predict import load_model, get_prediction
 
 
 
