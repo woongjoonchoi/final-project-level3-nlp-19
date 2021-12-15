@@ -6,6 +6,7 @@ Open-Domain Question Answering 을 수행하는 inference 코드 입니다.
 
 import logging
 import sys
+import os
 from typing import Callable, List, Dict, NoReturn, Tuple
 
 import numpy as np
@@ -13,6 +14,7 @@ from configure import *
 from preprocess import *
 from datasets import (
     load_metric,
+    load_dataset,
     load_from_disk,
     Sequence,
     Value,
@@ -36,6 +38,7 @@ from trainer_qa import QuestionAnsweringTrainer
 from sparse_retrieval import SparseRetrieval
 from dense_retrieval import DenseRetrieval
 from retrieval_common_part import build_faiss, retrieve_faiss
+import retrieval_common_part
 from postprocessing import post_processing_function
 from run_mrc import run_combine_mrc
 
@@ -75,8 +78,12 @@ def main():
     # 모델을 초기화하기 전에 난수를 고정합니다.
     set_seed(training_args.seed)
 
-    datasets = load_from_disk(data_args.dataset_name)
+
+    datasets = load_dataset('json', data_files={'validation':os.path.join(data_args.dataset_name, 'test.json')}, field='data')
     print(datasets)
+    # valid.json의 데이터 일부가 불러와진다. (train_copy.py에서 load_dataset함수로 인한 캐시간의 연동문제로 추정된다.)
+    # datasets = load_from_disk(data_args.dataset_name)
+    # print(datasets)
 
     # AutoConfig를 이용하여 pretrained model 과 tokenizer를 불러옵니다.
     # argument로 원하는 모델 이름을 설정하면 옵션을 바꿀 수 있습니다.
@@ -92,6 +99,7 @@ def main():
         )
 
 
+
     # eval or predict mrc model
     if training_args.do_eval or training_args.do_predict:
         run_combine_mrc(data_args, training_args, model_args, datasets, tokenizer, model)
@@ -103,7 +111,7 @@ def run_retrieval(
     training_args: TrainingArguments,
     data_args: DataTrainingArguments,
     data_path: str = "../data",
-    context_path: str = "wikipedia_documents.json",
+    context_path: str = "mbn_news_wiki.json",
 ) -> DatasetDict:
     print(f"-----------------------------------------run_retrieval-----------------------------------------")
 
@@ -128,25 +136,25 @@ def run_retrieval(
     elif data_args.sparse_name == "elastic":
         df_sparse = retriever_sparse.elastic_retrieve(datasets["validation"], topk=data_args.top_k_retrieval)
 
-    # 테스트
-    # Dense Passage Retrieval 부분
-    retriever_dense = DenseRetrieval(
-        tokenize_fn=tokenize_fn, datasets=datasets, data_path=data_path, context_path=context_path 
-    )
-    if data_args.dense_name == "None":
-        retriever_dense.get_dense_embedding(inbatch=False)
-        # 수정
-        retrieval_common_part.build_faiss(num_clusters=data_args.num_clusters)
-        df_dense = retrieval_common_part.retrieve_faiss(
-            datasets["validation"], topk=data_args.top_k_retrieval
-        )
-    elif data_args.dense_name == "in-batch":
-        retriever_dense.get_dense_embedding(inbatch=True)
-        # 수정
-        retrieval_common_part.build_faiss(num_clusters=data_args.num_clusters)
-        df_dense = retrieval_common_part.retrieve_faiss(
-            datasets["validation"], topk=data_args.top_k_retrieval
-        )
+    # # 테스트
+    # # Dense Passage Retrieval 부분
+    # retriever_dense = DenseRetrieval(
+    #     tokenize_fn=tokenize_fn, datasets=datasets, data_path=data_path, context_path=context_path 
+    # )
+    # if data_args.dense_name == "None":
+    #     retriever_dense.get_dense_embedding(inbatch=False)
+    #     # 수정
+    #     retrieval_common_part.build_faiss(num_clusters=data_args.num_clusters)
+    #     df_dense = retrieval_common_part.retrieve_faiss(
+    #         datasets["validation"], topk=data_args.top_k_retrieval
+    #     )
+    # elif data_args.dense_name == "in-batch":
+    #     retriever_dense.get_dense_embedding(inbatch=True)
+    #     # 수정
+    #     retrieval_common_part.build_faiss(num_clusters=data_args.num_clusters)
+    #     df_dense = retrieval_common_part.retrieve_faiss(
+    #         datasets["validation"], topk=data_args.top_k_retrieval
+    #     )
 
 
     # sparse만 이용하는 경우
@@ -205,8 +213,8 @@ def run_retrieval(
             }
         )
 
-    print(df)
-    print(f)
+    # print(df)
+    # print(f)
     
     datasets = DatasetDict({"validation": Dataset.from_pandas(df, features=f)})
     return datasets

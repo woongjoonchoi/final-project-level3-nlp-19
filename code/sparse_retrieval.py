@@ -36,7 +36,7 @@ class SparseRetrieval:
         self,
         tokenize_fn,
         data_path: Optional[str] = "../data",
-        context_path: Optional[str] = "wikipedia_documents.json",
+        context_path: Optional[str] = "mbn_news_wiki.json",
     ) -> NoReturn:
 
         """
@@ -61,7 +61,7 @@ class SparseRetrieval:
             wiki = json.load(f)
 
         self.contexts = list(
-            dict.fromkeys([v["text"] for v in wiki.values()])
+            dict.fromkeys([v["CONTEXT"] for v in wiki.values()])
         )  # set 은 매번 순서가 바뀌므로
         print(f"Lengths of unique contexts : {len(self.contexts)}")
         self.ids = list(range(len(self.contexts)))
@@ -79,7 +79,7 @@ class SparseRetrieval:
 
     def build_elastic_db(self):
         # db 이름 설정
-        INDEX_NAME = "wiki_index"
+        INDEX_NAME = "news_wiki_index"
 
         # db 셋팅
         INDEX_SETTINGS = {
@@ -132,7 +132,7 @@ class SparseRetrieval:
             for idx in range(1000,len(wikis), 1000):
                 response = helpers.bulk(self.es, wikis[idx-1000:idx])
                 # print ("\nRESPONSE:", response)
-            response = helpers.bulk(self.es, wikis[56000:len(wikis)])
+            response = helpers.bulk(self.es, wikis[836000:len(wikis)])
             print ("\nRESPONSE:", response)
         except Exception as e:
             print("\nERROR:", e)
@@ -143,7 +143,7 @@ class SparseRetrieval:
         ) -> Union[Tuple[List, List], pd.DataFrame]:
 
         
-        INDEX_NAME = "wiki_index"
+        INDEX_NAME = "news_wiki_index"
         if not self.es.indices.exists(INDEX_NAME):
             self.build_elastic_db()
 
@@ -153,11 +153,7 @@ class SparseRetrieval:
             for hit in res['hits']['hits']:
                 doc_indices.append(hit['_id']) 
 
-            for i in range(topk):
-                # print(f"Top-{i+1} passage with score {doc_scores[i]:4f}")
-                print(self.contexts[doc_indices[i]])
-
-            return ([self.contexts[doc_indices[i]] for i in range(topk)])
+            return [self.contexts[int(pid)] for pid in doc_indices]
 
         elif isinstance(query_or_dataset, Dataset):
 
