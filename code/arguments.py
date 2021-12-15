@@ -9,7 +9,7 @@ class ModelArguments:
     """
 
     model_name_or_path: str = field(
-        default="klue/roberta-large",
+        default="klue/bert-base",
         metadata={
             "help": "Path to pretrained model or model identifier from huggingface.co/models"
         },
@@ -47,12 +47,8 @@ class DataTrainingArguments:
     """
 
     dataset_name: Optional[str] = field(
-        default="../data/train",
+        default='../data/train', #"../data/train/train_data",
         metadata={"help": "The name of the dataset to use."},
-    )
-    hyp_search : bool = field(
-        default = False,
-        metadata={"help": "The name of the news_csv_dataset to use."},
     )
     overwrite_cache: bool = field(
         default=False,
