@@ -13,6 +13,8 @@
 > generation_pre_process  
 > generation_compute_metrics  
 > configuration  
-
+> building tiny dataset
+#### demo
+> reader model demo
 ### 추창한
 
