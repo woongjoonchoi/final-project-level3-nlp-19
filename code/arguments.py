@@ -9,7 +9,7 @@ class ModelArguments:
     """
 
     model_name_or_path: str = field(
-        default="klue/bert-base",
+        default="klue/roberta-large",
         metadata={
             "help": "Path to pretrained model or model identifier from huggingface.co/models"
         },
@@ -47,8 +47,12 @@ class DataTrainingArguments:
     """
 
     dataset_name: Optional[str] = field(
-        default='../data/train', #"../data/train/train_data",
+        default="../data/train",
         metadata={"help": "The name of the dataset to use."},
+    )
+    hyp_search : bool = field(
+        default = False,
+        metadata={"help": "The name of the news_csv_dataset to use."},
     )
     overwrite_cache: bool = field(
         default=False,
@@ -128,4 +132,7 @@ python train_copy.py --output_dir ./outputs/train_dataset --model_name_or_path .
 
 추론 방법
 python inference_copy.py --output_dir ./outputs/test_dataset/ --dataset_name ../data/test_dataset/ --model_name_or_path ./models/train_dataset/ --do_predict  --overwrite_cache --overwrite_output_dir
+
+앱실행 방법
+streamlit run prototype.py --server.address=127.0.0.1 -- --output_dir ./outputs/test_dataset/ --model_name_or_path ./models/train_dataset/ --dataset_name ../data/test_dataset/ --do_predict
 '''

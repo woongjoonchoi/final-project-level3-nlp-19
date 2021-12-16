@@ -150,27 +150,31 @@ def run_retrieval(
         )
 
 
-    # Sparse Retrieval 결과와 Dense Retrieval 결과를 병합합니다. 
+    # sparse만 이용하는 경우
     df = df_sparse
-    # 테스트
-    for idx in range(len(df_sparse)):
-        if idx == 10:
-            print(df_dense["context"][idx])
-        temp = df_sparse["context"][idx] + df_dense["context"][idx]
-        df["context"][idx] = " ".join(temp)
-        # sparse만 이용하는 경우
-        # df["context"][idx] = " ".join(df_sparse["context"][idx])
 
-    # Dense Retrieval 결과 일부 출력하기        
-    df = df_dense
-    for idx in range(len(df_dense)):
-        if idx % 1000 == 0:
-            print(df["context_id"][idx])
-            print('-----------')
-            print(df["question"][idx])
-            print('-----------')
-            print(df["context"][idx])
-        df["context"][idx] = " ".join(df_dense["context"][idx])
+    for idx in range(len(df_sparse)):
+        df["context"][idx] = " ".join(df_sparse["context"][idx])
+
+    # DPR 미사용으로 해당 코드 주석 처리
+    # df = df_sparse
+    # # Sparse Retrieval 결과와 Dense Retrieval 결과를 병합합니다. 
+    # for idx in range(len(df_sparse)):
+    #     if idx == 10:
+    #         print(df_dense["context"][idx])
+    #     temp = df_sparse["context"][idx] + df_dense["context"][idx]
+    #     df["context"][idx] = " ".join(temp)
+
+    # # Dense Retrieval 결과 일부 출력하기        
+    # df = df_dense
+    # for idx in range(len(df_dense)):
+    #     if idx % 1000 == 0:
+    #         print(df["context_id"][idx])
+    #         print('-----------')
+    #         print(df["question"][idx])
+    #         print('-----------')
+    #         print(df["context"][idx])
+    #     df["context"][idx] = " ".join(df_dense["context"][idx])
 
 
     # test data 에 대해선 정답이 없으므로 id question context 로만 데이터셋이 구성됩니다.
