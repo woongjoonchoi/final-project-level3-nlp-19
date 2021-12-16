@@ -119,6 +119,7 @@ def run_retrieval(
         if data_args.use_faiss:
             # 수정
             retrieval_common_part.build_faiss(num_clusters=data_args.num_clusters)
+            
             df_sparse = retrieval_common_part.retrieve_faiss(
                 datasets["validation"], topk=data_args.top_k_retrieval
             )
@@ -201,9 +202,6 @@ def run_retrieval(
             }
         )
 
-    print(df)
-    print(f)
-    
     datasets = DatasetDict({"validation": Dataset.from_pandas(df, features=f)})
     return datasets
 

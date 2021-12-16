@@ -1,10 +1,3 @@
-"""
-Open-Domain Question Answering 을 수행하는 inference 코드 입니다.
-
-대부분의 로직은 train.py 와 비슷하나 retrieval, predict 부분이 추가되어 있습니다.
-"""
-
-
 import logging
 import sys
 from typing import Callable, List, Dict, NoReturn, Tuple
@@ -163,18 +156,7 @@ def run_retrieval(
         #     print(df_dense["context"][idx])
         temp = df_sparse["context"][idx] + df_dense["context"][idx]
         df["context"][idx] = " ".join(temp)
-
-    # Dense Retrieval 결과 일부 출력하기        
-    # df = df_dense
-    # for idx in range(len(df_dense)):
-    #     if idx % 1000 == 0:
-    #         print(df["context_id"][idx])
-    #         print('-----------')
-    #         print(df["question"][idx])
-    #         print('-----------')
-    #         print(df["context"][idx])
-    #     df["context"][idx] = " ".join(df_dense["context"][idx])
-
+        
 
     # test data 에 대해선 정답이 없으므로 id question context 로만 데이터셋이 구성됩니다.
     if training_args.do_predict:
