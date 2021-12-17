@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "test-fastapi"
+version = "0.1.0"
+description = "FastAPI Test"
+authors = ["ParkByeolYi <7047star@naver.com>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = ">=3.6.2,<3.10"
+fastapi = "^0.70.0"
+
+[tool.poetry.dev-dependencies]
+pytest = "^6.2.5"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
