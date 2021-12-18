@@ -16,5 +16,12 @@
 > building tiny dataset
 #### prototyping
 > reader model demo
+#### backend
+> wiki_news db
+#### frontend
+> homepage_news title list
+> ai scrap news title list
+> my scrap news title list
+
 ### 추창한
 
