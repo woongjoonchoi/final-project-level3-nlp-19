@@ -1,8 +1,8 @@
 # final-project-level3-nlp-19
 ## WorkTool
-> Notion
-> Microsoft Todo
-> Google drive
+> Notion  
+> Microsoft Todo  
+> Google drive  
 
 ## Responsibilities
 
