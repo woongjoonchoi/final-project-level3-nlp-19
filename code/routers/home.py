@@ -10,7 +10,7 @@ templates = Jinja2Templates(directory='./templates')
 
 
 
-# 뉴스 홈페이지 화면이동
+# 뉴스 홈페이지 화면이동(웅준)
 @router.get("/")
 def get_home_page():
     # Homeboard Service 객체로 뉴스 목록 가져오기

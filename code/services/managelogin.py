@@ -8,3 +8,11 @@ class Checklogin():
 
     pass
 
+
+
+# 회원가입 하기
+class Signup():
+
+    # Signup Service 객체로 입력받은 회원정보를 db에 저장하기
+
+    pass
