@@ -2,6 +2,8 @@ from fastapi import FastAPI, APIRouter, Request, File, Form
 from fastapi.templating import Jinja2Templates
 import uvicorn
 
+from services.checklogin import Checklogin
+
 router = APIRouter(prefix="/login", tags=["login"])
 templates = Jinja2Templates(directory='./templates')
 
@@ -18,6 +20,9 @@ def get_login_page():
 @router.post("/")
 def login(username:str = Form(...), password:str = Form(...)):
     
+    # Checklogin Service 객체로 로그인 정보 확인하기
+
+
     # 로그인에 성공하면 홈페이지로 이동
 
     # 로그인에 실패하면 실패이유 반환하기
