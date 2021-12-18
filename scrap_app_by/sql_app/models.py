@@ -55,7 +55,6 @@
 #     owner_user = relationship("User", back_populates="scraps")
 #     newss = relationship("News", back_populates="owner_scrap")
 
-
 from sqlalchemy import Boolean, Column, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
 
@@ -72,10 +71,6 @@ class User(Base):
     hashed_password = Column(String)
     name = Column(String, index=True)
     alarm = Column(Boolean, default=False) # 일단 Boolean
-
-    # 각 페이지 생성으로 생각하시면 됩니다
-    news_scraps = relationship("NewsScrap", back_populates="owner_user2")
-    ai_news_scraps = relationship("AINewsScrap", back_populates="owner_user3")
 
 
 # Admin : 관리자아이디(PK) 비밀번호
@@ -99,49 +94,49 @@ class UserNews(Base):
     admin_id = Column(String, ForeignKey("admins.admin_id"))
 
 
-# NewsScrap : 유저아이디(FK) 유저가보는뉴스아이디(FK)
+# NewsScrap : news_scrap_id(PK) 유저아이디(FK) 유저가보는뉴스아이디(FK)
 # 유저가 뉴스 스크랩한 뉴스
 class NewsScrap(Base):
 
     __tablename__ = "news_scraps"
 
+    news_scrap_id = Column(Integer, primary_key=True, index=True)
     user_id = Column(String, ForeignKey("users.user_id"))
     user_news_id = Column(Integer, ForeignKey("user_newss.user_news_id"))
 
-    owner_user2 = relationship("User", back_populates="news_scraps")
 
-
-# UserInput : 유저아이디(FK) 유저가보는뉴스아이디(FK) 유저질문문장
+# UserInput : user_input_id(PK) 유저아이디(FK) 유저가보는뉴스아이디(FK) 유저질문문장
 # 유저가 입력한 question 관리
 class UserInput(Base):
 
     __tablename__ = "user_input"
 
+    user_input_id = Column(Integer, primary_key=True, index=True)
     user_id = Column(String, ForeignKey("users.user_id"))
     user_news_id = Column(Integer, ForeignKey("user_newss.user_news_id"))
     user_input = Column(String, index=True)
 
 
-# AINewsScrap : 유저아이디(FK) AI가보는뉴스아이디(FK)
-# AI가 스크랩한 뉴스
-class AINewsScrap(Base):
+# DataFlow 상에서 삭제됨
+# # AINewsScrap : ai_news_scraps_id(PK) 유저아이디(FK) AI가보는뉴스아이디(FK)
+# # AI가 스크랩한 뉴스
+# class AINewsScrap(Base):
 
-    __tablename__ = "ai_news_scraps"
+#     __tablename__ = "ai_news_scraps"
 
-    user_id = Column(String, ForeignKey("users.user_id"))
-    ai_news_id = Column(Integer, ForeignKey("user_newss.user_news_id"))
+#     ai_news_scraps_id = Column(Integer, primary_key=True, index=True)
+#     user_id = Column(String, ForeignKey("users.user_id"))
+#     ai_news_id = Column(Integer, ForeignKey("user_newss.user_news_id"))
 
-    owner_user3 = relationship("User", back_populates="ai_news_scraps")
 
-
-# AIInput : 유저아이디(FK) AI가보는뉴스아이디(FK) AI답변문장
+# AIInput : ai_input_id(PK) 유저아이디(FK) AI가보는뉴스아이디(FK) AI답변문장
 # AI가 내놓은 답변
 class AIInput(Base):
 
     __tablename__ = "ai_inputs"
 
+    ai_input_id = Column(Integer, primary_key=True, index=True)
     user_id = Column(String, ForeignKey("users.user_id"))
     ai_news_id = Column(Integer, ForeignKey("user_newss.user_news_id"))
     ai_input = Column(String, index=True)
-
     
