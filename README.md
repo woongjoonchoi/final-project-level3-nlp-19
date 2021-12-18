@@ -23,8 +23,12 @@
 > building tiny dataset 
 #### prototyping
 > reader model demo
-#### backend
+#### database
 > wiki_news db
+#### backend
+> homepage_news title list  with wiki_news_db
+> ai scrap news title list  with ai_scrap_db
+> my scrap news title list  with user_scrap_db
 #### frontend
 > homepage_news title list  
 > ai scrap news title list  
