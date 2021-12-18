@@ -9,9 +9,9 @@
 
 ### 최웅준
 #### modeling
-> test with tiny dataset
-> generation model error analysis
-> extraction model overfitted to train set  
+> test with tiny dataset  
+> generation model error analysis  
+> extraction model overfitted to train set   
 #### ml_pipeline code
 > extraction_pre_process  
 > generation_pre_process  
