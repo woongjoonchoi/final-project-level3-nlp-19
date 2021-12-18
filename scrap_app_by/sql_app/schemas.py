@@ -83,25 +83,6 @@ from typing import List, Optional
 from pydantic import BaseModel
 
 
-# User : 유저아이디(PK) 비밀번호 이름 알람설정
-class UserBase(BaseModel):
-    user_id: str
-
-
-class UserCreate(UserBase):
-    password: str
-
-
-class User(UserBase):
-    name: Optional[str]
-    alarm: Optional[bool]
-    news_scraps: List[NewsScrap] = [] # 뉴스 스크랩 페이지에서 볼 것이기 때문에
-    ai_news_scraps: List[AINewsScrap] = [] # 뉴스 스크랩 페이지에서 볼 것이기 때문에
-
-    class Config:
-        orm_mode = True
-
-
 # Admin : 관리자아이디(PK) 비밀번호
 class AdminBase(BaseModel):
     admin_id: str
@@ -140,8 +121,7 @@ class UserNews(UserNewsBase):
 # NewsScrap : 유저아이디(FK) 유저가보는뉴스아이디(FK)
 # 유저가 뉴스 스크랩한 뉴스
 class NewsScrapBase(BaseModel):
-    user_id: str
-    user_news_id: int
+    pass
 
 
 class NewsScrapCreate(NewsScrapBase):
@@ -206,6 +186,25 @@ class AIInputCreate(AIInputBase):
 
 class AIInput(AIInputBase):
     pass
+
+    class Config:
+        orm_mode = True
+
+
+# User : 유저아이디(PK) 비밀번호 이름 알람설정
+class UserBase(BaseModel):
+    user_id: str
+
+
+class UserCreate(UserBase):
+    password: str
+
+
+class User(UserBase):
+    name: Optional[str]
+    alarm: Optional[bool]
+    news_scraps: List[NewsScrap] = [] # 유저 스크랩 페이지에서 볼 것이기 때문에
+    ai_news_scraps: List[AINewsScrap] = [] # AI 스크랩 페이지에서 볼 것이기 때문에
 
     class Config:
         orm_mode = True
