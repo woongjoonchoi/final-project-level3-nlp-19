@@ -10,3 +10,9 @@ __pycache__/
 models/
 outputs/
 runs/
+__pycache__/
+models/
+outputs/
+runs/
+serving/schema/sql_app.db
+sql_app.db

@@ -11,6 +11,8 @@
 ### 이준수
 
 ### 최웅준
+#### Project Management
+> package directory management
 #### modeling
 > test with tiny dataset  
 > generation model error analysis  
