@@ -1,51 +1,80 @@
 import torch
-from sklearn.metrics.pairwise import cosine_similarity
+from typing import Tuple
+import sys
+import os
+from typing import Callable, List, Dict, NoReturn, Tuple
+import pandas as pd
+import json
+from datasets import load_dataset
 import numpy as np
-from transformers import AutoModel, AutoTokenizer
+import re
 
-from app.utils import load_data
+from .configure import configure_model
+from transformers import (
+    DataCollatorWithPadding,
+    HfArgumentParser,
+    TrainingArguments,
+    set_seed,
+)
 
+# from .utils_qa import postprocess_qa_predictions, check_no_error
+# from .trainer_qa import QuestionAnsweringTrainer
+# from .sparse_retrieval import SparseRetrieval
+# from .postprocessing import post_processing_function
+from .run_mrc import run_combine_mrc
+from .arguments import ModelArguments, DataTrainingArguments
+from .run_retrieval import run_retrieval
 
-def get_cls_token(model, tokenizer, sentence):
-    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    print(device)
-    model.to(device)
+parser = HfArgumentParser(
+    (ModelArguments, DataTrainingArguments, TrainingArguments)
+)
+model_args, data_args, training_args = parser.parse_args_into_dataclasses()
 
-    model.eval()
-    tokenized_sent = tokenizer(
-            sentence,
-            return_tensors="pt",
-            truncation=True,
-            add_special_tokens=True,
-            max_length=128
-    ).to(device)
-    with torch.no_grad():
-        outputs = model(
-            input_ids=tokenized_sent['input_ids'],
-            attention_mask=tokenized_sent['attention_mask'],
-            token_type_ids=tokenized_sent['token_type_ids']
-        )
-
-    logits = outputs.last_hidden_state[:, 0, :].detach().cpu().numpy()
-
-    return logits
+set_seed(training_args.seed)
 
 
-def get_prediction(sentence):
-    questions, answers = load_data()
-    
-    model = AutoModel.from_pretrained('klue/bert-base')
-    tokenizer = AutoTokenizer.from_pretrained('klue/bert-base')
-    
-    query_cls_hidden = get_cls_token(model, tokenizer, sentence)
-    dataset_cls_hidden = []
+def load_model():
+    model, tokenizer = configure_model(model_args, training_args, data_args)
 
-    for q in questions:
-        q_cls = get_cls_token(model, tokenizer, q)
-        dataset_cls_hidden.append(q_cls)
-    dataset_cls_hidden = np.array(dataset_cls_hidden).squeeze(axis=1)
+    data_collator = DataCollatorWithPadding(
+        tokenizer, pad_to_multiple_of=8 if training_args.fp16 else None
+    )
 
-    cos_sim = cosine_similarity(query_cls_hidden, dataset_cls_hidden)
-    top_question = np.argmax(cos_sim)
+    return model, tokenizer
 
-    return sentence, answers[top_question]
+
+def get_prediction(model, tokenizer, sentence):
+    # 입력받은 sentence 정보를 datasets로 변환하기
+    # dictionary -> json save -> load json to dataset
+    sample_test = {"data": [
+		{
+			"id": "1",
+			"question": sentence
+		}]}
+
+    print(sample_test)
+    with open(os.path.join(data_args.dataset_name, 'sample_test.json'), "w", encoding='utf-8') as json_file:
+        json.dump(sample_test, json_file, indent=4, sort_keys=True)
+
+    datasets = load_dataset('json', data_files={'validation':os.path.join(data_args.dataset_name, 'sample_test.json')}, field='data')
+
+    # Retrieval를 실행하여 관련 wiki news 가져오기
+    datasets, context_list = run_retrieval(
+            tokenizer,
+            datasets,
+            training_args,
+            data_args,
+    )
+
+    predictions = run_combine_mrc(data_args, training_args, model_args, datasets, tokenizer, model)
+
+    print(predictions)
+    print(predictions[0]['prediction_text'])
+
+    for c in context_list[0]:
+        if re.search(predictions[0]['prediction_text'], c):
+            context = c
+
+    print(f"--------End Predict-----------")
+
+    return context # predictions

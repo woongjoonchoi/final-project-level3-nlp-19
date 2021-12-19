@@ -4,5 +4,5 @@ from uuid import UUID
 
 class Question(BaseModel):
 
-    id: UUID
+    id: str
     text: str

@@ -1,43 +1,28 @@
+import os
+
 from fastapi import FastAPI, Form, Request, Depends
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 
-from . import tables, schemas
-from .database import engine, SessionLocal
-
-import random
+from . import tables
+from .database import engine, get_db
+from .routers import article
 
 app = FastAPI()
 templates = Jinja2Templates(directory='./app/script')
 
 tables.Base.metadata.create_all(engine)
 
-@app.get('/')
-def login_page(request: Request):
-    return templates.TemplateResponse('login_form.html', context={'request': request})
+path = './app/routers/'
+file_list = os.listdir(path)
+file_list_py = [file.replace('.py', '') for file in file_list if file.endswith('.py')]
+file_list_py.remove('__init__')
 
-@app.post('/main')
-def main_page(request: Request, id: str = Form(...)):
+# router 리스트 router로 추가하기
+for name in file_list_py:
+    app.include_router(locals()[name].router)
+
+@app.get('/main') #/main
+def main_page(request: Request):
     return templates.TemplateResponse('main_form.html', context={'request': request})
 
-@app.get('/article')
-def get_text_form(request: Request):
-    return templates.TemplateResponse('article_form.html', context={'request': request})
-
-def get_db():
-    db = SessionLocal()
-
-    try:
-        yield db
-    except:
-        db.close()
-
-@app.post('/question')
-def question_to_db(text: str = Form(...), db: Session = Depends(get_db)):
-    new_question = tables.Question(id=random.randint(0, 1000000), text=text)
-
-    db.add(new_question)
-    db.commit()
-    db.refresh(new_question)
-
-    return new_question
