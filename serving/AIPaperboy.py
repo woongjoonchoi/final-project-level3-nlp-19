@@ -1,7 +1,7 @@
 import os
 
 from fastapi import Depends, FastAPI, Form, Request, File
-
+from fastapi.staticfiles import StaticFiles
 from fastapi.responses import RedirectResponse
 import uvicorn
 from fastapi.templating import Jinja2Templates
@@ -14,7 +14,7 @@ from .routers import (news, aiscrap, upload,  ainews, login, home, scrap, scrapn
     
 app = FastAPI()
 templates = Jinja2Templates(directory='./templates')
-
+app.mount("/templates/css/", StaticFiles(directory="serving/templates/css"), name="home")
 # 뉴스 홈페이지로 연결하기
 @app.get("/")
 def get_home_page():

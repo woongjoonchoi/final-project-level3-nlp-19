@@ -6,7 +6,7 @@ from ..services.aiscrappedboard import Aiscrappedboard
 
 
 router = APIRouter(prefix="/aiscrap", tags=["AIScap"])
-templates = Jinja2Templates(directory='./templates')
+templates = Jinja2Templates(directory='serving/templates')
 
 
 # AI scrap 페이지로 이동(웅준)

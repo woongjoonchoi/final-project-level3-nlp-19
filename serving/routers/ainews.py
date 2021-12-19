@@ -7,7 +7,7 @@ from ..services.manageuserinput import Manageuserinput
 from ..services.managenewsscrap import Managenewsscrap
 
 router = APIRouter(prefix="/ainews", tags=["AINews"])
-templates = Jinja2Templates(directory='./templates')
+templates = Jinja2Templates(directory='serving/templates')
 
 
 # AI 스크랩 뉴스기사 화면이동(창한)
