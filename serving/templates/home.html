@@ -48,10 +48,8 @@
                             <div class="small text-muted">{{res_news[0]['_source']['date']}}</div>
                             <h2 class="card-title">{{res_news[0]['_source']['title']}}</h2>
                             <p class="card-text">{{res_news[0]['_source']['context'][:300]}}</p>
-                            <form name="myForm0" action="/test/" method="POST">
+                            <form name="myForm0" action="/news/" method="POST">
                             <input type="hidden" name="context" value= "{{ res_news[0]['_source']['context'] }}"/>
-                            <input type="hidden" name="some_key2" value="some value2" />
-                            
                             <input type = "submit" value = "Readme" >
                             </form>
                         </div>
@@ -66,9 +64,8 @@
                                     <div class="small text-muted">{{res_news[1]['_source']['date']}}</div>
                                     <h2 class="card-title h4">{{res_news[1]['_source']['title']}}</h2>
                                     <p class="card-text">{{res_news[1]['_source']['context'][:150]}}</p>
-                                    <form name="myForm1" action="/test/" method="POST">
+                                    <form name="myForm1" action="/news/" method="POST">
                                     <input type="hidden" name="context" value= "{{ res_news[1]['_source']['context'] }}" />
-                                    <input type="hidden" name="some_key2" value="some value2" />
                                 
                                     <input type = "submit" value = "Readme" >
                                     </form>
@@ -81,10 +78,8 @@
                                     <div class="small text-muted">{{res_news[2]['_source']['date']}}</div>
                                     <h2 class="card-title h4">{{res_news[2]['_source']['title']}}</h2>
                                     <p class="card-text">{{res_news[2]['_source']['context'][:150]}}</p>
-                                    <form name="myForm2" action="/test/" method="POST">
+                                    <form name="myForm2" action="/news/" method="POST">
                                     <input type="hidden" name="context" value= "{{ res_news[2]['_source']['context'] }}" />
-                                    <input type="hidden" name="some_key2" value="some value2" />
-                                    
                                     <input type = "submit" value = "Readme" >
                                     </form>
                                 </div>
@@ -98,9 +93,8 @@
                                     <div class="small text-muted">{{res_news[3]['_source']['date']}}</div>
                                     <h2 class="card-title h4">{{res_news[3]['_source']['title']}}</h2>
                                     <p class="card-text">{{res_news[3]['_source']['context'][:150]}}</p>
-                                    <form name="myForm3" action="/test/" method="POST">
+                                    <form name="myForm3" action="/news/" method="POST">
                                     <input type="hidden" name="context" value= "{{ res_news[3]['_source']['context'] }}" />
-                                    <input type="hidden" name="some_key2" value="some value2" />
                                     <input type = "submit" value = "Readme" >
                                     </form>
                                     
@@ -113,9 +107,8 @@
                                     <div class="small text-muted">{{res_news[4]['_source']['date']}}</div>
                                     <h2 class="card-title h4">{{res_news[4]['_source']['title']}}</h2>
                                     <p class="card-text">{{res_news[4]['_source']['context'][:150]}}</p>
-                                    <form name="myForm4" action="/test/" method="POST">
+                                    <form name="myForm4" action="/news/" method="POST">
                                     <input type="hidden" name="context" value= "{{ res_news[4]['_source']['context'] }}" />
-                                    <input type="hidden" name="some_key2" value="some value2" />
                                     <input type = "submit" value = "Readme" >
                                     </form>
                                     
