@@ -7,7 +7,7 @@ from ..services.manageuserinput import Manageuserinput
 from ..services.managenewsscrap import Managenewsscrap
 
 router = APIRouter(prefix="/scrap", tags=["Scrap"])
-templates = Jinja2Templates(directory='./templates')
+templates = Jinja2Templates(directory='serving/templates')
 
 
 # 사용자 scrap 페이지로 이동(웅준)

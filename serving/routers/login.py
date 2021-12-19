@@ -5,7 +5,7 @@ import uvicorn
 from ..services.managelogin import Checklogin, Signup
 
 router = APIRouter(prefix="/login", tags=["login"])
-templates = Jinja2Templates(directory='./templates')
+templates = Jinja2Templates(directory='serving/templates')
 
 
 

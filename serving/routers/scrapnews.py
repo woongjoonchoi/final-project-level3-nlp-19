@@ -9,8 +9,8 @@ from ..services.managenewsscrap import Managenewsscrap
 
 from pydantic import BaseModel
 
-router = APIRouter(prefix="/news", tags=["News"])
-templates = Jinja2Templates(directory='./templates')
+router = APIRouter(prefix="/scrapnews", tags=["scrapNews"])
+templates = Jinja2Templates(directory='serving/templates')
 
 
 # 스크랩된 뉴스 기사 불러오기(창한)

@@ -7,7 +7,7 @@ from starlette.responses import HTMLResponse
 from pydantic import BaseModel
 
 router = APIRouter(prefix="/upload", tags=["Upload"])
-templates = Jinja2Templates(directory='./templates')
+templates = Jinja2Templates(directory='serving/templates')
 
 
 # 업로드 페이지로 이동
