@@ -63,8 +63,7 @@ class NewsScrap(NewsScrapBase):
 # 유저가 입력한 question 관리
 class UserInputBase(BaseModel):
     user_id: str
-    user_news_id: int
-    user_input: str
+    user_news_id: str
 
 
 class UserInputCreate(UserInputBase):

@@ -46,7 +46,7 @@ class NewsScrap(Base):
 
     news_scrap_id = Column(Integer, primary_key=True, autoincrement=True, index=True)
     user_id = Column(String, ForeignKey("users.user_id"))
-    user_news_id = Column(Integer, ForeignKey("user_newss.user_news_id"))
+    user_news_id = Column(String, ForeignKey("user_newss.user_news_id"))
 
 
 # UserInput : user_input_id(PK) 유저아이디(FK) 유저가보는뉴스아이디(FK) 유저질문문장
@@ -57,7 +57,7 @@ class UserInput(Base):
 
     user_input_id = Column(Integer, primary_key=True, autoincrement=True, index=True)
     user_id = Column(String, ForeignKey("users.user_id"))
-    user_news_id = Column(Integer, ForeignKey("user_newss.user_news_id"))
+    user_news_id = Column(String, ForeignKey("user_newss.user_news_id"))
     user_input = Column(String, index=True)
 
 
@@ -81,5 +81,5 @@ class AIInput(Base):
 
     ai_input_id = Column(Integer, primary_key=True, autoincrement=True, index=True)
     user_id = Column(String, ForeignKey("users.user_id"))
-    ai_news_id = Column(Integer, ForeignKey("user_newss.user_news_id"))
+    ai_news_id = Column(String, ForeignKey("user_newss.user_news_id"))
     ai_input = Column(String, index=True)
