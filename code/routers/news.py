@@ -16,7 +16,6 @@ templates = Jinja2Templates(directory='./templates')
 
 
 
-
 # 뉴스 기사 불러오기(창한)
 @router.get("/{news_id}",  description="사용자가 호출한 뉴스 본문을 볼 수 있도록 합니다.")
 def get_news_page(news_id: str, user_id: str, db: Session = Depends(get_db)):
@@ -37,7 +36,7 @@ def question_to_db(text: str = Form(...), user_id: str = Form(...), db: Session 
 
 
 # 사용자가 뉴스 기사에 입력한 정보, 스크랩 정보를 DB에서 삭제하기(준수, 별이)
-@router.delete("/")
+@router.delete("/{news_id}")
 def delete_news_input():
     
     # Manageuserinput Service 객체로 사용자 입력 정보를 DB에서 삭제하기(준수)
