@@ -26,10 +26,14 @@ file_list_py.remove('__init__')
 
 for name in file_list_py:
     app.include_router(locals()[name].router)
+
+
 @app.post('/test/')
 def test_page(context : str = Form(...) , some_key2 : str = Form(...)):
 
     return {"context" : context  , "some_key2" : some_key2}
+
+
 ## if 안에서 지역변수 취급 받는듯
 if __name__=='__main__' :
     print(dir())
