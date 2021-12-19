@@ -20,13 +20,13 @@ def get_db():
     finally : 
         db.close()
 
-# @router.post('/{user_id}')
-# def create(request : schemas.AIInput,  db : Session = Depends(get_db)):
-#     new_blog = models.AIInput(user_id = request.user_id , ai_news_id = request.ai_news_id , ai_input_id = request.ai_input_id, ai_input= request.ai_input)
-#     db.add(new_blog)
-#     db.commit()
-#     db.refresh(new_blog)
-#     return new_blog
+@router.post('/{user_id}')
+def create(request : schemas.AIInput,  db : Session = Depends(get_db)):
+    new_blog = models.AIInput(user_id = request.user_id , ai_news_id = request.ai_news_id , ai_input_id = request.ai_input_id, ai_input= request.ai_input)
+    db.add(new_blog)
+    db.commit()
+    db.refresh(new_blog)
+    return new_blog
 @router.get("/")
 def get_aiscrap_page(request : Request ,  db : Session = Depends(get_db)):
     owner_user_id = "wjc"

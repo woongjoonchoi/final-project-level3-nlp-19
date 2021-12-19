@@ -236,11 +236,12 @@
 	<div class="row">
 		<div class="col-lg-12">
 			<div class="wrapper wrapper-content animated fadeInRight">
-
+				<input type="string" name="id" value =  "{{ ai_news[0].user_id}}"/>
 				<div class="ibox-content forum-container">
                     <script type="text/javascript">
-                        function aaa(){
-                            for(var i = 0 ; i< 15 ;i ++){
+                        function aaa(ai_news){
+							document.write(ai_news)
+                            for(var i = 0 ; i< {{news}}.length ;i ++){
                             document.write(	`<div class="forum-item"> 
                                     <div class="row">
                                         <div class="col-md-7">
@@ -282,44 +283,6 @@
                         }
                         aaa();
                     </script>
-					<div class="forum-item">
-						<div class="row">
-							<div class="col-md-7">
-								<div class="forum-icon">
-									<i class="fa fa-bookmark"></i>
-								</div>
-								<a href="forum_post.html" class="forum-item-title">Projet 1</a>
-								<div class="forum-sub-title">Ipsum generators on the Internet tend to repeat predefined chunks as necessary, making this the first true generator on the Internet.</div>
-							</div>
-							<div class="col-md-2 forum-info">
-								<div>
-									<small>Créé le </small>
-								</div>
-                            <span class="views-number">
-                                12/01/2017
-                            </span>
-
-							</div>
-							<div class="col-md-2 forum-info">
-								<div>
-									<small>Stats</small>
-								</div>
-                            <span class="views-number">
-                                90
-                            </span>
-
-							</div>
-							<div class="col-md-1 forum-info">
-                            <span class="views-number">
-                              <span class="fa-stack">
-										<i class="fa fa-square fa-stack-2x"></i>
-										<i class="fa fa-pencil fa-stack-1x fa-inverse"></i>
-									</span>
-                            </span>
-
-							</div>
-						</div>
-					</div>
 					<div class="forum-item">
 						<div class="row">
 							<div class="col-md-7">
