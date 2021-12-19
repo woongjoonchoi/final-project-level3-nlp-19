@@ -1,8 +1,13 @@
-from fastapi import FastAPI, APIRouter, Request, File, Form
+from fastapi import FastAPI, APIRouter, Request, File, Form, Depends, HTTPException
 from fastapi.templating import Jinja2Templates
 import uvicorn
 
 from ..services.managelogin import Checklogin, Signup
+
+from routers.home import get_db
+from ..schema import schemas
+from sqlalchemy.orm import Session
+
 
 router = APIRouter(prefix="/login", tags=["login"])
 templates = Jinja2Templates(directory='serving/templates')
@@ -11,7 +16,7 @@ templates = Jinja2Templates(directory='serving/templates')
 
 # 로그인 페이지로 이동
 @router.get("/", description="로그인하는 html 부름")
-def get_login_page((request: Request):
+def get_login_page(request: Request):
     return templates.TemplateResponse('login_form.html', context={'request': request})
 
 
@@ -59,14 +64,14 @@ def create_user(user_id: str = Form(...), password: str = Form(...), name: str =
 
 # 회원탈퇴 페이지로 이동
 # delete_user 해결 못 함
-@app.get("/delete_user/", description="탈퇴하는 html 부름")
+@router.get("/delete_user/", description="탈퇴하는 html 부름")
 def get_delete_user_form(request: Request, db: Session = Depends(get_db)):
     return templates.TemplateResponse('delete_user_form.html', context={'request': request})
 
 
 # 회원탈퇴 하기
 # 추후 users/{user_id}/delete 이런 식으로 넣을 예정
-@app.post("/delete_user/", description="유저 로그인한 경우 회원아이디는 그대로 있고 password 입력해서 탈퇴")
+@router.post("/delete_user/", description="유저 로그인한 경우 회원아이디는 그대로 있고 password 입력해서 탈퇴")
 def delete_user(user_id: str = Form(...), password: str = Form(...), db: Session = Depends(get_db)):
     db_user = Checklogin.get_user(db, user_id=user_id)
     if db_user is None:

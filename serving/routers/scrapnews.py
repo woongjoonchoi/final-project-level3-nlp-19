@@ -1,23 +1,27 @@
 from typing import Optional
-from fastapi import FastAPI, APIRouter
+from fastapi import FastAPI, APIRouter,  Depends
 from fastapi.templating import Jinja2Templates
 import uvicorn
 
-from ..services.scrappednewscontent import Scrappednewscontent
+from ..services.newscontent import Newscontent
 from ..services.manageuserinput import Manageuserinput
 from ..services.managenewsscrap import Managenewsscrap
-
+from schema.schemas import UserNewsBase, NewsScrap, NewsScrapCreate
+from routers.home import get_db
+from ..schema import schemas
+from sqlalchemy.orm import Session
 from pydantic import BaseModel
+
 
 router = APIRouter(prefix="/scrapnews", tags=["scrapNews"])
 templates = Jinja2Templates(directory='serving/templates')
 
 
 # 스크랩된 뉴스 기사 불러오기(창한)
-@router.get("/{news_id}")
-def get_news_page():
+@router.get("/{news_id}", response_model=UserNewsBase, description="사용자가 호출한 뉴스 본문을 볼 수 있도록 합니다.")
+def get_news_page(news_id: str, user_id: str, db: Session = Depends(get_db)):
     # Scrappednewscontent Serivce 객체로 스크랩된 news 기사 본문 가져오기
-    pass
+    return Newscontent.get_news(db=db, news_id=news_id, user_id = user_id)
 
 """(별이)
 @app.get("user/{user_id}/news_scrap/", description="유저가 스크랩하거나 해재할 뉴스 페이지 html")
@@ -38,7 +42,7 @@ def post_news_input(news_scrap: schemas.NewsScrapCreate, db: Session = Depends(g
 
 # 사용자가 스크랩된 뉴스 기사에 입력한 정보, 스크랩 정보를 DB에서 삭제하기(준수, 별이)
 @router.delete("/")
-def delete_news_input(news_scrap: schemas.NewsScrapDelete, db: Session = Depends(get_db):
+def delete_news_input(news_scrap: schemas.NewsScrapDelete, db: Session = Depends(get_db)):
     # Manageuserinput Service 객체로 사용자 입력 정보를 DB에서 삭제하기(준수)
 
     # 해당 기사에서 Userinput 정보가 없으면 Managenewsscrap Service 객체로 사용자 스크랩 정보를 DB에서 삭제하기(별이)

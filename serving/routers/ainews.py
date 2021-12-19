@@ -1,4 +1,4 @@
-from fastapi import FastAPI, APIRouter
+from fastapi import FastAPI, APIRouter, Depends
 from fastapi.templating import Jinja2Templates
 import uvicorn
 
@@ -6,15 +6,18 @@ from ..services.aiscrappednewscontent import Aiscrappednewscontent
 from ..services.manageuserinput import Manageuserinput
 from ..services.managenewsscrap import Managenewsscrap
 
+from routers.home import get_db
+from ..schema import schemas
+from sqlalchemy.orm import Session
+
 router = APIRouter(prefix="/ainews", tags=["AINews"])
 templates = Jinja2Templates(directory='serving/templates')
 
 
-# AI 스크랩 뉴스기사 화면이동(창한)
-@router.get("/")
-def get_ainews_page():
-    # Aiscrappednewscontent Service 객체로 AI가 스크랩한 뉴스 기사 본문 가져오기
-    pass
+@router.get("/{news_id}", description="사용자가 호출한 뉴스 본문을 볼 수 있도록 합니다.")
+def get_ainews_page(news_id: str, user_id: str, db: Session = Depends(get_db)):
+    # Aiscrappednewscontent Serivce 객체로 AI가 스크랩한 뉴스 기사 본문 가져오기
+    return Aiscrappednewscontent.get_news(db=db, news_id=news_id, user_id = user_id)
 
 """
 @app.get("user/{user_id}/news_scrap/", description="유저가 스크랩하거나 해재할 뉴스 페이지 html")
@@ -57,10 +60,6 @@ def post_scrap_input(news_scrap: schemas.NewsScrapCreate, db: Session = Depends(
 def delete_scrap_input(news_scrap: schemas.NewsScrapDelete, db: Session = Depends(get_db)):
     # Managenewsscrap Service 객체로 사용자 스크랩 정보를 DB에서 삭제하기
     return Managenewsscrap.delete_news_scrap(db=db, news_scrap=news_scrap)
-
-
-
-
 
 
 
