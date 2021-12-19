@@ -6,7 +6,7 @@ def configure_model(model_args , training_args ,data_args):
         config = AutoConfig.from_pretrained(
             model_args.config_name
             if model_args.config_name is not None
-            else model_args.model_name_or_path,from_pt=True
+            else model_args.model_name_or_path,
         )
         tokenizer = AutoTokenizer.from_pretrained(
             model_args.tokenizer_name

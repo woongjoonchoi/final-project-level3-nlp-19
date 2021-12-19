@@ -147,7 +147,6 @@ def run_combine_mrc(
 
     #### eval dataset & eval example - predictions.json 생성됨
     if training_args.do_predict:
-        print(eval_dataset.column_names)
         predictions = trainer.predict(
             test_dataset=eval_dataset, test_examples=datasets["validation"]
         )
@@ -155,7 +154,7 @@ def run_combine_mrc(
         print(
             "No metric can be presented because there is no correct answer given. Job done!"
         )
-    return predictions
+
 
 def run_generation_mrc(
     data_args: DataTrainingArguments,

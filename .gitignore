@@ -3,7 +3,17 @@ ipynb_checkpoints/
 wandb/
 my-model/
 wjcmodel/
+<<<<<<< HEAD
 __pycache__/
 models/
 outputs/
 runs/
+=======
+ljs_data/
+outputs/
+code/outputs/
+__pycache__/
+models/
+outputs/
+runs/
+>>>>>>> main

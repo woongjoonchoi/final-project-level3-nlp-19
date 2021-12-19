@@ -99,9 +99,11 @@ class DataTrainingArguments:
             "help": "Define how many top-k passages to retrieve based on similarity."
         },
     )
-
+    use_faiss: bool = field(
+        default=False, metadata={"help": "Whether to build with faiss"}
+    )
     sparse_name: Optional[str] = field(
-        default='elastic',
+        default='None',
         metadata={
             "help": "Sparse module option. (None, elastic)"
         },
