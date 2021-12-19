@@ -10,6 +10,6 @@ class Aiscrappednewscontent():
     def get_news(db: Session, news_id: str, user_id: str):
         news_content = es.get(index = "news_wiki_index", id=news_id)
         ai_input = db.query(AIInput).filter(AIInput.ai_news_id == news_id, user_id == user_id).first()
-        news_scrap = db.query(AIInput).filter(NewsScrap.user_news_id == news_id, NewsScrap.user_id == user_id).first()
+        news_scrap = db.query(NewsScrap).filter(NewsScrap.user_news_id == news_id, NewsScrap.user_id == user_id).first()
         user_input = db.query(UserInput).filter(UserInput.user_id == news_id, UserInput.user_id == user_id).first()
-        return news_content, ai_input, news_scrap, user_input
+        return news_content["_source"], ai_input, news_scrap, user_input
