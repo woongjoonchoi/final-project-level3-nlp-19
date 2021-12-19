@@ -11,8 +11,6 @@ from datasets import (
     Features,
     Dataset,
     DatasetDict,
-    load_dataset,
-    
 )
 
 from transformers import (
@@ -20,26 +18,9 @@ from transformers import (
     DataCollatorWithPadding,
     DataCollatorForSeq2Seq,
     TrainingArguments,
-    PrinterCallback,
-    TrainerCallback,
-    Trainer,
-    TrainerCallback,
-    default_data_collator
-    # PrinterCallback,
 )
 
-class PrinterCallback(TrainerCallback):
-    """
-    A bare :class:`~transformers.TrainerCallback` that just prints the logs.
-    """
 
-    def on_log(self, args, state, control, logs=None, **kwargs):
-
-        print(state.log_history)
-        _ = logs.pop("total_flos", None)
-        print(logs)
-        if state.is_local_process_zero:
-            print(logs)
 from utils_qa import postprocess_qa_predictions, check_no_error
 from trainer_qa import QuestionAnsweringTrainer
 from postprocessing import post_processing_function, compute_metrics
@@ -51,35 +32,6 @@ from arguments import (
 
 logger = logging.getLogger(__name__)
 
-import wandb
-
-# WANDB_PROJECT='final_mrc'
-WANDB_WATCH=all
-defaults = dict(
-    learning_rate = 1e-4,
-    # dropout=0.2,
-)
-
-
-wandb.init(config=defaults , tags =["roberta"])
-config = wandb.config
-# class MyCallback(TrainerCallback):
-#     "A callback that prints a message at the beginning of training"
-
-#     def on_evaulate(self, args, state, control, **kwargs):
-#         breakpoint()
-#         print("Starting training")
-class PrinterCallback(TrainerCallback):
-    """
-    A bare :class:`~transformers.TrainerCallback` that just prints the logs.
-    """
-
-    def on_log(self, args, state, control, logs=None, **kwargs):
-        print(logs)
-        print(state.log_history)
-        _ = logs.pop("total_flos", None)
-        if state.is_local_process_zero:
-            print(logs)
 # run_extraction_mrc, run_mrc 합침
 def run_combine_mrc(
     data_args: DataTrainingArguments,
@@ -100,27 +52,13 @@ def run_combine_mrc(
     last_checkpoint, max_seq_length = check_no_error(
         data_args, training_args, datasets, tokenizer
     )
-    
-    # training_args = TrainingArguments(
-    #     output_dir = output_dir,
-    #     do_train = do_train,
-    #     do_eval = do_eval,
-    #     learning_rate = config.learning_rate,
-    #     eval_steps = 200,
-    #     evaluation_strategy='steps',
-    #     per_device_train_batch_size = 16,
-    #     per_device_eval_batch_size = 16,
-    #     num_train_epochs = 4,
-    #     logging_steps= 100
-    # )
-    training_args.learning_rate = config.learning_rate
 
-    print(training_args)
-    breakpoint()
     if training_args.do_train:
         if "train" not in datasets:
             raise ValueError("--do_train requires a train dataset")
         train_dataset = datasets["train"]
+        
+        # prepare_train_features = preprocess_gen(tokenizer)
         # dataset에서 train feature를 생성합니다.
         prepare_train_features = preprocess_extract_train(tokenizer, data_args, column_names, max_seq_length)
         train_dataset = train_dataset.map(
@@ -134,6 +72,7 @@ def run_combine_mrc(
     # Validation preprocessing / 전처리를 진행합니다.
     if training_args.do_eval or training_args.do_predict:
         eval_dataset = datasets["validation"]
+
         prepare_valid_features = preprocess_extract_valid(tokenizer, data_args, column_names, max_seq_length)
         # Validation Feature 생성
         eval_dataset = eval_dataset.map(
@@ -144,37 +83,27 @@ def run_combine_mrc(
             load_from_cache_file=not data_args.overwrite_cache,
         )
 
-
     # Data collator
     # flag가 True이면 이미 max length로 padding된 상태입니다.
     # 그렇지 않다면 data collator에서 padding을 진행해야합니다.
     data_collator = DataCollatorWithPadding(
         tokenizer, pad_to_multiple_of=8 if training_args.fp16 else None
     )
-    # data_collator = default_data_collator
 
     print("init trainer...")
-    # print(training_args)
-    print(train_dataset)
-    print(eval_dataset)
-    
     # Trainer 초기화
-
-
     trainer = QuestionAnsweringTrainer( 
         model=model,
         args=training_args,
         train_dataset=train_dataset if training_args.do_train else None,
-        # train_dataset=eval_dataset,
         eval_dataset=eval_dataset if training_args.do_eval else None,
         eval_examples=datasets["validation"] if training_args.do_eval else None,
         tokenizer=tokenizer,
-        data_collator=default_data_collator,
+        data_collator=data_collator,
         post_process_function=post_processing_function,
         compute_metrics=compute_metrics,
     )
 
-    # trainer.add_callback(PrinterCallback)
     # Training
     if training_args.do_train:
         if last_checkpoint is not None:
@@ -218,6 +147,7 @@ def run_combine_mrc(
 
     #### eval dataset & eval example - predictions.json 생성됨
     if training_args.do_predict:
+        print(eval_dataset.column_names)
         predictions = trainer.predict(
             test_dataset=eval_dataset, test_examples=datasets["validation"]
         )
@@ -225,7 +155,7 @@ def run_combine_mrc(
         print(
             "No metric can be presented because there is no correct answer given. Job done!"
         )
-
+    return predictions
 
 def run_generation_mrc(
     data_args: DataTrainingArguments,
@@ -240,15 +170,12 @@ def run_generation_mrc(
     training_args = Seq2SeqTrainingArguments(
         predict_with_generate=True,
         output_dir = training_args.output_dir,
-        per_device_train_batch_size=16,
-        per_device_eval_batch_size=16,
         do_train = training_args.do_train,
         do_eval = training_args.do_eval,
-        eval_steps = 100,
+        eval_steps = 10,
         evaluation_strategy = 'steps',
-        num_train_epochs = 12
     )
-    # print(training_args)
+
     # dataset을 전처리합니다.
     # training과 evaluation에서 사용되는 전처리는 아주 조금 다른 형태를 가집니다.
     if training_args.do_train:
@@ -297,17 +224,16 @@ def run_generation_mrc(
     compute_metrics = gen_metrics(tokenizer,datasets["validation"])
     print(train_dataset)
 
-
     trainer = Seq2SeqTrainer(
             model=model,
             args=training_args,
-            train_dataset=eval_dataset,
+            train_dataset=train_dataset,
             eval_dataset=eval_dataset,
             tokenizer=tokenizer,
             data_collator=data_collator,
             compute_metrics=compute_metrics,   
         )
-    trainer.add_callback(PrinterCallback)
+ 
     if training_args.do_train:
         
         train_result = trainer.train()
