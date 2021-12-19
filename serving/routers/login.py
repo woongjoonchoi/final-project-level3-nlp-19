@@ -28,10 +28,10 @@ def get_login_page((request: Request):
 # 비밀번호 이슈 있음
 @router.post("/", description="회원가입할 때 이미 등록된 아이디인지 확인해서 있으면 400에러 없으면 해당 아이디 생성")
 def login(user_id: str = Form(...), password: str = Form(...), db: Session = Depends(get_db)):
-    db_user = crud.login_user(db, user_id=user_id, password=password)
+    db_user = Checklogin.login_user(db, user_id=user_id, password=password)
     if db_user is None:
         raise HTTPException(status_code=404, detail="해당 유저를 찾을 수 없습니다.")
-    return crud.login_user(db, user_id=user_id, password=password), {"정상적으로 로그인 되었습니다."}
+    return Checklogin.login_user(db, user_id=user_id, password=password), {"정상적으로 로그인 되었습니다."}
 
 
 
@@ -48,10 +48,10 @@ def get_signup_page(request: Request, db: Session = Depends(get_db)):
 @router.post("/signup", description="회원가입할 때 이미 등록된 아이디인지 확인해서 있으면 400에러 없으면 해당 아이디 생성")
 def create_user(user_id: str = Form(...), password: str = Form(...), name: str = Form(...), alarm: bool = Form(False), db: Session = Depends(get_db)):
     # Signup Service 객체로 입력받은 회원정보를 db에 저장하기
-    db_user = crud.get_user(db, user_id=user_id)
+    db_user = Checklogin.get_user(db, user_id=user_id)
     if db_user:
         raise HTTPException(status_code=400, detail="이미 등록된 아이디 입니다.")
-    return crud.create_user(db, user_id=user_id, password=password, name=name, alarm=alarm)
+    return Signup.create_user(db, user_id=user_id, password=password, name=name, alarm=alarm)
 
 
 
@@ -68,14 +68,14 @@ def get_delete_user_form(request: Request, db: Session = Depends(get_db)):
 # 추후 users/{user_id}/delete 이런 식으로 넣을 예정
 @app.post("/delete_user/", description="유저 로그인한 경우 회원아이디는 그대로 있고 password 입력해서 탈퇴")
 def delete_user(user_id: str = Form(...), password: str = Form(...), db: Session = Depends(get_db)):
-    db_user = crud.get_user(db, user_id=user_id)
+    db_user = Checklogin.get_user(db, user_id=user_id)
     if db_user is None:
         raise HTTPException(status_code=400, detail="해당 유저를 찾을 수 없습니다.")
 
-    db_user = crud.login_user(db, user_id=user_id, password=password)
+    db_user = Checklogin.login_user(db, user_id=user_id, password=password)
     if db_user is None:
         raise HTTPException(status_code=400, detail="비밀번호가 틀렸습니다.")
-    return crud.delete_user(db=db, user_id=user_id, password=password)
+    return Signup.delete_user(db=db, user_id=user_id, password=password)
 
 
 
