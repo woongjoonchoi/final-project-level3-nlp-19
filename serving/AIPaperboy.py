@@ -26,8 +26,7 @@ path = 'serving/routers/'
 
 file_list = os.listdir(path)
 file_list_py = [file.replace('.py', '') for file in file_list if file.endswith('.py')]
-print(file_list_py)
-breakpoint()
+
 file_list_py.remove('__init__')
 
 # router 리스트 router로 추가하기
@@ -37,6 +36,5 @@ for name in file_list_py:
 
 if __name__ == "__main__":
     
-    breakpoint()
-    print(dir())
-    uvicorn.run(app="AIPaperboy:app", host="0.0.0.0", port=8000, reload=True)
+
+    uvicorn.run(app="serving.AIPaperboy:app", host="0.0.0.0", port=8000, reload=True)
