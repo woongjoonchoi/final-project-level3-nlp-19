@@ -238,9 +238,11 @@
 			<div class="wrapper wrapper-content animated fadeInRight">
 				<input type="string" name="id" value =  "{{ ai_news[0].user_id}}"/>
 				<div class="ibox-content forum-container">
-                    <script type="text/javascript">
-                        function aaa(ai_news){
-							document.write(ai_news)
+					<script type="text/javascript">
+						var x = document.write(`{{ai_news[0]}}`);
+						document.write(x);
+                        function aaa(x){
+							document.write(x)
                             for(var i = 0 ; i< {{news}}.length ;i ++){
                             document.write(	`<div class="forum-item"> 
                                     <div class="row">
