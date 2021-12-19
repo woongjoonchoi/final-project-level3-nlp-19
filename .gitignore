@@ -4,16 +4,28 @@ wandb/
 my-model/
 wjcmodel/
 <<<<<<< HEAD
-__pycache__/
-models/
-outputs/
-runs/
+<<<<<<< HEAD
 =======
 ljs_data/
 outputs/
 code/outputs/
+>>>>>>> main
 __pycache__/
 models/
 outputs/
 runs/
+<<<<<<< HEAD
+=======
+ljs_data/
+outputs/
+code/outputs/
+=======
+>>>>>>> main
+__pycache__/
+models/
+outputs/
+runs/
+<<<<<<< HEAD
+>>>>>>> main
+=======
 >>>>>>> main
