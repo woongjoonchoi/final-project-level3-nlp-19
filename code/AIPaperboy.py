@@ -8,9 +8,17 @@ import uvicorn
 from routers import (
     news, aiscrap, upload, 
     ainews, login, home, scrap, scrapnews)
-    
+
+from schema.models import Base
+from schema.database import SessionLocal, engine
+
+
+
 app = FastAPI()
 templates = Jinja2Templates(directory='./templates')
+
+# Base.metadata.create_all(engine)
+
 
 # 뉴스 홈페이지로 연결하기
 @app.get("/")

@@ -1,8 +1,12 @@
-from fastapi import FastAPI, APIRouter, Request, File, Form
+from fastapi import FastAPI, APIRouter, Request, File, Form, Depends
 from fastapi.templating import Jinja2Templates
 import uvicorn
 
-from services.checklogin import Checklogin
+from services.managelogin import Checklogin, Signup
+
+from schema.schemas import UserNewsBase, NewsScrap, NewsScrapCreate
+from sqlalchemy.orm import Session
+from routers.home import get_db
 
 router = APIRouter(prefix="/login", tags=["login"])
 templates = Jinja2Templates(directory='./templates')
@@ -27,6 +31,19 @@ def login(username:str = Form(...), password:str = Form(...)):
 
     # 로그인에 실패하면 실패이유 반환하기
 
+    pass
+
+
+# 회원가입 페이지로 이동
+@router.get("/signup")
+def get_signup_page():
+    pass
+
+
+# 회원가입 하기
+@router.post("/signup")
+def create_user():
+    # Signup Service 객체로 입력받은 회원정보를 db에 저장하기
     pass
 
 

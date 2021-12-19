@@ -1,8 +1,12 @@
 from typing import Optional, List
-from fastapi import FastAPI, APIRouter, File, UploadFile 
+from fastapi import FastAPI, APIRouter, File, UploadFile, Depends
 from fastapi.templating import Jinja2Templates
 import uvicorn
 from starlette.responses import HTMLResponse
+
+from schema.schemas import UserNewsBase, NewsScrap, NewsScrapCreate
+from sqlalchemy.orm import Session
+from routers.home import get_db
 
 from pydantic import BaseModel
 

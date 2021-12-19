@@ -1,10 +1,14 @@
-from fastapi import FastAPI, APIRouter
+from fastapi import FastAPI, APIRouter, Depends
 from fastapi.templating import Jinja2Templates
 import uvicorn
 
 from services.scrappedboard import Scrappedboard
 from services.manageuserinput import Manageuserinput
 from services.managenewsscrap import Managenewsscrap
+
+from schema.schemas import UserNewsBase, NewsScrap, NewsScrapCreate
+from sqlalchemy.orm import Session
+from routers.home import get_db
 
 router = APIRouter(prefix="/scrap", tags=["Scrap"])
 templates = Jinja2Templates(directory='./templates')

@@ -1,8 +1,11 @@
-from fastapi import FastAPI, APIRouter
+from fastapi import FastAPI, APIRouter, Depends
 from fastapi.templating import Jinja2Templates
 import uvicorn
 
 from services.aiscrappedboard import Aiscrappedboard
+
+from sqlalchemy.orm import Session
+from routers.home import get_db
 
 
 router = APIRouter(prefix="/aiscrap", tags=["AIScap"])
