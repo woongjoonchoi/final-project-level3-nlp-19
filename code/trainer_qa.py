@@ -27,13 +27,10 @@ if is_torch_tpu_available():
     import torch_xla.core.xla_model as xm
     import torch_xla.debug.metrics as met
 
-import wandb
 # Huggingface의 Trainer를 상속받아 QuestionAnswering을 위한 Trainer를 생성합니다.
 class QuestionAnsweringTrainer(Trainer):
     def __init__(self, *args, eval_examples=None, post_process_function=None, **kwargs):
-
         super().__init__(*args, **kwargs)
-   
         self.eval_examples = eval_examples
         self.post_process_function = post_process_function
 
@@ -44,8 +41,7 @@ class QuestionAnsweringTrainer(Trainer):
 
         # 일시적으로 metric computation를 불가능하게 한 상태이며, 해당 코드에서는 loop 내에서 metric 계산을 수행합니다.
         compute_metrics = self.compute_metrics
-
-        # self.compute_metrics = None
+        self.compute_metrics = None
         try:
             output = self.prediction_loop(
                 eval_dataloader,
@@ -68,8 +64,6 @@ class QuestionAnsweringTrainer(Trainer):
             eval_preds = self.post_process_function(
                 eval_examples, eval_dataset, output.predictions, self.args
             )
-
-
             metrics = self.compute_metrics(eval_preds)
 
             self.log(metrics)
@@ -83,7 +77,6 @@ class QuestionAnsweringTrainer(Trainer):
         self.control = self.callback_handler.on_evaluate(
             self.args, self.state, self.control, metrics
         )
-        wandb.log({"eval" : metrics})
         return metrics
 
     def predict(self, test_dataset, test_examples, ignore_keys=None):
@@ -92,8 +85,7 @@ class QuestionAnsweringTrainer(Trainer):
         # 일시적으로 metric computation를 불가능하게 한 상태이며, 해당 코드에서는 loop 내에서 metric 계산을 수행합니다.
         # evaluate 함수와 동일하게 구성되어있습니다
         compute_metrics = self.compute_metrics
-        # self.compute_metrics = None
-
+        self.compute_metrics = None
         try:
             output = self.prediction_loop(
                 test_dataloader,

@@ -9,7 +9,7 @@ class ModelArguments:
     """
 
     model_name_or_path: str = field(
-        default="klue/roberta-large",
+        default="klue/bert-base",
         metadata={
             "help": "Path to pretrained model or model identifier from huggingface.co/models"
         },
@@ -47,12 +47,8 @@ class DataTrainingArguments:
     """
 
     dataset_name: Optional[str] = field(
-        default="../data/train",
+        default='../data/train', #"../data/train/train_data",
         metadata={"help": "The name of the dataset to use."},
-    )
-    hyp_search : bool = field(
-        default = False,
-        metadata={"help": "The name of the news_csv_dataset to use."},
     )
     overwrite_cache: bool = field(
         default=False,
@@ -136,3 +132,6 @@ python inference_copy.py --output_dir ./outputs/test_dataset/ --dataset_name ../
 앱실행 방법
 streamlit run prototype.py --server.address=127.0.0.1 -- --output_dir ./outputs/test_dataset/ --model_name_or_path ./models/train_dataset/ --dataset_name ../data/test_dataset/ --do_predict
 '''
+
+# (model option : wjc123/qa_finetuned)
+

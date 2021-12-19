@@ -1,11 +1,11 @@
 import logging
 import os
 import sys
-import ast
+
 from typing import List, NoReturn, NewType, Any
-from datasets import load_metric, load_from_disk, Dataset, DatasetDict , load_dataset
-import copy
+
 from dataclasses import field
+from datasets import load_metric, load_from_disk, Dataset, DatasetDict, load_dataset
 
 from transformers import (
     DataCollatorForSeq2Seq,
@@ -37,7 +37,6 @@ logger = logging.getLogger(__name__)
 def main():
 
     # print(datasets.__version__)
-
     parser = HfArgumentParser(
         (ModelArguments, DataTrainingArguments, TrainingArguments)
     )
@@ -65,11 +64,6 @@ def main():
     set_seed(training_args.seed)
 
     # datasets = load_from_disk(data_args.dataset_name)
-    # print(datasets['validation'][0])
-    # breakpoint()
-    print(data_args)
-    # breakpoint()
-
     PATH = data_args.dataset_name
     datasets = load_dataset('json', data_files={'train':os.path.join(PATH, 'train.json'), 'validation': os.path.join(PATH, 'valid.json')}, field='data')
     print(datasets)
@@ -85,9 +79,8 @@ def main():
         type(tokenizer),
         type(model),
     )
-    training_args.overwrite_output_dir = True
+
     # do_train mrc model 혹은 do_eval mrc model
-    
     if training_args.do_train or training_args.do_eval:
         if model_args.run_extraction:
             run_combine_mrc(data_args, training_args, model_args, datasets, tokenizer, model)
