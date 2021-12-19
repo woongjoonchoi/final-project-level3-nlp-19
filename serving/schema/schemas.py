@@ -100,7 +100,7 @@ class UserInput(UserInputBase):
 # AIInput : 유저아이디(FK) AI가보는뉴스아이디(FK) AI답변문장
 # AI가 내놓은 답변
 class AIInputBase(BaseModel):
-    news_scrap_id: int
+    ai_input_id: int
     user_id: str
     ai_news_id: int
     ai_input: str

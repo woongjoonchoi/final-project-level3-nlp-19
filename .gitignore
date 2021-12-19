@@ -14,3 +14,4 @@ __pycache__/
 models/
 outputs/
 runs/
+schema/sql_app.db
