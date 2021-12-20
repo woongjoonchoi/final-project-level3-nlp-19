@@ -28,8 +28,8 @@ def get_home_page(request : Request , user_id : str = None):
     res = home_board.get_news_title()
     if user_id is None :
         user_id = "wjc"
-    print(res['hits']['hits'][0])
-    print(user_id)
+    # print(res['hits']['hits'][0])
+    # print(user_id)
     return templates.TemplateResponse('home.html', context={'request': request , 'res_news' : res['hits']['hits'] , 'user_id' : user_id})
 
 
