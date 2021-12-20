@@ -64,13 +64,8 @@ class NewsScrap(NewsScrapBase):
 class UserInputBase(BaseModel):
     user_id: str
     user_news_id: str
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-=======
->>>>>>> 0b163814fb998f81311d4e0253a77c565686874d
+
     user_input: str
->>>>>>> 93ed5217cf3f28efa2121344b69ac07bc8ccb516
 
 
 class UserInputCreate(UserInputBase):

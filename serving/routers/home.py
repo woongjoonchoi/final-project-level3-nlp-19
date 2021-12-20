@@ -3,7 +3,7 @@ from fastapi.templating import Jinja2Templates
 import uvicorn
 
 from ..services.homeboard import Homeboard
-from schema.database import SessionLocal
+from ..schema.database import SessionLocal
 
 
 router = APIRouter(prefix="/home", tags=["Home"])

@@ -9,7 +9,7 @@ from ..services.managenewsscrap import Managenewsscrap
 
 from pydantic import BaseModel
 
-from routers.home import get_db
+from .home import get_db
 from ..schema import schemas
 from sqlalchemy.orm import Session
 
