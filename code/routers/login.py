@@ -3,10 +3,13 @@ from fastapi.templating import Jinja2Templates
 import uvicorn
 
 from services.managelogin import Checklogin, Signup
+<<<<<<< HEAD
 
 from schema.schemas import UserNewsBase, NewsScrap, NewsScrapCreate
 from sqlalchemy.orm import Session
 from routers.home import get_db
+=======
+>>>>>>> ab84b6342e4f1feaf0a7239afdff7d227f3494c2
 
 router = APIRouter(prefix="/login", tags=["login"])
 templates = Jinja2Templates(directory='./templates')
