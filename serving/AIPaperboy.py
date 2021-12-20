@@ -7,10 +7,6 @@ import uvicorn
 from fastapi.templating import Jinja2Templates
 from .routers import (news, aiscrap, upload,  ainews, login, home, scrap, scrapnews)
     
-
-# # (
-# #     news, aiscrap, upload, 
-# #     ainews, login, home, scrap, scrapnews)
     
 app = FastAPI()
 templates = Jinja2Templates(directory='./templates')

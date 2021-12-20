@@ -239,7 +239,6 @@
 				<div class="ibox-content forum-container">
 					<ul>
 						{% for news in my_news %}
-
 							<div value = {{news.news_scrap_id}} id = {{ "my_news_id{0}".format(loop.index) }} ></div>
 							<li> {{news.news_scrap_id}}  </li>
 						{% endfor %}

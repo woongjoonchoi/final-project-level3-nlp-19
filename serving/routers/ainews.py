@@ -7,16 +7,17 @@ from ..services.aiscrappednewscontent import Aiscrappednewscontent
 from ..services.manageuserinput import Manageuserinput
 from ..services.managenewsscrap import Managenewsscrap
 from ..schema import schemas
+from routers.home import get_db
 
 router = APIRouter(prefix="/ainews", tags=["AINews"])
 templates = Jinja2Templates(directory='serving/templates')
 
 
-# AI 스크랩 뉴스기사 화면이동(창한)
-@router.get("/")
-def get_ainews_page():
-    # Aiscrappednewscontent Service 객체로 AI가 스크랩한 뉴스 기사 본문 가져오기
-    pass
+
+@router.get("/{news_id}", description="사용자가 호출한 뉴스 본문을 볼 수 있도록 합니다.")
+def get_ainews_page(news_id: str, user_id: str, db: Session = Depends(get_db)):
+    # Aiscrappednewscontent Serivce 객체로 AI가 스크랩한 뉴스 기사 본문 가져오기
+    return Aiscrappednewscontent.get_news(db=db, news_id=news_id, user_id = user_id)
 
 """
 @app.get("user/{user_id}/news_scrap/", description="유저가 스크랩하거나 해재할 뉴스 페이지 html")
