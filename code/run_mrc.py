@@ -29,7 +29,18 @@ from arguments import (
     ModelArguments,
     DataTrainingArguments,
 )
+import wandb
 
+# WANDB_PROJECT='final_mrc'
+WANDB_WATCH=all
+defaults = dict(
+    learning_rate = 1e-4,
+    # dropout=0.2,
+)
+
+
+wandb.init(config=defaults , tags =["baseline"])
+config = wandb.config
 logger = logging.getLogger(__name__)
 
 # run_extraction_mrc, run_mrc 합침
@@ -103,7 +114,8 @@ def run_combine_mrc(
         post_process_function=post_processing_function,
         compute_metrics=compute_metrics,
     )
-
+    breakpoint()
+    print(training_args)
     # Training
     if training_args.do_train:
         if last_checkpoint is not None:

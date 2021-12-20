@@ -41,7 +41,7 @@ class UserNews(UserNewsBase):
 # NewsScrap : 유저아이디(FK) 유저가보는뉴스아이디(FK)
 # 유저가 뉴스 스크랩한 뉴스
 class NewsScrapBase(BaseModel):
-    user_id: str
+    news_scrap_id: int
     user_news_id: str
 
 class NewsScrapCreate(NewsScrapBase):
@@ -53,7 +53,7 @@ class NewsScrapDelete(NewsScrapBase):
 
 
 class NewsScrap(NewsScrapBase):
-    news_scrap_id: int
+    user_id: str
     
     class Config:
         orm_mode = True

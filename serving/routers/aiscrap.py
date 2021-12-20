@@ -6,7 +6,7 @@ from ..services.aiscrappedboard import Aiscrappedboard
 from ..schema.database import engine , SessionLocal
 from .home import get_db
 from ..schema import models,schemas
-
+from .home import get_db
 
 models.Base.metadata.create_all(engine)
 router = APIRouter(prefix="/aiscrap", tags=["AIScap"])
@@ -27,7 +27,10 @@ def create(request : schemas.AIInput,  db : Session = Depends(get_db)):
 def get_aiscrap_page(request : Request ,  db : Session = Depends(get_db)):
     owner_user_id = "wjc"
     news = aiscrapboard.get_user_news(db,owner_user_id)
+<<<<<<< HEAD
     print(len(news))
+=======
+>>>>>>> c546b5b05a485d9ef36620075a58317ea632f4fa
     # 로그인이 되어있으면 Aiscrappedboard Service 객체로 AI가 스크랩한 뉴스기사 목록 불러오기
     return templates.TemplateResponse('aiscrap.html', context={'request': request , 'ai_news' : news})
     # 로그인이 안되어있으면 로그인 화면으로 이동(로그인 기능이 구현되어 있다면)

@@ -79,7 +79,7 @@ def main():
         type(tokenizer),
         type(model),
     )
-
+    breakpoint()
     # do_train mrc model 혹은 do_eval mrc model
     if training_args.do_train or training_args.do_eval:
         if model_args.run_extraction:
