@@ -23,6 +23,9 @@ from transformers.trainer_utils import PredictionOutput
 if is_datasets_available():
     import datasets
 
+if is_torch_tpu_available():
+    import torch_xla.core.xla_model as xm
+    import torch_xla.debug.metrics as met
 
 # Huggingface의 Trainer를 상속받아 QuestionAnswering을 위한 Trainer를 생성합니다.
 class QuestionAnsweringTrainer(Trainer):
@@ -67,6 +70,9 @@ class QuestionAnsweringTrainer(Trainer):
         else:
             metrics = {}
 
+        if self.args.tpu_metrics_debug or self.args.debug:
+            # tpu-comment: PyTorch/XLA에 대한 Logging debug metrics (compile, execute times, ops, etc.)
+            xm.master_print(met.metrics_report())
 
         self.control = self.callback_handler.on_evaluate(
             self.args, self.state, self.control, metrics
@@ -87,9 +93,8 @@ class QuestionAnsweringTrainer(Trainer):
                 # metric이 없으면 예측값을 모으는 이유가 없으므로 아래의 코드를 따르게 됩니다.
                 # self.args.prediction_loss_only
                 prediction_loss_only=True if compute_metrics is None else None,
-                ignore_keys=ignore_keys
+                ignore_keys=ignore_keys,
             )
-
         finally:
             self.compute_metrics = compute_metrics
 
@@ -101,6 +106,7 @@ class QuestionAnsweringTrainer(Trainer):
                 type=test_dataset.format["type"],
                 columns=list(test_dataset.features.keys()),
             )
+
         predictions = self.post_process_function(
             test_examples, test_dataset, output.predictions, self.args
         )
