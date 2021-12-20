@@ -4,7 +4,7 @@ import uvicorn
 from sqlalchemy.orm import Session
 from ..services.aiscrappedboard import Aiscrappedboard
 from ..schema.database import engine , SessionLocal
-
+from routers.home import get_db
 from ..schema import models,schemas
 
 models.Base.metadata.create_all(engine)
