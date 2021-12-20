@@ -68,8 +68,8 @@ def main():
     datasets = load_dataset('json', data_files={'train':os.path.join(PATH, 'train.json'), 'validation': os.path.join(PATH, 'valid.json')}, field='data')
     print(datasets)
 
-    datasets['train'] = datasets['train'].shuffle(seed=42).select(range(10000))
-    datasets['validation'] = datasets['validation'].shuffle(seed=42).select(range(1000))
+    datasets['train'] = datasets['train'].shuffle().select(range(10000))
+    datasets['validation'] = datasets['validation'].shuffle().select(range(1000))
 
     model, tokenizer = configure_model(model_args, training_args, data_args)
     print(
@@ -79,7 +79,7 @@ def main():
         type(tokenizer),
         type(model),
     )
-    breakpoint()
+
     # do_train mrc model 혹은 do_eval mrc model
     if training_args.do_train or training_args.do_eval:
         if model_args.run_extraction:

@@ -65,6 +65,7 @@ class UserInputBase(BaseModel):
     user_id: str
     user_news_id: str
     user_input: str
+    user_input: str
 
 
 class UserInputCreate(UserInputBase):

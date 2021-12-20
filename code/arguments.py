@@ -99,11 +99,9 @@ class DataTrainingArguments:
             "help": "Define how many top-k passages to retrieve based on similarity."
         },
     )
-    use_faiss: bool = field(
-        default=False, metadata={"help": "Whether to build with faiss"}
-    )
+
     sparse_name: Optional[str] = field(
-        default='None',
+        default='elastic',
         metadata={
             "help": "Sparse module option. (None, elastic)"
         },
@@ -131,7 +129,6 @@ python inference_copy.py --output_dir ./outputs/test_dataset/ --dataset_name ../
 
 앱실행 방법
 streamlit run prototype.py --server.address=127.0.0.1 -- --output_dir ./outputs/test_dataset/ --model_name_or_path ./models/train_dataset/ --dataset_name ../data/test_dataset/ --do_predict
+
+(model option : wjc123/qa_finetuned)
 '''
-
-# (model option : wjc123/qa_finetuned)
-
