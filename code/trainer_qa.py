@@ -77,6 +77,7 @@ class QuestionAnsweringTrainer(Trainer):
         self.control = self.callback_handler.on_evaluate(
             self.args, self.state, self.control, metrics
         )
+        wandb.log({"eval" : metrics})
         return metrics
 
     def predict(self, test_dataset, test_examples, ignore_keys=None):
