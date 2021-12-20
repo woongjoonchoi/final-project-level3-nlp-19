@@ -1,5 +1,5 @@
 from typing import Optional
-from fastapi import FastAPI, APIRouter, Depends
+from fastapi import FastAPI, APIRouter, Depends, Form
 from fastapi.templating import Jinja2Templates
 import uvicorn
 
@@ -32,10 +32,10 @@ def get_ai_input_form(request: Request, db: Session = Depends(get_db)):
 
 # 사용자가 뉴스 기사에 입력한 정보, 스크랩 정보를 DB에 저장하기(준수, 별이)
 @router.post("/")
-def post_news_input(news_scrap: schemas.NewsScrapCreate, db: Session = Depends(get_db)):
+def post_news_input(user_info: schemas.UserInputBase, news_scrap: schemas.NewsScrapCreate, db: Session = Depends(get_db), input: str = Form(...)):
 
     # Manageuserinput Service 객체로 사용자 입력 정보를 DB에 저장하기(준수)
-
+    Manageuserinput.insert_news_input(db=db, user_info=user_info, input=input)
     # Managenewsscrap Service 객체로 사용자 스크랩 정보를 DB에 저장하기(별이)
     return Managenewsscrap.create_news_scrap(db=db, news_scrap=news_scrap)
 

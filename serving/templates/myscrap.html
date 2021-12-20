@@ -238,15 +238,15 @@
 			<div class="wrapper wrapper-content animated fadeInRight">
 				<div class="ibox-content forum-container">
 					<ul>
-						{% for news in ai_news %}
+						{% for news in my_news %}
 
-							<div value = {{news.ai_news_id}} id = {{ "ai_news_id{0}".format(loop.index) }} ></div>
-							<li> {{news.ai_news_id}}  </li>
+							<div value = {{news.news_scrap_id}} id = {{ "my_news_id{0}".format(loop.index) }} ></div>
+							<li> {{news.news_scrap_id}}  </li>
 						{% endfor %}
 					</ul>
-					<div id=length style = "display:none" value = {{ai_news|length}}> </div>
+					<div id=length style = "display:none" value = {{my_news|length}}> </div>
 					<script type="text/javascript">		
-						document.write(document.getElementById('ai_news_id1').getAttribute('value'))
+						document.write(document.getElementById('my_news_id1').getAttribute('value'))
 
                         function aaa(x){
 							var news_length = document.getElementById('length').getAttribute('value');
@@ -254,14 +254,14 @@
 							document.write(news_length)
                             for(var i = 0 ; i< news_length;i ++){
 								
-								var ai_news_id = document.getElementById(`ai_news_id${i+1}`).getAttribute('value')
+								var my_news_id = document.getElementById(`my_news_id${i+1}`).getAttribute('value')
 								document.write(	`<div class="forum-item"> 
 										<div class="row">
 											<div class="col-md-7">
 												<div class="forum-icon">
 													<i class="fa fa-bookmark"></i>
 												</div>
-												<a href="/news/${ai_news_id}" class="forum-item-title">ai_news_id ${ai_news_id}</a>
+												<a href="/news/${my_news_id}" class="forum-item-title">my_news_id ${my_news_id}</a>
 												<div class="forum-sub-title">Ipsum generators on the Internet tend to repeat predefined chunks as necessary, making this the first true generator on the Internet.</div>
 											</div>
 											<div class="col-md-2 forum-info">
