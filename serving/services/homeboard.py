@@ -1,47 +1,59 @@
 from elasticsearch import Elasticsearch , helpers
+
+# db 이름 설정
+INDEX_NAME = "news_wiki_index_update"
+
+# db 셋팅
 INDEX_SETTINGS = {
-  "settings" : {
+"settings" : {
     "index":{
-      "analysis":{
+    "analysis":{
         "analyzer":{
-          "korean":{
+        "korean":{
             "type":"custom",
             "tokenizer":"nori_tokenizer",
             "filter": [ "shingle" ],
 
-          }
         }
-      }
+        }
     }
-  },
-  "mappings": {
+    }
+},
+"mappings": {
 
-      "properties" : {
-        "CONTEXT" : {
-          "type" : "text",
-          "analyzer": "korean",
-          "search_analyzer": "korean"
+    "properties" : {
+        
+        "admin_id" : {
+        "type" : "keyword",
         },
-        "TITLE" : {
-          "type" : "text",
-          "analyzer": "korean",
-          "search_analyzer": "korean"
+        
+        "category" : {
+        "type" : "keyword",
         },
-        "DATE" :{
-            "type" : "text",
-          "analyzer": "korean",
-          "search_analyzer": "korean"
+        
+        "date" : {
+        "type" : "date"
         },
-        "CATEGORY" :{
-            "type" : "text",
-          "analyzer": "korean",
-          "search_analyzer": "korean"
+        
+        "title" : {
+        "type" : "keyword",
+        },
+        
+        "article" : {
+        "type" : "text"
+        },
+        
+        "context" : {
+        "type" : "text",
+        "analyzer": "korean",
+        "search_analyzer": "korean"
         }
-      }
+        
+    }
 
-  }
 }
-INDEX_NAME = "mbn_index2"
+}
+
 # 뉴스 기사 목록 불러오기
 class Homeboard():
     def __init__(self) :
