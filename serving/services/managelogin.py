@@ -1,4 +1,5 @@
-
+from sqlalchemy.orm import Session
+from ..schema import models, schemas
 
 
 # 로그인 정보 확인하기
@@ -24,8 +25,7 @@ class Checklogin():
 
 
 
-# 회원가입 하기, 
-# 회원탈퇴 하기
+# 회원가입 하기, 회원탈퇴 하기
 class Signup():
 
     # Signup Service 객체로 입력받은 회원정보를 db에 저장하기
