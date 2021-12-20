@@ -7,6 +7,7 @@ from ..services.aiscrappednewscontent import Aiscrappednewscontent
 from ..services.manageuserinput import Manageuserinput
 from ..services.managenewsscrap import Managenewsscrap
 from ..schema import schemas
+from routers.home import get_db
 
 router = APIRouter(prefix="/ainews", tags=["AINews"])
 templates = Jinja2Templates(directory='serving/templates')
