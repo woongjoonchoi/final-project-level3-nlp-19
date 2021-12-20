@@ -21,7 +21,7 @@ templates = Jinja2Templates(directory='serving/templates')
 @router.get("/{news_id}",  description="사용자가 호출한 뉴스 본문을 볼 수 있도록 합니다.")
 def get_news_page(request: Request, news_id: str, user_id: str, db: Session = Depends(get_db)):
     # Newscontent Service 객체로 news 기사 본문 가져오기
-    templates.TemplateResponse('article_form.html', context={'request': request})
+    templates.TemplateResponse('article_form.html', context={'request': request, 'news_id': news_id, 'user_id': user_id})
     return Newscontent.get_news(db=db, news_id=news_id, user_id = user_id)
 
 
