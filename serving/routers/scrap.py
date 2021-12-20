@@ -28,7 +28,7 @@ def create(request : schemas.NewsScrap,  db : Session = Depends(get_db)):
     return new_blog
 @router.get("/")
 def get_scrap_page(request : Request ,  db : Session = Depends(get_db)):
-    owner_user_id = "wjc"
+    owner_user_id = "wjc1"
     news = newsscrapboard.get_user_news(db,owner_user_id)
     # owner_user_id=""
     # 로그인이 되어있으면 Scrappedboard Service 객체로 사용자가 스크랩한 뉴스기사 목록 불러오기
