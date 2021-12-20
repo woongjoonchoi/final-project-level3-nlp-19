@@ -19,9 +19,9 @@ class Checklogin():
         return db.query(models.User).filter(models.User.user_id == user_id and models.User.password == fake_hashed_password).first()
 
 
-    # 모든 유저
-    def get_users(db: Session, skip: int = 0, limit: int = 100):
-        return db.query(models.User).offset(skip).limit(limit).all()
+    # # 모든 유저
+    # def get_users(db: Session, skip: int = 0, limit: int = 100):
+    #     return db.query(models.User).offset(skip).limit(limit).all()
 
 
 
