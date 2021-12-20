@@ -6,8 +6,8 @@ import uvicorn
 from ..services.newscontent import Newscontent
 from ..services.manageuserinput import Manageuserinput
 from ..services.managenewsscrap import Managenewsscrap
-from schema.schemas import UserNewsBase, NewsScrap, NewsScrapCreate
-from routers.home import get_db
+from ..schema.schemas import UserNewsBase, NewsScrap, NewsScrapCreate
+from .home import get_db
 from ..schema import schemas
 from sqlalchemy.orm import Session
 from pydantic import BaseModel
