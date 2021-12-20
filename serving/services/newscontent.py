@@ -11,5 +11,5 @@ class Newscontent():
     # 뉴스 기사 내용과 사용자 입력 내용 불러오기
     def get_news(db: Session, news_id: str, user_id: str):
         
-        res = es.get(index = "news_wiki_index_update", id=news_id)
+        res = es.get(index = "mbn_index2", id=news_id)
         return res["_source"], news_id
