@@ -6,6 +6,7 @@ from ..services.aiscrappedboard import Aiscrappedboard
 from ..schema.database import engine , SessionLocal
 from routers.home import get_db
 from ..schema import models,schemas
+from routers.home import get_db
 
 models.Base.metadata.create_all(engine)
 router = APIRouter(prefix="/aiscrap", tags=["AIScap"])
@@ -13,12 +14,7 @@ templates = Jinja2Templates(directory='serving/templates')
 
 aiscrapboard =Aiscrappedboard()
 # AI scrap 페이지로 이동(웅준)
-def get_db():
-    db = SessionLocal()
-    try : 
-        yield db
-    finally : 
-        db.close()
+
 
 @router.post('/{user_id}')
 def create(request : schemas.AIInput,  db : Session = Depends(get_db)):
