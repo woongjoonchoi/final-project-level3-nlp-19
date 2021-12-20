@@ -70,12 +70,5 @@ class AIInput(Base):
     ai_input_id = Column(Integer, primary_key=True, autoincrement=True, index=True)
     user_id = Column(String, ForeignKey("users.user_id"))
     ai_news_id = Column(String, ForeignKey("user_newss.user_news_id"))
-<<<<<<< HEAD
     ai_input = Column(String, index=True)
-=======
-<<<<<<< HEAD
-    ai_input = Column(String, index=True)
-=======
-    ai_input = Column(String, index=True)
->>>>>>> 93ed5217cf3f28efa2121344b69ac07bc8ccb516
->>>>>>> 0b163814fb998f81311d4e0253a77c565686874d
+

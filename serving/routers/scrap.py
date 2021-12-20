@@ -9,7 +9,7 @@ from ..services.manageuserinput import Manageuserinput
 from ..services.managenewsscrap import Managenewsscrap
 from ..schema.database import engine , SessionLocal
 from ..schema import models,schemas
-from routers.home import get_db
+from .home import get_db
 
 models.Base.metadata.create_all(engine)
 router = APIRouter(prefix="/scrap", tags=["Scrap"])

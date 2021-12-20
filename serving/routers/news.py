@@ -9,9 +9,9 @@ from ..services.managenewsscrap import Managenewsscrap
 
 from pydantic import BaseModel
 
-from routers.home import get_db
+from .home import get_db
 from ..schema import schemas
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Sessions
 
 router = APIRouter(prefix="/news", tags=["News"])
 templates = Jinja2Templates(directory='serving/templates')
