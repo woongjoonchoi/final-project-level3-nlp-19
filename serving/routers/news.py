@@ -11,7 +11,11 @@ from pydantic import BaseModel
 
 from .home import get_db
 from ..schema import schemas
+<<<<<<< HEAD
 from sqlalchemy.orm import Sessions
+=======
+from sqlalchemy.orm import Session
+>>>>>>> main
 
 router = APIRouter(prefix="/news", tags=["News"])
 templates = Jinja2Templates(directory='serving/templates')
