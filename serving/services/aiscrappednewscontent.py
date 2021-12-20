@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from schema.models import UserNews, AIInput, NewsScrap, UserInput
+from ..schema.models import UserNews, AIInput, NewsScrap, UserInput
 from elasticsearch import Elasticsearch
 
 es = Elasticsearch()

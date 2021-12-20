@@ -7,7 +7,7 @@ from ..services.aiscrappednewscontent import Aiscrappednewscontent
 from ..services.manageuserinput import Manageuserinput
 from ..services.managenewsscrap import Managenewsscrap
 from ..schema import schemas
-from routers.home import get_db
+from .home import get_db
 
 router = APIRouter(prefix="/ainews", tags=["AINews"])
 templates = Jinja2Templates(directory='serving/templates')
@@ -46,8 +46,6 @@ def delete_news_input(news_scrap: schemas.NewsScrapDelete, db: Session = Depends
     pass
 
 
-
-
 # AI가 스크랩해준 뉴스 기사를 사용자가 스크랩하기(별이)
 @router.post("/", description="유저아이디, 스크랩할 뉴스아이디 가져와서 db에 저장")
 def post_scrap_input(news_scrap: schemas.NewsScrapCreate, db: Session = Depends(get_db)):
@@ -62,12 +60,8 @@ def delete_scrap_input(news_scrap: schemas.NewsScrapDelete, db: Session = Depend
     return Managenewsscrap.delete_news_scrap(db=db, news_scrap=news_scrap)
 
 
-
-
-
-
-
 if __name__ == '__main__':
     app = FastAPI()
     app.include_router(router)
     uvicorn.run(app="AIPaperboy:app", host="0.0.0.0", port=8000, reload=True)
+

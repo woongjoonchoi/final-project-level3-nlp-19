@@ -3,7 +3,7 @@ from fastapi import FastAPI, APIRouter, File, UploadFile
 from fastapi.templating import Jinja2Templates
 import uvicorn
 from starlette.responses import HTMLResponse
-from routers.home import get_db
+from .home import get_db
 
 from pydantic import BaseModel
 

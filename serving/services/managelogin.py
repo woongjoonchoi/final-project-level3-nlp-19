@@ -16,6 +16,7 @@ class Checklogin():
     # 아이디 비밀번호 줘서 로그인
     def login_user(db: Session, user_id: str, password: str):
         fake_hashed_password = password + "notreallyhashed"
+        { "g"}
         return db.query(models.User).filter(models.User.user_id == user_id and models.User.password == fake_hashed_password).first()
 
 

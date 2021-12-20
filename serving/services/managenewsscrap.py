@@ -5,8 +5,8 @@ from ..schema import models, schemas
 class Managenewsscrap():
 
     # 유저가 뉴스 스크랩 생성
-    def create_news_scrap(db: Session, news_scrap: schemas.NewsScrapCreate):
-        db_news_scrap = models.NewsScrap(**news_scrap.dict())
+    def create_news_scrap(db: Session, user_id: str, user_news_id: str,):
+        db_news_scrap = models.NewsScrap(user_id=user_id, user_news_id=user_news_id)
         db.add(db_news_scrap)
         db.commit()
         db.refresh(db_news_scrap)
