@@ -1,23 +1,22 @@
-from fastapi import FastAPI, APIRouter, Depends
+from fastapi import FastAPI, APIRouter, Depends, Form
 from fastapi.templating import Jinja2Templates
 import uvicorn
+from sqlalchemy.orm import Session
 
 from ..services.aiscrappednewscontent import Aiscrappednewscontent
 from ..services.manageuserinput import Manageuserinput
 from ..services.managenewsscrap import Managenewsscrap
-
-from routers.home import get_db
 from ..schema import schemas
-from sqlalchemy.orm import Session
 
 router = APIRouter(prefix="/ainews", tags=["AINews"])
 templates = Jinja2Templates(directory='serving/templates')
 
 
-@router.get("/{news_id}", description="사용자가 호출한 뉴스 본문을 볼 수 있도록 합니다.")
-def get_ainews_page(news_id: str, user_id: str, db: Session = Depends(get_db)):
-    # Aiscrappednewscontent Serivce 객체로 AI가 스크랩한 뉴스 기사 본문 가져오기
-    return Aiscrappednewscontent.get_news(db=db, news_id=news_id, user_id = user_id)
+# AI 스크랩 뉴스기사 화면이동(창한)
+@router.get("/")
+def get_ainews_page():
+    # Aiscrappednewscontent Service 객체로 AI가 스크랩한 뉴스 기사 본문 가져오기
+    pass
 
 """
 @app.get("user/{user_id}/news_scrap/", description="유저가 스크랩하거나 해재할 뉴스 페이지 html")
@@ -28,10 +27,10 @@ def get_news_scraps_form(request: Request, db: Session = Depends(get_db)):
 
 # 사용자가 AI가 스크랩해준 뉴스 기사에 입력한 정보, 스크랩 정보를 DB에 저장하기(준수, 별이)
 @router.post("/")
-def post_news_input(news_scrap: schemas.NewsScrapCreate, db: Session = Depends(get_db)):
-
+def post_news_input(user_info: schemas.UserInputBase, news_scrap: schemas.NewsScrapCreate, db: Session = Depends(get_db), input: str = Form(...)):
+    
     # Manageuserinput Service 객체로 사용자 입력 정보를 DB에 저장하기(준수)
-
+    Manageuserinput.insert_news_input(db=db, user_info=user_info, input=input)
     # Managenewsscrap Service 객체로 사용자 스크랩 정보를 DB에 저장하기(별이)
     return Managenewsscrap.create_news_scrap(db=db, news_scrap=news_scrap)
 
@@ -60,6 +59,10 @@ def post_scrap_input(news_scrap: schemas.NewsScrapCreate, db: Session = Depends(
 def delete_scrap_input(news_scrap: schemas.NewsScrapDelete, db: Session = Depends(get_db)):
     # Managenewsscrap Service 객체로 사용자 스크랩 정보를 DB에서 삭제하기
     return Managenewsscrap.delete_news_scrap(db=db, news_scrap=news_scrap)
+
+
+
+
 
 
 
