@@ -4,21 +4,21 @@ from ..schema import models, schemas
 # 사용자가 스크랩 정보를 관리한다.
 class Managenewsscrap():
 
-    # 사용자가 스크랩한 정보를 DB에 저장하기
-    def create_news_scrap(db: Session, news_scrap: schemas.NewsScrapCreate, user_id: str):
-        db_news_scrap = models.NewsScrap(**news_scrap.dict(), user_id=user_id)
+    # 유저가 뉴스 스크랩 생성
+    def create_news_scrap(db: Session, news_scrap: schemas.NewsScrapCreate):
+        db_news_scrap = models.NewsScrap(**news_scrap.dict())
         db.add(db_news_scrap)
         db.commit()
         db.refresh(db_news_scrap)
         return db_news_scrap
 
-    # 사용자가 스크랩한 정보를 DB에서 삭제하기
-    def delete_news_scrap(db: Session, news: schemas.NewsScrapDelete, user_id: str, news_scrap_id: int):
-        db_news_scrap = models.NewsScrap(user_id=user_id, news_scrap_id=news_scrap_id)
+
+    # 유저가 뉴스 스크랩 제거
+    def delete_news_scrap(db: Session, news_scrap: schemas.NewsScrapDelete):
+        db_news_scrap = models.NewsScrap(**news_scrap.dict())
         db.delete(db_news_scrap)
         db.commit()
         db.refresh(db_news_scrap)
         return db_news_scrap
-
 
     pass

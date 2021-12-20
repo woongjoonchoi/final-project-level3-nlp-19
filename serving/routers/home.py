@@ -3,10 +3,20 @@ from fastapi.templating import Jinja2Templates
 import uvicorn
 
 from ..services.homeboard import Homeboard
+from schema.database import SessionLocal
 
 
 router = APIRouter(prefix="/home", tags=["Home"])
 templates = Jinja2Templates(directory='serving/templates')
+
+# Dependency
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
 
 
 home_board= Homeboard()

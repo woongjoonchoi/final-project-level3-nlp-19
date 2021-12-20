@@ -32,7 +32,7 @@ class UserNews(Base):
 
     __tablename__ = "user_newss"
 
-    user_news_id = Column(Integer, primary_key=True, index=True)
+    user_news_id = Column(String, primary_key=True, index=True)
     title = Column(String, index=True)
     article = Column(String, index=True)
     admin_id = Column(String, ForeignKey("admins.admin_id"))
@@ -46,7 +46,7 @@ class NewsScrap(Base):
 
     news_scrap_id = Column(Integer, primary_key=True, autoincrement=True, index=True)
     user_id = Column(String, ForeignKey("users.user_id"))
-    user_news_id = Column(Integer, ForeignKey("user_newss.user_news_id"))
+    user_news_id = Column(String, ForeignKey("user_newss.user_news_id"))
 
 
 # UserInput : user_input_id(PK) 유저아이디(FK) 유저가보는뉴스아이디(FK) 유저질문문장
@@ -57,20 +57,8 @@ class UserInput(Base):
 
     user_input_id = Column(Integer, primary_key=True, autoincrement=True, index=True)
     user_id = Column(String, ForeignKey("users.user_id"))
-    user_news_id = Column(Integer, ForeignKey("user_newss.user_news_id"))
+    user_news_id = Column(String, ForeignKey("user_newss.user_news_id"))
     user_input = Column(String, index=True)
-
-
-# DataFlow 상에서 삭제됨
-# # AINewsScrap : ai_news_scraps_id(PK) 유저아이디(FK) AI가보는뉴스아이디(FK)
-# # AI가 스크랩한 뉴스
-# class AINewsScrap(Base):
-
-#     __tablename__ = "ai_news_scraps"
-
-#     ai_news_scraps_id = Column(Integer, primary_key=True, index=True)
-#     user_id = Column(String, ForeignKey("users.user_id"))
-#     ai_news_id = Column(Integer, ForeignKey("user_newss.user_news_id"))
 
 
 # AIInput : ai_input_id(PK) 유저아이디(FK) AI가보는뉴스아이디(FK) AI답변문장
@@ -81,5 +69,13 @@ class AIInput(Base):
 
     ai_input_id = Column(Integer, primary_key=True, autoincrement=True, index=True)
     user_id = Column(String, ForeignKey("users.user_id"))
-    ai_news_id = Column(Integer, ForeignKey("user_newss.user_news_id"))
+    ai_news_id = Column(String, ForeignKey("user_newss.user_news_id"))
+<<<<<<< HEAD
     ai_input = Column(String, index=True)
+=======
+<<<<<<< HEAD
+    ai_input = Column(String, index=True)
+=======
+    ai_input = Column(String, index=True)
+>>>>>>> 93ed5217cf3f28efa2121344b69ac07bc8ccb516
+>>>>>>> 0b163814fb998f81311d4e0253a77c565686874d
