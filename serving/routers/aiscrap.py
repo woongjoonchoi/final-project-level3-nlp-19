@@ -25,7 +25,7 @@ def create(request : schemas.AIInput,  db : Session = Depends(get_db)):
     return new_blog
 @router.get("/")
 def get_aiscrap_page(request : Request ,  db : Session = Depends(get_db)):
-    owner_user_id = "wjc"
+    owner_user_id = "wjc1"
     news = aiscrapboard.get_user_news(db,owner_user_id)
     # 로그인이 되어있으면 Aiscrappedboard Service 객체로 AI가 스크랩한 뉴스기사 목록 불러오기
     return templates.TemplateResponse('aiscrap.html', context={'request': request , 'ai_news' : news})
