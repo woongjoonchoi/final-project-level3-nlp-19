@@ -28,6 +28,15 @@ def get_home_page(request : Request):
     res = home_board.get_news_title()
     return templates.TemplateResponse('home.html', context={'request': request , 'res_news' : res['hits']['hits']})
 
+def get_home_page(request : Request , user_id : str = None):
+    # Homeboard Service 객체로 뉴스 목록 가져오기
+    res = home_board.get_news_title()
+    if user_id is None :
+        user_id = "string"
+    print(res['hits']['hits'][0])
+    print(user_id)
+    return templates.TemplateResponse('home.html', context={'request': request , 'res_news' : res['hits']['hits'] , 'user_id' : user_id})
+
 
 if __name__ == '__main__':
     app = FastAPI()

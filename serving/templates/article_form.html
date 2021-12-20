@@ -51,6 +51,17 @@
             </div>
             <div id="header">
                 header: 뉴스 타이틀이 들어갈 예정입니다.
+                <form method="post" action="/news_scrap/{{ news_id }}/create">
+                    <input type="hidden" name="user_id" value = "{{ user_id }}"/>
+                    <input type="hidden" name="user_news_id" value = "{{ user_news_id }}"/>
+                    <button type = "submit">스크랩 생성</button>
+                </form>
+        
+                <form method="post" action="/news_scrap/{{ news_id }}/delete">
+                    <input type="hidden" name="user_id" value = "{{ user_id }}"/>
+                    <input type="hidden" name="user_news_id" value = "{{ user_news_id }}"/>
+                    <button type = "submit">스크랩 해제</button>
+                </form>
             </div>
             <div id="middle">
                 <div id="content">
