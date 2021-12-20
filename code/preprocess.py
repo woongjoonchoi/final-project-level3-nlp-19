@@ -34,8 +34,6 @@ def preprocess_gen(tokenizer,model_name):
             # One example can give several spans, this is the index of the example containing this span of text.
             sample_index = sample_mapping[i]
             answers = examples["answers"][sample_index]
-            if answers['answer_start'] == 567 :
-                breakpoint()
             with tokenizer.as_target_tokenizer():
                 tokenized_lables = tokenizer(answers['text'],
                     max_length=target_length,
