@@ -245,6 +245,7 @@
 						{% endfor %}
 					</ul>
 					<div id=length style = "display:none" value = {{ai_news|length}}> </div>
+					<div id=userid style = "display:none" value = {{ai_news[0].user_id}}> </div>
 					<script type="text/javascript">		
 						document.write(document.getElementById('ai_news_id1').getAttribute('value'))
 
@@ -255,13 +256,14 @@
                             for(var i = 0 ; i< news_length;i ++){
 								
 								var ai_news_id = document.getElementById(`ai_news_id${i+1}`).getAttribute('value')
+								var user_id = document.getElementById('userid').getAttribute('value');
 								document.write(	`<div class="forum-item"> 
 										<div class="row">
 											<div class="col-md-7">
 												<div class="forum-icon">
 													<i class="fa fa-bookmark"></i>
 												</div>
-												<a href="/news/${ai_news_id}" class="forum-item-title">ai_news_id ${ai_news_id}</a>
+												<a href="/news/${ai_news_id}?news_id=${ai_news_id}&user_id=${user_id}" class="forum-item-title">ai_news_id ${ai_news_id}</a>
 												<div class="forum-sub-title">Ipsum generators on the Internet tend to repeat predefined chunks as necessary, making this the first true generator on the Internet.</div>
 											</div>
 											<div class="col-md-2 forum-info">
