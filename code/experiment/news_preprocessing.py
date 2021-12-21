@@ -25,7 +25,7 @@ def remove_email(texts):
     """
     preprocessed_text = []
     for text in texts:
-        text = re.sub(r"[a-zA-Z0-9+-_.]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+", "", text).strip()
+        text = re.sub(r"[a-zA-Z0-9+-_.]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+.*", "", text).strip()
         if text:
             preprocessed_text.append(text)
     return preprocessed_text
@@ -71,7 +71,7 @@ def remove_bad_char(texts):
     """
     문제를 일으킬 수 있는 문자들을 제거합니다.
     """
-    bad_chars = {"\u200b": "", "…": " ... ", "\ufeff": "", "☎": ""}
+    bad_chars = {"\u200b": "", "…": " ... ", "\ufeff": "", "☎": "" , "◆":""}
     preprcessed_text = []
     for text in texts:
         for bad_char in bad_chars:
@@ -91,6 +91,7 @@ def remove_press(texts):
         r"\([^(]*?(뉴스|경제|일보|미디어|데일리|한겨례|타임즈|위키트리)\)",
         r"[가-힣]{0,4}\s?(기자|선임기자|수습기자|특파원|객원기자|논설고문|통신원|연구소장)",  # 이름 + 기자
         r"[가-힣]{1,}(뉴스|경제|일보|미디어|데일리|한겨례|타임|위키트리)",  # (... 연합뉴스) ..
+        r"^\[[^[]*?\]",  # [  ] 모든 시작 [] 태그 제거
         r"\(\s+\)",  # (  )
         r"\(=\s+\)",  # (=  )
         r"\(\s+=\)",  # (  =)
@@ -111,8 +112,8 @@ def remove_copyright(texts):
     ``(사진=저작권자(c) 연합뉴스, 무단 전재-재배포 금지)`` -> ``(사진= 연합뉴스, 무단 전재-재배포 금지)`` TODO 수정할 것
     """
     re_patterns = [
-        r"\<저작권자(\(c\)|ⓒ|©|\(Copyright\)|(\(c\))|(\(C\))).+?\>",
-        r"저작권자\(c\)|ⓒ|©|(Copyright)|(\(c\))|(\(C\))",
+        r"\<저작권자(\(c\)|ⓒ|©|\(Copyright\)|\(Copyrights\)|(\(c\))|(\(C\))).+?\>",  
+        r"저작권자\(c\)|ⓒ|©|(Copyright)|(Copyrights)|(\(c\))|(\(C\))",
         r"& mk.co.kr, 무단전재 및 재배포 금지",
     ]
     preprocessed_text = []
@@ -219,8 +220,21 @@ def remove_repeated_spacing(texts):
         if text:
             preprocessed_text.append(text)
     return preprocessed_text
-
-
+def remove_answer_mark(texts) :
+    preprocessed_text = []
+    for text in texts:
+        text = re.sub(r"ὧ", "", text).strip()
+        text = re.sub(r"Ὠ", "", text).strip()
+        if text:
+            preprocessed_text.append(text) 
+    return preprocessed_text        
+def remove_copyrightspattern(texts) :
+    preprocessed_text = []
+    for text in texts :
+        text = re.sub(r"Copyrightsⓒ.*" , " ",text).strip()
+        if text :
+            preprocessed_text.append(text)
+    return preprocessed_text
 def spacing_sent(texts):
     """
     띄어쓰기를 보정합니다.
@@ -242,13 +256,21 @@ def spell_check_sent(texts):
         try:
             spelled_sent = spell_checker.check(text)
             checked_sent = spelled_sent.checked 
+            print(checked_sent)
             if checked_sent:
                 preprocessed_text.append(checked_sent)
         except:
             preprocessed_text.append(text)
     return preprocessed_text
 
-
+def remove_stopwords(sents):
+    #  큰 의미가 없는 불용어 정의
+    stopwords = ['IMG',"헤럴드POP"]
+    preprocessed_text = []
+    for sent in sents:
+        sent = [w for w in sent.split(' ') if w not in stopwords]# 불용어 제거
+        preprocessed_text.append(' '.join(sent))
+    return preprocessed_text
 
 if __name__ == "__main__":
     df = pd.read_csv("../data_kdx/MBN00003U_2_2016.csv", encoding='cp949')
