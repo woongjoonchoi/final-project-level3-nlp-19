@@ -3,6 +3,7 @@
     <head>
         <meta charset="UTF-8">
         <title>Text Form</title>
+
         <style type="text/css">
             * {
                 font-family: Consolas, sans-serif;
@@ -42,33 +43,35 @@
         <div id="wrap">
             <div id="sidebar">
                 AI Paper Boy
-                <form action="/main">
+                <form method="get" action="/home/{{user_id}}">
                     <button class="btn main">기사 홈으로</button>
                 </form>
-                <form action="/scrap">
+                <form method="get" action="/scrap">
                     <button class="btn scrap">스크랩 박스로</button>
                 </form>
             </div>
             <div id="header">
-                header: 뉴스 타이틀이 들어갈 예정입니다.
-                <form method="post" action="/news_scrap/{{ news_id }}/create">
-                    <input type="hidden" name="user_id" value = "{{ user_id }}"/>
-                    <input type="hidden" name="user_news_id" value = "{{ user_news_id }}"/>
-                    <button type = "submit">스크랩 생성</button>
-                </form>
-        
-                <form method="post" action="/news_scrap/{{ news_id }}/delete">
-                    <input type="hidden" name="user_id" value = "{{ user_id }}"/>
-                    <input type="hidden" name="user_news_id" value = "{{ user_news_id }}"/>
-                    <button type = "submit">스크랩 해제</button>
-                </form>
+                <!-- header: 뉴스 타이틀이 들어갈 예정입니다. -->
+                <div id="title">
+                    <h1>{{ title }}</h1>
+                </div>
             </div>
             <div id="middle">
                 <div id="content">
-                    content: 뉴스 본문이 들어갈 예정입니다.
+                    {{ article }}
                 </div>
             </div>
             <div id="footer">
+                <form method="get" action="/news/{{ news_id }}/create">
+                    <input type="hidden" name="news_id" value = "{{ news_id }}"/>
+                    <input type="hidden" name="user_id" value = "{{ user_id }}"/>
+                    <button type = "submit">스크랩 생성</button>
+                </form>
+                <form method="delete" action="/news/{{ news_id }}/delete">
+                    <input type="hidden" name="news_id" value = "{{ news_id }}"/>
+                    <input type="hidden" name="user_id" value = "{{ user_id }}"/>
+                    <button type = "submit">스크랩 해제</button>
+                </form>
                 <form method="post" action="/question">
                     <fieldset>
                         <legend>Ask Your Question!</legend>
