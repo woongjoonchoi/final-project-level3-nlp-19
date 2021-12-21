@@ -12,6 +12,18 @@
         <link href="{{ url_for('home', path='/styles.css') }}" rel="stylesheet" />
     </head>
     <body>
+        <div id="sidebar">
+            AI Paper Boy
+            <form action="/home">
+                <button class="btn main">기사 홈으로</button>
+            </form>
+            <form action="/scrap">
+                <button class="btn scrap">스크랩 박스로</button>
+            </form>
+            <form action="/aiscrap">
+                <button class="btn scrap">ai스크랩 박스로</button>
+            </form>
+        </div>
         <!-- Responsive navbar-->
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
             <div class="container">
