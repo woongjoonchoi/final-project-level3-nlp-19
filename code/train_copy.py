@@ -67,7 +67,7 @@ def main():
     PATH = data_args.dataset_name
     datasets = load_dataset('json', data_files={'train':os.path.join(PATH, 'train.json'), 'validation': os.path.join(PATH, 'valid.json')}, field='data')
     print(datasets)
-
+    
     datasets['train'] = datasets['train'].shuffle(seed=42).select(range(10000))
     datasets['validation'] = datasets['validation'].shuffle(seed=42).select(range(1000))
 

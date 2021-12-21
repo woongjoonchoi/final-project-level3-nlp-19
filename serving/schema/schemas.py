@@ -67,6 +67,7 @@ class UserInputBase(BaseModel):
     user_input: str
 
 
+
 class UserInputCreate(UserInputBase):
     pass
 

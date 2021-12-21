@@ -27,7 +27,7 @@ def get_news_scraps_form(request: Request, db: Session = Depends(get_db)):
 
 
 # 사용자가 AI가 스크랩해준 뉴스 기사에 입력한 정보, 스크랩 정보를 DB에 저장하기(준수, 별이)
-@router.post("/question")
+@router.post("/")
 def post_news_input(user_info: schemas.UserInputBase, news_scrap: schemas.NewsScrapCreate, db: Session = Depends(get_db), input: str = Form(...)):
     
     # Manageuserinput Service 객체로 사용자 입력 정보를 DB에 저장하기(준수)
@@ -46,6 +46,8 @@ def delete_news_input(news_scrap: schemas.NewsScrapDelete, db: Session = Depends
     pass
 
 
+
+
 # AI가 스크랩해준 뉴스 기사를 사용자가 스크랩하기(별이)
 @router.post("/", description="유저아이디, 스크랩할 뉴스아이디 가져와서 db에 저장")
 def post_scrap_input(news_scrap: schemas.NewsScrapCreate, db: Session = Depends(get_db)):
@@ -60,8 +62,12 @@ def delete_scrap_input(news_scrap: schemas.NewsScrapDelete, db: Session = Depend
     return Managenewsscrap.delete_news_scrap(db=db, news_scrap=news_scrap)
 
 
+
+
+
+
+
 if __name__ == '__main__':
     app = FastAPI()
     app.include_router(router)
     uvicorn.run(app="AIPaperboy:app", host="0.0.0.0", port=8000, reload=True)
-
