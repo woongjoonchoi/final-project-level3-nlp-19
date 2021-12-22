@@ -1,5 +1,4 @@
 import streamlit as st
-from streamlit.elements.json import JsonMixin
 from upload_proto_prediction import load_model, get_prediction
 
 import pandas as pd
