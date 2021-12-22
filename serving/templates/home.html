@@ -14,13 +14,13 @@
     <body>
         <div id="sidebar">
             AI Paper Boy
-            <form action="/home">
+            <form action="/home/{{user_id}}">
                 <button class="btn main">기사 홈으로</button>
             </form>
-            <form action="/scrap">
+            <form action="/scrap/{{user_id}}">
                 <button class="btn scrap">스크랩 박스로</button>
             </form>
-            <form action="/aiscrap">
+            <form action="/aiscrap/{{user_id}}">
                 <button class="btn scrap">ai스크랩 박스로</button>
             </form>
         </div>
