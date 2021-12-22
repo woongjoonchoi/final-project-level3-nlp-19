@@ -49,24 +49,41 @@ def get_news_page(request: Request, news_id: str, user_id: str, db: Session = De
 
 # 뉴스 기사 스크랩하기(별이)
 @router.get("/{news_id}/create", description="유저아이디, 스크랩할 뉴스아이디 가져와서 db에 저장")
-def post_scrap_input(request: Request, news_id: str, user_id: str, db: Session = Depends(get_db)):
-    # Managenewsscrap Service 객체로 사용자 스크랩 정보를 DB에 저장하기
+def create_scrap_input(request: Request, news_id: str, user_id: str, db: Session = Depends(get_db)):
+    title, article = Newscontent.get_news(db=db, news_id=news_id, user_id=user_id)
 
+    # 해당 기사가 이미 DB에 저장되어있는지 확인
+    if Managenewsscrap.get_news_scrap_id(db=db, user_id=user_id, news_id=news_id):
+        return templates.TemplateResponse('article_form.html', context={'request': request, 'title': title, 'article': article, 'news_id': news_id, 'user_id': user_id})
+
+    # Managenewsscrap Service 객체로 사용자 스크랩 정보를 DB에 저장하기
     Managenewsscrap.create_news_scrap(db=db, user_id=user_id, news_id=news_id)
-    print(111111111111111111111111111111111111111111111111111111)
-    url = f'/login'
-    return RedirectResponse(url=url, status_code=302)
+
+    # 이 부분 RedirectResponse로 바꿔야 하는데 아직 모르겠음
+    return templates.TemplateResponse('article_form.html', context={'request': request, 'title': title, 'article': article, 'news_id': news_id, 'user_id': user_id})
 
 
 # 스크랩한 뉴스기사 취소하기(별이)
-@router.delete("/{news_id}/delete", description="유저아이디, 스크랩할 뉴스아이디 가져와서 db에서 제거")
+@router.get("/{news_id}/delete", description="유저아이디, 스크랩할 뉴스아이디 가져와서 db에서 제거")
 def delete_scrap_input(request: Request, user_id: str, news_id: str, db: Session = Depends(get_db)):
+    title, article = Newscontent.get_news(db=db, news_id=news_id, user_id=user_id)
+    print(2222222222222222222222222222222222222222222222222222222222222222222222222222)
+    # 해당 기사가 DB에 저장되어있어서 삭제가 가능한지 확인
+    if not Managenewsscrap.get_news_scrap_id(db=db, user_id=user_id, news_id=news_id):
+        return templates.TemplateResponse('article_form.html', context={'request': request, 'title': title, 'article': article, 'news_id': news_id, 'user_id': user_id})
+
+    print(2222222222222222222222222222222222222222222222222222222222222222222222222222)
     # Managenewsscrap Service 객체로 사용자 스크랩 정보를 DB에서 삭제하기
-    Managenewsscrap.delete_news_scrap(db=db, user_id=user_id, user_news_id=news_id)
-    return templates.TemplateResponse('alrtice_form.html', context={'request': request})
+    Managenewsscrap.delete_news_scrap(db=db, user_id=user_id, news_id=news_id)
+
+    print(2222222222222222222222222222222222222222222222222222222222222222222222222222)
+
+    # 이 부분 RedirectResponse로 바꿔야 하는데 아직 모르겠음
+    return templates.TemplateResponse('alrtice_form.html', context={'request': request, 'title': title, 'article': article, 'news_id': news_id, 'user_id': user_id})
 
 
 if __name__ == '__main__':
     app = FastAPI()
     app.include_router(router)
     uvicorn.run(app="AIPaperboy:app", host="0.0.0.0", port=8000, reload=True)
+

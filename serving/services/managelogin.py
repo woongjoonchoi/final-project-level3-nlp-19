@@ -20,6 +20,7 @@ class Checklogin():
 
         # db 테이블을 잘 보자
         if db.query(models.User).filter(models.User.user_id == user_id).first():
+            
             user = db.query(models.User).get(user_id)
             db_hashed_password_password = user.hashed_password
             if db_hashed_password_password == fake_hashed_password:

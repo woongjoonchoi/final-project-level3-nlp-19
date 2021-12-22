@@ -9,7 +9,7 @@
                 font-family: Consolas, sans-serif;
             }
             fieldset {
-                width: 800px; height:150px;
+                width: 770px; height:150px;
             }
 
             textarea {
@@ -29,7 +29,7 @@
             }
 
             #sidebar {
-                width:200px; height:150px; float:left; margin-left: 20px; border: 1px solid gray;
+                width:200px; height:250px; float:left; margin-left: 20px; 
             }
 
             #content{
@@ -49,16 +49,16 @@
                 <form method="get" action="/scrap">
                     <button class="btn scrap">스크랩 박스로</button>
                 </form>
+                <form method="get" action="/aiscrap">
+                    <button class="btn scrap">AI 스크랩 박스로</button>
+                </form>
             </div>
             <div id="header">
-                <!-- header: 뉴스 타이틀이 들어갈 예정입니다. -->
-                <div id="title">
-                    <h1>{{ title }}</h1>
-                </div>
+                <h2> {{ title }} </h2>
             </div>
             <div id="middle">
                 <div id="content">
-                    {{ article }}
+                    <textarea readonly cols="88" rows="25"> {{ article }} </textarea>
                 </div>
             </div>
             <div id="footer">
@@ -67,12 +67,12 @@
                     <input type="hidden" name="user_id" value = "{{ user_id }}"/>
                     <button type = "submit">스크랩 생성</button>
                 </form>
-                <form method="delete" action="/news/{{ news_id }}/delete">
+                <form method="get" action="/news/{{ news_id }}/delete">
                     <input type="hidden" name="news_id" value = "{{ news_id }}"/>
                     <input type="hidden" name="user_id" value = "{{ user_id }}"/>
                     <button type = "submit">스크랩 해제</button>
                 </form>
-                <form method="post" action="/question">
+                <form method="post" action="./question">
                     <fieldset>
                         <legend>Ask Your Question!</legend>
                             <textarea name="text" cols="80" rows="5" placeholder="궁금한 질문을 입력해주세요." value="{{ text }}"></textarea><br>
