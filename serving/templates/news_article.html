@@ -3,6 +3,7 @@
     <head>
         <meta charset="UTF-8">
         <title>Text Form</title>
+
         <style type="text/css">
             * {
                 font-family: Consolas, sans-serif;
@@ -42,7 +43,7 @@
         <div id="wrap">
             <div id="sidebar">
                 AI Paper Boy
-                <form method="get" action="/home">
+                <form method="get" action="/home/{{user_id}}">
                     <button class="btn main">기사 홈으로</button>
                 </form>
                 <form method="get" action="/scrap">

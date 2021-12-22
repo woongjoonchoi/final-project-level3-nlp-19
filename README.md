@@ -42,12 +42,18 @@
 ### 추창한
 
 ## Demo(Tracer Bullet)
+### login
+![12-22-08-31](https://user-images.githubusercontent.com/50165842/147010980-eed7db8f-66a3-416f-a734-a9d568be24cb.gif)
 
 ### home
-![12-20-13-01](https://user-images.githubusercontent.com/50165842/146710094-3b224c9d-36b5-41a1-a17b-e734e59b7df0.gif)
+![12-22-08-34](https://user-images.githubusercontent.com/50165842/147011118-e815425b-c799-45a2-aada-e20c271a0069.gif)
 
 ### myscrap
-![12-20-12-57](https://user-images.githubusercontent.com/50165842/146709794-1b05315a-70b8-4d7a-b508-bd7148961a92.gif)
+![12-22-08-35](https://user-images.githubusercontent.com/50165842/147011244-64db1c90-343a-42ee-87de-e940aaeb3d41.gif)
 
 ### ai_scrap
-![12-20-12-54](https://user-images.githubusercontent.com/50165842/146709658-f6662470-b68b-4ea4-b7cc-00eb90731448.gif)
+![12-22-08-37](https://user-images.githubusercontent.com/50165842/147011315-6e890362-57dd-4573-92e4-bb13c8c5432b.gif)
+
+### side-bar
+![12-22-08-38](https://user-images.githubusercontent.com/50165842/147011357-10b3dfc2-1aaa-4364-96da-c2b93765491b.gif)
+

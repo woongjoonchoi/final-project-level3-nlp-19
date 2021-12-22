@@ -1,6 +1,7 @@
 from typing import Optional
 from fastapi import FastAPI, APIRouter, Depends, Form
 from fastapi.templating import Jinja2Templates
+from fastapi.responses import RedirectResponse
 import uvicorn
 
 from ..services.newscontent import Newscontent
@@ -49,8 +50,6 @@ def delete_news_input(news_scrap: schemas.NewsScrapDelete, db: Session = Depends
     pass
 
 
-
-
 # 스크랩된 뉴스 기사 다시 스크랩하기(스크랩이 취소되었을 경우를 고려)(별이)
 @router.post("/", description="유저아이디, 스크랩할 뉴스아이디 가져와서 db에 저장")
 def post_scrap_input(news_scrap: schemas.NewsScrapCreate, db: Session = Depends(get_db)):
@@ -63,9 +62,6 @@ def post_scrap_input(news_scrap: schemas.NewsScrapCreate, db: Session = Depends(
 def delete_scrap_input(news_scrap: schemas.NewsScrapDelete, db: Session = Depends(get_db)):
     # Managenewsscrap Service 객체로 사용자 스크랩 정보를 DB에서 삭제하기
     return Managenewsscrap.delete_news_scrap(db=db, news_scrap=news_scrap)
-
-
-
 
 
 if __name__ == '__main__':

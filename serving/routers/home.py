@@ -5,7 +5,12 @@ import uvicorn
 from ..services.homeboard import Homeboard
 from ..schema.database import SessionLocal
 
+<<<<<<< HEAD
 router = APIRouter(prefix="/home", tags=["Home"])
+=======
+
+router = APIRouter(prefix="/home/{user_id}", tags=["Home"])
+>>>>>>> 6b866e0104b640978b75a0a90cd474b77de70096
 templates = Jinja2Templates(directory='serving/templates')
 
 # Dependency
@@ -23,10 +28,11 @@ home_board= Homeboard()
 def get_home_page(request : Request , user_id : str = None):
     # Homeboard Service 객체로 뉴스 목록 가져오기
     res = home_board.get_news_title()
-    if user_id is None :
-        user_id = "wjc"
+    # if user_id is None :
+    #     user_id = "wjc"
     # print(res['hits']['hits'][0])
-    # print(user_id)
+    print(user_id)
+
     return templates.TemplateResponse('home.html', context={'request': request , 'res_news' : res['hits']['hits'] , 'user_id' : user_id})
 
 
