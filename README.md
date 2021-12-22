@@ -15,13 +15,8 @@
 > package directory management
 #### modeling
 > test with tiny dataset  
-<<<<<<< HEAD
-> generation model error analysis  
-> extraction model overfitted to train set   
-=======
 > error analysis on generation model   
 > overfitted extraction model  to train set   
->>>>>>> main
 #### ml_pipeline code
 > extraction_pre_process  
 > generation_pre_process  

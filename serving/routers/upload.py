@@ -5,9 +5,9 @@ import uvicorn
 from starlette.responses import HTMLResponse
 from .home import get_db
 
-from schema.schemas import UserNewsBase, NewsScrap, NewsScrapCreate
+from ..schema.schemas import UserNewsBase, NewsScrap, NewsScrapCreate
 from sqlalchemy.orm import Session
-from routers.home import get_db
+from ..routers.home import get_db
 
 from pydantic import BaseModel
 

@@ -1,5 +1,5 @@
 from typing import Optional
-from fastapi import FastAPI, APIRouter, Depends, Form
+from fastapi import FastAPI, APIRouter, Depends, Form, Request
 from fastapi.templating import Jinja2Templates
 import uvicorn
 
@@ -19,9 +19,14 @@ templates = Jinja2Templates(directory='serving/templates')
 
 # 뉴스 기사 불러오기(창한)
 @router.get("/{news_id}",  description="사용자가 호출한 뉴스 본문을 볼 수 있도록 합니다.")
-def get_news_page(news_id: str, user_id: str, db: Session = Depends(get_db)):
+def get_news_page(request: Request, news_id: str, user_id: str, db: Session = Depends(get_db)):
     # Newscontent Service 객체로 news 기사 본문 가져오기
-    return Newscontent.get_news(db=db, news_id=news_id, user_id = user_id)
+    title, article  = Newscontent.get_news(db=db, news_id=news_id, user_id = user_id)
+    article = article.replace('<br />', '\n')
+    article = article.replace('<!------------ PHOTO_POS_0 ------------>', '')
+    print(title, article, sep='\n')
+    
+    return templates.TemplateResponse('article_form.html', context={'request': request, 'news_id': news_id, 'user_id': user_id, 'title': title, 'article': article})
 
 """(별이)
 @app.get("/ai_input/", description="유저가 스크랩하거나 해재할 AI의 뉴스 페이지 html")
