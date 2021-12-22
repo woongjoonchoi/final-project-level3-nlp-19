@@ -10,7 +10,7 @@
 
 ### 이준수
 
-### 최웅준ss
+### 최웅준
 #### Project Management
 > package directory management
 #### modeling
