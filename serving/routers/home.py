@@ -5,7 +5,6 @@ import uvicorn
 from ..services.homeboard import Homeboard
 from ..schema.database import SessionLocal
 
-
 router = APIRouter(prefix="/home", tags=["Home"])
 templates = Jinja2Templates(directory='serving/templates')
 
@@ -16,8 +15,6 @@ def get_db():
         yield db
     finally:
         db.close()
-
-
 
 home_board= Homeboard()
 
