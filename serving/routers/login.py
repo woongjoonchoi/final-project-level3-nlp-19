@@ -60,6 +60,7 @@ def get_signup_page(request: Request, db: Session = Depends(get_db)):
 
 
 # 회원가입 하기
+# radio 사용해서 알람 무조건 0으로 저장되고 있음
 @router.post("/signup", description="회원가입할 때 이미 등록된 아이디인지 확인해서 있으면 400에러 없으면 해당 아이디 생성")
 def create_user(request: Request, user_id: str = Form(...), password: str = Form(...), name: str = Form(...), alarm: bool = Form(...), db: Session = Depends(get_db)):
     # Signup Service 객체로 입력받은 회원정보를 db에 저장하기
@@ -68,7 +69,8 @@ def create_user(request: Request, user_id: str = Form(...), password: str = Form
         raise HTTPException(status_code=400, detail="이미 등록된 아이디 입니다.")
 
     Signup.create_user(db, user_id=user_id, password=password, name=name, alarm=alarm)
-    return RedirectResponse(url="/login", status_code=302)
+    url = f'/login'
+    return RedirectResponse(url=url, status_code=302)
 
 
 # # 회원탈퇴 페이지로 이동
