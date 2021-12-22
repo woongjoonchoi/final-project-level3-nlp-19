@@ -43,16 +43,6 @@ def get_news_page(request: Request, news_id: str, user_id: str, db: Session = De
 #     return Managenewsscrap.create_news_scrap(db=db, news_scrap=news_scrap)
 
 
-
-
-# # 사용자가 뉴스 기사에 입력한 정보, 스크랩 정보를 DB에 저장하기(준수, 별이)
-@router.get("/{news_id}/question", description="유저아이디, 스크랩할 뉴스아이디 가져와서 db에 저장")
-def get_user_input(request: Request, news_id: str, user_id: str, text: str, db: Session = Depends(get_db)):
-    title, article = Newscontent.get_news(db=db, news_id=news_id, user_id=user_id)
-    article = article.replace('<br />', '\n')
-    article = article.replace('<!------------ PHOTO_POS_0 ------------>', '')
-    # print(title, article, sep='\n')
-
 # 사용자가 뉴스 기사에 입력한 정보, 스크랩 정보를 DB에 저장하기(준수, 별이)
 @router.get("/{news_id}/question", description="유저아이디, 스크랩할 뉴스아이디 가져와서 db에 저장")
 def get_user_input(request: Request, news_id: str, user_id: str, text: str, db: Session = Depends(get_db)):
@@ -63,6 +53,12 @@ def get_user_input(request: Request, news_id: str, user_id: str, text: str, db: 
 
     # Managenewsscrap Service 객체로 사용자 스크랩 정보를 DB에 저장하기
     Manageuserinput.insert_news_input(db=db, user_id=user_id, news_id=news_id, user_input=text)
+
+
+    # Managenewsscrap Service 객체로 사용자 스크랩 정보를 DB에 저장하기(별이)
+    # 해당 기사가 이미 DB에 저장되어있는지 확인
+    if not Managenewsscrap.get_news_scrap_id(db=db, user_id=user_id, news_id=news_id):
+        Managenewsscrap.create_news_scrap(db=db, user_id=user_id, news_id=news_id)
 
     # 이 부분 RedirectResponse로 바꿔야 하는데 아직 모르겠음
     return templates.TemplateResponse('news_article.html', context={'request': request, 'title': title, 'article': article, 'news_id': news_id, 'user_id': user_id})

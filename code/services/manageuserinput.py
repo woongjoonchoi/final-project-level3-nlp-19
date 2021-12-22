@@ -30,7 +30,7 @@ class Manageuserinput():
         # 예측결과 AIInput 테이블에 저장하기        
         for idx, context in enumerate(df["context_list"][0]):
             if prediction[0]['prediction_text'] in context:
-                db_user_input = models.AIInput(user_id=user_id, ai_news_id=news_id, ai_input=prediction[0]["prediction_text"])             
+                db_user_input = models.AIInput(user_id=user_id, ai_news_id=df["context_id"][0][idx], ai_input=prediction[0]["prediction_text"])             
                 db.add(db_user_input)
                 db.commit()
                 db.refresh(db_user_input)
@@ -38,7 +38,7 @@ class Manageuserinput():
         return db_user_input
 
     # 사용자가 입력한 정보를 DB에서 삭제하기
-    def delete_news_input(db: Session, user_input: schemas.UserInputBase):
-        pass
-
-    pass
+    def delete_news_input(db: Session, user_id: str, news_id: str):
+        db_user_input = db.query(models.UserInput).filter(models.UserInput.user_id == user_id and models.UserInput.user_news_id == news_id).delete()
+        db.commit()
+        return db_user_input

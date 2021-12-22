@@ -17,7 +17,7 @@ from sqlalchemy.orm import Session
 
 
 router = APIRouter(prefix="/login", tags=["login"])
-templates = Jinja2Templates(directory='templates')
+templates = Jinja2Templates(directory='serving/templates')
 
 
 # 로그인 페이지로 이동
@@ -101,4 +101,3 @@ if __name__ == '__main__':
     app = FastAPI()
     app.include_router(router)
     uvicorn.run(app="AIPaperboy:app", host="0.0.0.0", port=8000, reload=True)
-

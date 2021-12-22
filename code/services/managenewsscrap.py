@@ -52,4 +52,3 @@ class Managenewsscrap():
         db_news_scrap = db.query(models.NewsScrap).filter(models.NewsScrap.news_scrap_id == int(news_scrap_id)).delete()
         db.commit()
         return db_news_scrap
-

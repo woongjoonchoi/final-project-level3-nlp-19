@@ -62,6 +62,3 @@ class Signup():
         db.commit()
         db.refresh(db_user)
         return db_user
-
-
-
