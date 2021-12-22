@@ -35,7 +35,6 @@ def get_scrap_page(request : Request ,  db : Session = Depends(get_db)):
 
     # 로그인이 안되어있으면 로그인 화면으로 이동(로그인 기능이 구현되어 있다면)
     return templates.TemplateResponse('myscrap.html', context={'request': request , 'my_news' : news})
-    pass
 
 
 

@@ -17,7 +17,6 @@ def get_db():
     finally:
         db.close()
 
-
 home_board= Homeboard()
 
 
