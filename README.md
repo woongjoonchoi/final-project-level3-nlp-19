@@ -39,7 +39,7 @@
 > ai scrap news title list  
 > my scrap news title list  
 
-### 추창한s
+### 추창한
 
 ## Demo(Tracer Bullet)
 ### login
