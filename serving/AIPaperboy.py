@@ -13,8 +13,8 @@ templates = Jinja2Templates(directory='./templates')
 app.mount("/templates/css/", StaticFiles(directory="serving/templates/css"), name="home")
 # 뉴스 홈페이지로 연결하기
 @app.get("/")
-def get_home_page():
-    return RedirectResponse("./home")
+def get_login_page():
+    return RedirectResponse("./login")
 
 # router 리스트 목록 불러오기
 path = 'serving/routers/'
