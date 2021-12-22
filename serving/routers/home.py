@@ -5,12 +5,8 @@ import uvicorn
 from ..services.homeboard import Homeboard
 from ..schema.database import SessionLocal
 
-<<<<<<< HEAD
-router = APIRouter(prefix="/home", tags=["Home"])
-=======
 
 router = APIRouter(prefix="/home/{user_id}", tags=["Home"])
->>>>>>> 6b866e0104b640978b75a0a90cd474b77de70096
 templates = Jinja2Templates(directory='serving/templates')
 
 # Dependency
