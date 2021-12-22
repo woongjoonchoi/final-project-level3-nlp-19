@@ -16,12 +16,20 @@ class Checklogin():
     # 아이디 비밀번호 줘서 로그인
     def login_user(db: Session, user_id: str, password: str):
         fake_hashed_password = password + "notreallyhashed"
-        return db.query(models.User).filter(models.User.user_id == user_id and models.User.password == fake_hashed_password).first()
+        # return db.query(models.User).filter(models.User.user_id == user_id and models.User.hashed_password == fake_hashed_password).first()
+
+        # db 테이블을 잘 보자
+        if db.query(models.User).filter(models.User.user_id == user_id).first():
+            user = db.query(models.User).get(user_id)
+            db_hashed_password_password = user.hashed_password
+            if db_hashed_password_password == fake_hashed_password:
+                return True
+        return False
 
 
-    # 모든 유저
-    def get_users(db: Session, skip: int = 0, limit: int = 100):
-        return db.query(models.User).offset(skip).limit(limit).all()
+    # # 모든 유저
+    # def get_users(db: Session, skip: int = 0, limit: int = 100):
+    #     return db.query(models.User).offset(skip).limit(limit).all()
 
 
 
@@ -45,7 +53,10 @@ class Signup():
     # 유저 직접 삭제
     def delete_user(db: Session, user_id: str, password: str):
         fake_hashed_password = password + "notreallyhashed"
-        db_user = models.User(user_id=user_id, hashed_password=fake_hashed_password)
+        user = db.query(models.User).get(user_id)
+        name=user.name
+        alarm=user.alarm
+        db_user = models.User(user_id=user_id, hashed_password=fake_hashed_password, name=name, alarm=alarm)
         db.delete(db_user)
         db.commit()
         db.refresh(db_user)

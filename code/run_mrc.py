@@ -29,7 +29,16 @@ from arguments import (
     ModelArguments,
     DataTrainingArguments,
 )
+# import wandb
+# WANDB_WATCH=all
+# defaults = dict(
+#     learning_rate = 1e-4,
+#     # dropout=0.2,
+# )
 
+
+# wandb.init(config=defaults , tags =["baseline"])
+# config = wandb.config
 logger = logging.getLogger(__name__)
 
 # run_extraction_mrc, run_mrc 합침

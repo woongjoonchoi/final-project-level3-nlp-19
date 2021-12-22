@@ -12,10 +12,22 @@
         <link href="{{ url_for('home', path='/styles.css') }}" rel="stylesheet" />
     </head>
     <body>
+        <div id="sidebar">
+            AI Paper Boy
+            <form action="/home/{{user_id}}">
+                <button class="btn main">기사 홈으로</button>
+            </form>
+            <form action="/scrap/{{user_id}}">
+                <button class="btn scrap">스크랩 박스로</button>
+            </form>
+            <form action="/aiscrap/{{user_id}}">
+                <button class="btn scrap">ai스크랩 박스로</button>
+            </form>
+        </div>
         <!-- Responsive navbar-->
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
             <div class="container">
-                <a class="navbar-brand" href="#!">Start Bootstrap</a>
+                <a class="navbar-brand" href="#!">AI Paperboy</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
@@ -32,7 +44,7 @@
             <div class="container">
                 <div class="text-center my-5">
                     <h1 class="fw-bolder">Welcome to AIpaperboy!</h1>
-                    <p class="lead mb-0">A Bootstrap 5 starter layout for your next blog homepage</p>
+                    <p class="lead mb-0">Made by 4 people of BCA aitech NLP-19</p>
                 </div>
             </div>
         </header>
@@ -48,16 +60,10 @@
                             <div class="small text-muted">{{res_news[0]['_source']['date']}}</div>
                             <h2 class="card-title">{{res_news[0]['_source']['title']}}</h2>
                             <p class="card-text">{{res_news[0]['_source']['context'][:300]}}</p>
-<<<<<<< HEAD
-                            <form name="myForm0" action="/news/{{ res_news[0]['_id'] }}" method="POST">
-                            <input type="hidden" name="context" value= "{{ res_news[0]['_source']['context'] }}"/>
-                            <input type="hidden" name="id" value =  "{{ res_news[0]['_id'] }}"/>
-=======
                             <form name="myForm0" action="/news/{{ res_news[0]['_id'] }}" method="GET">
 
                             <input type="hidden" name="news_id" value =  "{{ res_news[0]['_id'] }}"/>
                             <input type="hidden" name="user_id" value =  "{{user_id}}"/>
->>>>>>> main
                             <input type = "submit" value = "Readme" >
                             </form>
                         </div>
@@ -72,15 +78,9 @@
                                     <div class="small text-muted">{{res_news[1]['_source']['date']}}</div>
                                     <h2 class="card-title h4">{{res_news[1]['_source']['title']}}</h2>
                                     <p class="card-text">{{res_news[1]['_source']['context'][:150]}}</p>
-<<<<<<< HEAD
-                                    <form name="myForm1" action="/news/{{ res_news[1]['_id'] }}" method="POST">
-                                    <input type="hidden" name="context" value= "{{ res_news[1]['_source']['context'] }}" />
-                                    <input type="hidden" name="id" value =  "{{ res_news[1]['_id'] }}"/>
-=======
                                     <form name="myForm1" action="/news/{{ res_news[1]['_id'] }}" method="GET">
                                     <input type="hidden" name="news_id" value =  "{{ res_news[1]['_id'] }}"/>
                                     <input type="hidden" name="user_id" value =  "{{user_id}}"/>
->>>>>>> main
                                     <input type = "submit" value = "Readme" >
                                     </form>
                                 </div>
@@ -92,15 +92,9 @@
                                     <div class="small text-muted">{{res_news[2]['_source']['date']}}</div>
                                     <h2 class="card-title h4">{{res_news[2]['_source']['title']}}</h2>
                                     <p class="card-text">{{res_news[2]['_source']['context'][:150]}}</p>
-<<<<<<< HEAD
-                                    <form name="myForm2" action="/news/{{ res_news[2]['_id'] }}" method="POST">
-                                    <input type="hidden" name="context" value= "{{ res_news[2]['_source']['context'] }}" />
-                                    <input type="hidden" name="id" value =  "{{ res_news[2]['_id'] }}"/>
-=======
                                     <form name="myForm2" action="/news/{{ res_news[2]['_id'] }}" method="GET">
                                     <input type="hidden" name="user_id" value =  "{{user_id}}"/>
                                     <input type="hidden" name="news_id" value =  "{{ res_news[2]['_id'] }}"/>
->>>>>>> main
                                     <input type = "submit" value = "Readme" >
                                     </form>
                                 </div>
@@ -114,15 +108,9 @@
                                     <div class="small text-muted">{{res_news[3]['_source']['date']}}</div>
                                     <h2 class="card-title h4">{{res_news[3]['_source']['title']}}</h2>
                                     <p class="card-text">{{res_news[3]['_source']['context'][:150]}}</p>
-<<<<<<< HEAD
-                                    <form name="myForm3" action="/news/{{ res_news[3]['_id'] }}" method="POST">
-                                    <input type="hidden" name="context" value= "{{ res_news[3]['_source']['context'] }}" />
-                                    <input type="hidden" name="id" value =  "{{ res_news[3]['_id'] }}"/>
-=======
                                     <form name="myForm3" action="/news/{{ res_news[3]['_id'] }}" method="GET">
                                     <input type="hidden" name="user_id" value =  "{{user_id}}"/>
                                     <input type="hidden" name="news_id" value =  "{{ res_news[3]['_id'] }}"/>
->>>>>>> main
                                     <input type = "submit" value = "Readme" >
                                     </form>
                                     
@@ -135,15 +123,9 @@
                                     <div class="small text-muted">{{res_news[4]['_source']['date']}}</div>
                                     <h2 class="card-title h4">{{res_news[4]['_source']['title']}}</h2>
                                     <p class="card-text">{{res_news[4]['_source']['context'][:150]}}</p>
-<<<<<<< HEAD
-                                    <form name="myForm4" action="/news/{{ res_news[4]['_id'] }}" method="POST">
-                                    <input type="hidden" name="context" value= "{{ res_news[4]['_source']['context'] }}" />
-                                    <input type="hidden" name="id" value =  "{{ res_news[4]['_id'] }}"/>
-=======
                                     <form name="myForm4" action="/news/{{ res_news[4]['_id'] }}" method="GET">
                                     <input type="hidden" name="user_id" value =  "{{user_id}}"/>
                                     <input type="hidden" name="news_id" value =  "{{ res_news[4]['_id'] }}"/>
->>>>>>> main
                                     <input type = "submit" value = "Readme" >
                                     </form>
                                     

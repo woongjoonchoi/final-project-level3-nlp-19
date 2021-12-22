@@ -7,7 +7,7 @@ from .home import get_db
 
 from ..schema.schemas import UserNewsBase, NewsScrap, NewsScrapCreate
 from sqlalchemy.orm import Session
-from ..routers.home import get_db
+from .home import get_db
 
 from pydantic import BaseModel
 
