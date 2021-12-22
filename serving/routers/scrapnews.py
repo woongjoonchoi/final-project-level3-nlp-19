@@ -32,7 +32,7 @@ def get_news_scraps_form(request: Request, db: Session = Depends(get_db)):
 
 
 # 사용자가 스크랩된 뉴스 기사에 입력한 정보, 스크랩 정보를 DB에 저장하기(준수, 별이)
-@router.post("/")
+@router.post("/question")
 def post_news_input(user_info: schemas.UserInputBase, news_scrap: schemas.NewsScrapCreate, db: Session = Depends(get_db), input: str = Form(...)):
 
     # Manageuserinput Service 객체로 사용자 입력 정보를 DB에 저장하기(준수)

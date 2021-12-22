@@ -12,5 +12,5 @@ class Newscontent():
     def get_news(db: Session, news_id: str, user_id: str):
         
         res = es.get(index = "news_wiki_index_update", id=news_id)
-        print(res)
+        # return res["_source"], news_id
         return res["_source"]["title"], res["_source"]["article"]
