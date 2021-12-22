@@ -104,9 +104,7 @@ def run_retrieval(
     tokenize_fn: Callable[[str], List[str]],
     datasets: DatasetDict,
     training_args: TrainingArguments,
-    data_args: DataTrainingArguments,
-    data_path: str = "../data",
-    context_path: str = "mbn_news_wiki.json",
+    data_args: DataTrainingArguments
 ) -> DatasetDict:
     print(f"-----------------------------------------run_retrieval-----------------------------------------")
 
@@ -114,7 +112,7 @@ def run_retrieval(
 
     # Spase Passage Retrieval 부분 
     retriever_sparse = SparseRetrieval(
-        tokenize_fn=tokenize_fn.tokenize, data_path=data_path, context_path=context_path
+        tokenize_fn=tokenize_fn.tokenize
         )
         
     df_sparse = retriever_sparse.elastic_retrieve(datasets["validation"], topk=data_args.top_k_retrieval)
@@ -157,6 +155,69 @@ def run_retrieval(
 
     datasets = DatasetDict({"validation": Dataset.from_pandas(df, features=f)})
     return datasets
+
+
+def run_retrieval_date(
+    tokenize_fn: Callable[[str], List[str]],
+    datasets: DatasetDict,
+    training_args: TrainingArguments,
+    data_args: DataTrainingArguments,
+    date_range,
+    data_path: str = "../data",
+    context_path: str = "mbn_news_wiki.json",
+) -> DatasetDict:
+    print(f"-----------------------------------------run_retrieval-----------------------------------------")
+
+    # Query에 맞는 Passage들을 Retrieval 합니다.
+
+    # Spase Passage Retrieval 부분 
+    retriever_sparse = SparseRetrieval(
+        tokenize_fn=tokenize_fn.tokenize
+        )
+        
+    df_sparse = retriever_sparse.elastic_retrieve_date(datasets["validation"], date_range, topk=data_args.top_k_retrieval)
+
+    df = df_sparse
+    
+    df["context_list"] = df["context"]
+    for idx in range(len(df_sparse)):
+        df["context"][idx] = " ".join(df_sparse["context"][idx])
+
+
+
+    # test data 에 대해선 정답이 없으므로 id question context 로만 데이터셋이 구성됩니다.
+    if training_args.do_predict:
+        f = Features(
+            {
+                "context": Value(dtype="string", id=None),
+                "id": Value(dtype="string", id=None),
+                "question": Value(dtype="string", id=None),
+            }
+        )
+
+    
+    # train data 에 대해선 정답이 존재하므로 id question context answer 로 데이터셋이 구성됩니다.
+    elif training_args.do_eval:
+        f = Features(
+            {
+                "answers": Sequence(
+                    feature={
+                        "text": Value(dtype="string", id=None),
+                        "answer_start": Value(dtype="int32", id=None),
+                    },
+                    length=-1,
+                    id=None,
+                ),
+                "context": Value(dtype="string", id=None),
+                "id": Value(dtype="string", id=None),
+                "question": Value(dtype="string", id=None),
+            }
+        )
+
+    datasets = DatasetDict({"validation": Dataset.from_pandas(df, features=f)})
+    return datasets, df
+
+
 
 
 if __name__ == "__main__":

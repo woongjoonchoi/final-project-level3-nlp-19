@@ -32,9 +32,7 @@ def timer(name):
 class SparseRetrieval:
     def __init__(
         self,
-        tokenize_fn,
-        data_path: Optional[str] = "../data",
-        context_path: Optional[str] = "mbn_news_wiki.json",
+        tokenize_fn
     ) -> NoReturn:
 
         """
@@ -45,24 +43,9 @@ class SparseRetrieval:
                 - lambda x: x.split(' ')
                 - Huggingface Tokenizer
                 - konlpy.tag의 Mecab
-            data_path:
-                데이터가 보관되어 있는 경로입니다.
-            context_path:
-                Passage들이 묶여있는 파일명입니다.
-            data_path/context_path가 존재해야합니다.
         Summary:
             Passage 파일을 불러오고 TfidfVectorizer를 선언하는 기능을 합니다.
         """
-
-        self.data_path = data_path
-        with open(os.path.join(data_path, context_path), "r", encoding="utf-8") as f:
-            wiki = json.load(f)
-
-        self.contexts = list(
-            dict.fromkeys([v["CONTEXT"] for v in wiki.values()])
-        )  # set 은 매번 순서가 바뀌므로
-        print(f"Lengths of unique contexts : {len(self.contexts)}")
-        self.ids = list(range(len(self.contexts)))
 
         # Transform by vectorizer
         self.tfidfv = TfidfVectorizer(
@@ -77,7 +60,7 @@ class SparseRetrieval:
 
     def build_elastic_db(self):
         # db 이름 설정
-        INDEX_NAME = "news_wiki_index"
+        INDEX_NAME = "news_wiki_index_update"
 
         # db 셋팅
         INDEX_SETTINGS = {
@@ -98,39 +81,72 @@ class SparseRetrieval:
         "mappings": {
 
             "properties" : {
+                
+                "admin_id" : {
+                "type" : "keyword",
+                },
+                
+                "category" : {
+                "type" : "keyword",
+                },
+                
+                "date" : {
+                "type" : "date"
+                },
+                
+                "title" : {
+                "type" : "keyword",
+                },
+                
+                "article" : {
+                "type" : "text"
+                },
+                
                 "context" : {
                 "type" : "text",
                 "analyzer": "korean",
                 "search_analyzer": "korean"
                 }
+                
             }
 
         }
         }
+
 
         # db 생성
         if self.es.indices.exists(INDEX_NAME):
             self.es.indices.delete(index=INDEX_NAME)
         self.es.indices.create(index=INDEX_NAME, body=INDEX_SETTINGS)
 
+        # wiki_data 불러오기
+        with open(os.path.join("../data/", "mbn_news_wiki_update.json"), "r", encoding="utf-8") as f:
+            wiki = json.load(f)
+
         # 데이터 elastic search 입력 형식으로 변환
-        wikis = [
-            {
-                "_index": INDEX_NAME,
-                "_id" : idx,
-                "_source": {
-                    "context": doc
-                }
+        wikis =[]
+        for doc in wiki.values():
+            temp = {
+            "_index": INDEX_NAME,
+            "_id" : doc['news_id'],
+            "_source": {
+                "admin_id":doc['admin_id'],
+                "category":doc['category'],
+                "date":doc['date'],
+                "title":doc['title'],
+                "article":doc['article'],
+                "context": doc['context']
             }
-            for idx, doc in enumerate(self.contexts)
-        ]
-        
+        }
+            wikis.append(temp)
+
+
         # 데이터 입력
         try:
             for idx in range(1000,len(wikis), 1000):
                 response = helpers.bulk(self.es, wikis[idx-1000:idx])
                 # print ("\nRESPONSE:", response)
-            response = helpers.bulk(self.es, wikis[836000:len(wikis)])
+            response = helpers.bulk(self.es, wikis[842000:len(wikis)])
             print ("\nRESPONSE:", response)
         except Exception as e:
             print("\nERROR:", e)
@@ -141,7 +157,7 @@ class SparseRetrieval:
         ) -> Union[Tuple[List, List], pd.DataFrame]:
 
         
-        INDEX_NAME = "news_wiki_index"
+        INDEX_NAME = "news_wiki_index_update"
         if not self.es.indices.exists(INDEX_NAME):
             self.build_elastic_db()
 
@@ -158,13 +174,19 @@ class SparseRetrieval:
             # Retrieve한 Passage를 pd.DataFrame으로 반환합니다.
             total = []
             with timer("query exhaustive search"):
+
                 doc_indices = []
+                context_lists =[]
                 for query in query_or_dataset["question"]:
-                    res = self.es.search(index=INDEX_NAME, q=query)
+                    res = self.es.search(index = INDEX_NAME, q = query)
                     doc_indice = []
+                    context_list = []
                     for hit in res['hits']['hits']:
-                        doc_indice.append(hit['_id']) 
+                        doc_indice.append(hit['_id'])
+                        context_list.append(hit['_source']['context']) 
                     doc_indices.append(doc_indice)
+                    context_lists.append(context_list)
+
 
             for idx, example in enumerate(
                 tqdm(query_or_dataset, desc="Sparse retrieval: ")
@@ -175,7 +197,7 @@ class SparseRetrieval:
                     "id": example["id"],
                     # Retrieve한 Passage의 id, context를 반환합니다.
                     "context_id": doc_indices[idx],
-                    "context": [self.contexts[int(pid)] for pid in doc_indices[idx]]
+                    "context": context_lists[idx]
                     # "context": " ".join(
                     #     [self.contexts[int(pid)] for pid in doc_indices[idx]]
                     # )
@@ -188,6 +210,78 @@ class SparseRetrieval:
 
             cqas = pd.DataFrame(total)
         return cqas
+
+
+
+    def elastic_retrieve_date(
+        self, query_or_dataset: Union[str, Dataset], date_range, topk: Optional[int] = 1
+        ) -> Union[Tuple[List, List], pd.DataFrame]:
+
+        
+        INDEX_NAME = "news_wiki_index_update"
+        if not self.es.indices.exists(INDEX_NAME):
+            self.build_elastic_db()
+
+        if isinstance(query_or_dataset, str):
+            res = self.es.search(index=INDEX_NAME, q=query_or_dataset)
+            doc_indices = []
+            for hit in res['hits']['hits']:
+                doc_indices.append(hit['_id']) 
+
+            return [self.contexts[int(pid)] for pid in doc_indices]
+
+        elif isinstance(query_or_dataset, Dataset):
+
+            body = {
+            "query": {
+                "range": {
+                "date": {
+                    "gt": date_range[0],
+                    "lt": date_range[1]
+                }
+                }
+            }
+            }
+
+            # Retrieve한 Passage를 pd.DataFrame으로 반환합니다.
+            total = []
+            with timer("query exhaustive search"):
+                doc_indices = []
+                context_lists =[]
+                for query in query_or_dataset["question"]:
+                    res = self.es.search(index = INDEX_NAME, q = query, body = body)
+                    doc_indice = []
+                    context_list = []
+                    for hit in res['hits']['hits']:
+                        doc_indice.append(hit['_id'])
+                        context_list.append(hit['_source']['context']) 
+                    doc_indices.append(doc_indice)
+                    context_lists.append(context_list)
+
+            for idx, example in enumerate(
+                tqdm(query_or_dataset, desc="Sparse retrieval: ")
+            ):
+                tmp = {
+                    # Query와 해당 id를 반환합니다.
+                    "question": example["question"],
+                    "id": example["id"],
+                    # Retrieve한 Passage의 id, context를 반환합니다.
+                    "context_id": doc_indices[idx],
+                    "context": context_lists[idx]
+                    # "context": " ".join(
+                    #     [self.contexts[int(pid)] for pid in doc_indices[idx]]
+                    # )
+                }
+                if "context" in example.keys() and "answers" in example.keys():
+                    # validation 데이터를 사용하면 ground_truth context와 answer도 반환합니다.
+                    tmp["original_context"] = example["context"]
+                    tmp["answers"] = example["answers"]
+                total.append(tmp)
+
+            cqas = pd.DataFrame(total)
+            print(cqas)
+        return cqas
+    
 
 
     def get_sparse_embedding(self) -> NoReturn:
