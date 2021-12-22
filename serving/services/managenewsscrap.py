@@ -8,8 +8,8 @@ class Managenewsscrap():
 
     # 유저가 뉴스 스크랩 생성
 
-    def create_news_scrap(db: Session, user_id: str, user_news_id: str):
-        db_news_scrap = models.NewsScrap(user_id=user_id, user_news_id=user_news_id, news_scrap_id=randint(1, 100000000))
+    def create_news_scrap(db: Session, user_id: str, news_id: str):
+        db_news_scrap = models.NewsScrap(user_id=user_id, user_news_id=news_id, news_scrap_id=randint(1, 100000000))
         db.add(db_news_scrap)
         db.commit()
         db.refresh(db_news_scrap)

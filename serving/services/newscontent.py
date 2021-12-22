@@ -9,7 +9,7 @@ es = Elasticsearch()
 class Newscontent():
 
     # 뉴스 기사 내용과 사용자 입력 내용 불러오기
-    def get_news(db: Session, news_id: str):
+    def get_news(db: Session, news_id: str, user_id: str):
         
         res = es.get(index = "news_wiki_index_update", id=news_id)
         print(res)
