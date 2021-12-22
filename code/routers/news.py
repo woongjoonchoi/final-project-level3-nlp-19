@@ -4,18 +4,18 @@ from fastapi.templating import Jinja2Templates
 from fastapi.responses import RedirectResponse
 import uvicorn
 
-from ..services.newscontent import Newscontent
-from ..services.manageuserinput import Manageuserinput
-from ..services.managenewsscrap import Managenewsscrap
+from services.newscontent import Newscontent
+from services.manageuserinput import Manageuserinput
+from services.managenewsscrap import Managenewsscrap
 
 from pydantic import BaseModel
 
 from .home import get_db
-from ..schema import schemas
+from schema import schemas
 from sqlalchemy.orm import Session
 
 router = APIRouter(prefix="/news", tags=["News"])
-templates = Jinja2Templates(directory='serving/templates')
+templates = Jinja2Templates(directory='templates')
 
 
 # 뉴스 기사 불러오기(창한)

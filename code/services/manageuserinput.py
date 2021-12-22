@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from fastapi import Form
 
-from ..schema import models, schemas
+from schema import models, schemas
 
 # 사용자가 입력한 정보를 관리한다.
 class Manageuserinput():

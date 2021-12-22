@@ -2,12 +2,12 @@ from fastapi import FastAPI, APIRouter,Request,Form
 from fastapi.templating import Jinja2Templates
 import uvicorn
 
-from ..services.homeboard import Homeboard
-from ..schema.database import SessionLocal
+from services.homeboard import Homeboard
+from schema.database import SessionLocal
 
 
 router = APIRouter(prefix="/home/{user_id}", tags=["Home"])
-templates = Jinja2Templates(directory='serving/templates')
+templates = Jinja2Templates(directory='templates')
 
 # Dependency
 def get_db():

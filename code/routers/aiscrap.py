@@ -2,15 +2,15 @@ from fastapi import FastAPI, APIRouter , Depends , Request
 from fastapi.templating import Jinja2Templates
 import uvicorn
 from sqlalchemy.orm import Session
-from ..services.aiscrappedboard import Aiscrappedboard
-from ..schema.database import engine , SessionLocal
+from services.aiscrappedboard import Aiscrappedboard
+from schema.database import engine , SessionLocal
 from .home import get_db
-from ..schema import models,schemas
-from .home import get_db
+from schema import models,schemas
+
 
 models.Base.metadata.create_all(engine)
 router = APIRouter(prefix="/aiscrap", tags=["AIScap"])
-templates = Jinja2Templates(directory='serving/templates')
+templates = Jinja2Templates(directory='templates')
 
 aiscrapboard =Aiscrappedboard()
 # AI scrap 페이지로 이동(웅준)

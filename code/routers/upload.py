@@ -5,21 +5,21 @@ import uvicorn
 from starlette.responses import HTMLResponse
 from .home import get_db
 
-from ..schema.schemas import UserNewsBase, NewsScrap, NewsScrapCreate
+from schema.schemas import UserNewsBase, NewsScrap, NewsScrapCreate
 from sqlalchemy.orm import Session
-from .home import get_db
+
 
 from pydantic import BaseModel
 
 router = APIRouter(prefix="/upload", tags=["Upload"])
-templates = Jinja2Templates(directory='serving/templates')
+templates = Jinja2Templates(directory='templates')
 
 
 # 업로드 페이지로 이동
 @router.get("/")
 def get_upload_page():
-    # return templates.TemplateResponse('upload.html', context={'request':request})
-    pass
+    return templates.TemplateResponse('upload.html', context={'request':request})
+    
 
 
 # 파일 업로드하기

@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from ..schema import models, schemas
+from schema import models, schemas
 
 
 # 로그인 정보 확인하기

@@ -1,6 +1,6 @@
 
 
-from ..schema import schemas , models
+from schema import schemas , models
 from sqlalchemy.orm import Session
 
 from elasticsearch import Elasticsearch

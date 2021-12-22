@@ -4,10 +4,10 @@ from fastapi.responses import RedirectResponse
 import uvicorn
 from typing import List
 
-from ..services.managelogin import Checklogin, Signup
+from services.managelogin import Checklogin, Signup
 
 from .home import get_db, get_home_page
-from ..schema import schemas
+from schema import schemas
 from sqlalchemy.orm import Session
 
 
@@ -17,7 +17,7 @@ from sqlalchemy.orm import Session
 
 
 router = APIRouter(prefix="/login", tags=["login"])
-templates = Jinja2Templates(directory='serving/templates')
+templates = Jinja2Templates(directory='templates')
 
 
 # 로그인 페이지로 이동

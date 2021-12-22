@@ -4,16 +4,16 @@ import uvicorn
 from sqlalchemy.orm import Session
 
 
-from ..services.scrappedboard import Scrappedboard
-from ..services.manageuserinput import Manageuserinput
-from ..services.managenewsscrap import Managenewsscrap
-from ..schema.database import engine , SessionLocal
-from ..schema import models,schemas
+from services.scrappedboard import Scrappedboard
+from services.manageuserinput import Manageuserinput
+from services.managenewsscrap import Managenewsscrap
+from schema.database import engine , SessionLocal
+from schema import models,schemas
 from .home import get_db
 
 models.Base.metadata.create_all(engine)
 router = APIRouter(prefix="/scrap", tags=["Scrap"])
-templates = Jinja2Templates(directory='serving/templates')
+templates = Jinja2Templates(directory='templates')
 
 
 # 사용자 scrap 페이지로 이동(웅준)
