@@ -31,7 +31,7 @@ def get_news_page(request: Request, news_id: str, user_id: str, db: Session = De
     
 
 
-# # 사용자가 뉴스 기사에 입력한 정보, 스크랩 정보를 DB에 저장하기(준수, 별이)
+# # 사용자가 뉴스 기사에 입력한 정보, 스크랩 정보를 DB에 저장하기(준수, 별이)ss
 # @router.post("/")
 # def post_news_input(user_info: schemas.UserInputBase, news_scrap: schemas.NewsScrapCreate, db: Session = Depends(get_db), input: str = Form(...)):
 
