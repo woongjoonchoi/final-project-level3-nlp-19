@@ -18,8 +18,8 @@ def get_db():
         db.close()
 
 
-
 home_board= Homeboard()
+
 
 # 뉴스 홈페이지 화면이동(웅준)
 @router.get("/")
