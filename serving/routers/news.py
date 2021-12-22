@@ -51,11 +51,11 @@ def get_news_page(request: Request, news_id: str, user_id: str, db: Session = De
 @router.get("/{news_id}/create", description="유저아이디, 스크랩할 뉴스아이디 가져와서 db에 저장")
 def post_scrap_input(request: Request, news_id: str, user_id: str, db: Session = Depends(get_db)):
     # Managenewsscrap Service 객체로 사용자 스크랩 정보를 DB에 저장하기
-
     Managenewsscrap.create_news_scrap(db=db, user_id=user_id, news_id=news_id)
-    print(111111111111111111111111111111111111111111111111111111)
-    url = f'/login'
-    return RedirectResponse(url=url, status_code=302)
+    # 이 부분 RedirectResponse로 바꿔야 하는데 아직 모르겠음
+    title, article = Newscontent.get_news(db=db, news_id=news_id, user_id=user_id)
+    url = f'/news/{news_id}'
+    return templates.TemplateResponse('article_form.html', context={'request': request, 'title': title, 'article': article, 'news_id': news_id, 'user_id': user_id})
 
 
 # 스크랩한 뉴스기사 취소하기(별이)
