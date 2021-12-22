@@ -36,14 +36,20 @@ def get_news_page(request: Request, news_id: str, user_id: str, db: Session = De
 # def post_news_input(user_info: schemas.UserInputBase, news_scrap: schemas.NewsScrapCreate, db: Session = Depends(get_db), input: str = Form(...)):
 
 # 사용자가 뉴스 기사에 입력한 정보, 스크랩 정보를 DB에 저장하기(준수, 별이)
-@router.post("/question")
-def post_news_input(user_info: schemas.UserInputBase, news_scrap: schemas.NewsScrapCreate, db: Session = Depends(get_db), input: str = Form(...)):
-    print(input, user_info)
-    # Manageuserinput Service 객체로 사용자 입력 정보를 DB에 저장하기(준수)
-    Manageuserinput.insert_news_input(db=db, user_info=user_info, input=input)
-    print("No Problem")
-    # Managenewsscrap Service 객체로 사용자 스크랩 정보를 DB에 저장하기(별이)
-    return Managenewsscrap.create_news_scrap(db=db, news_scrap=news_scrap)
+@router.get("/{news_id}/question", description="유저아이디, 스크랩할 뉴스아이디 가져와서 db에 저장")
+def get_user_input(request: Request, news_id: str, user_id: str, text: str, db: Session = Depends(get_db)):
+    title, article = Newscontent.get_news(db=db, news_id=news_id, user_id=user_id)
+    article = article.replace('<br />', '\n')
+    article = article.replace('<!------------ PHOTO_POS_0 ------------>', '')
+    print(title, article, sep='\n')
+
+    # Managenewsscrap Service 객체로 사용자 스크랩 정보를 DB에 저장하기
+    Manageuserinput.insert_news_input(db=db, user_id=user_id, news_id=news_id, user_input=text)
+
+    # 이 부분 RedirectResponse로 바꿔야 하는데 아직 모르겠음
+    return templates.TemplateResponse('news_article.html', context={'request': request, 'title': title, 'article': article, 'news_id': news_id, 'user_id': user_id})
+
+
 
 # # 사용자가 뉴스 기사에 입력한 정보, 스크랩 정보를 DB에서 삭제하기(준수, 별이)
 # @router.delete("/")

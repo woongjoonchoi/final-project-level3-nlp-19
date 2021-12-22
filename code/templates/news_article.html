@@ -46,10 +46,10 @@
                 <form method="get" action="/home/{{user_id}}">
                     <button class="btn main">기사 홈으로</button>
                 </form>
-                <form method="get" action="/scrap">
+                <form method="get" action="/scrap/{{user_id}}">
                     <button class="btn scrap">스크랩 박스로</button>
                 </form>
-                <form method="get" action="/aiscrap">
+                <form method="get" action="/aiscrap/{{user_id}}">
                     <button class="btn scrap">AI 스크랩 박스로</button>
                 </form>
             </div>
@@ -58,24 +58,25 @@
             </div>
             <div id="middle">
                 <div id="content">
-                    <textarea cols="88" rows="25"> {{ article }} </textarea>
+                    <textarea readonly cols="88" rows="25"> {{ article }} </textarea>
                 </div>
             </div>
             <div id="footer">
-                <form method="post" action="/news_scrap/{{ news_id }}/create">
+                <form method="get" action="/news/{{ news_id }}/create">
+                    <input type="hidden" name="news_id" value = "{{ news_id }}"/>
                     <input type="hidden" name="user_id" value = "{{ user_id }}"/>
-                    <input type="hidden" name="user_news_id" value = "{{ user_news_id }}"/>
                     <button type = "submit">스크랩 생성</button>
                 </form>
-        
-                <form method="post" action="/news_scrap/{{ news_id }}/delete">
+                <form method="get" action="/news/{{ news_id }}/delete">
+                    <input type="hidden" name="news_id" value = "{{ news_id }}"/>
                     <input type="hidden" name="user_id" value = "{{ user_id }}"/>
-                    <input type="hidden" name="user_news_id" value = "{{ user_news_id }}"/>
                     <button type = "submit">스크랩 해제</button>
                 </form>
-                <form method="post" action="./question">
+                <form method="get" action="/news/{{ news_id }}/question">
                     <fieldset>
                         <legend>Ask Your Question!</legend>
+                            <input type="hidden" name="news_id" value = "{{ news_id }}"/>
+                            <input type="hidden" name="user_id" value = "{{ user_id }}"/>
                             <textarea name="text" cols="80" rows="5" placeholder="궁금한 질문을 입력해주세요." value="{{ text }}"></textarea><br>
                             <input type="submit" value="submit"/>
                             <input type="reset" value="reset"/><br>

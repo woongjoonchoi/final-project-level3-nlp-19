@@ -29,21 +29,10 @@ def get_upload_page(request: Request):
 @router.post("/uploadfiles/")
 def files_upload(files: List[UploadFile] = File(...), db: Session = Depends(get_db)):
 
-    prediction, df = Batchserving.serving(files, db)
-    print(prediction)
+    output = Batchserving.serving(files, db)
     # 업로드로 json 데이터 받기
     # 기사 날짜의 범위 구하기
-
-    if files is not None:
-        # To convert to a string based IO:
-        # stringio = StringIO(files[0].file)
-        # To read file as string:
-        string_data = files[0].file.read()
-        # print(string_data)
-        questions = json.loads(string_data)
-        date_range = [questions['data'][0]["date"], questions['data'][len(questions['data'])-1]["date"]]
-
-    return {"questions": questions, "date_range" : date_range}
+    return {"output": output}
 
 
 
