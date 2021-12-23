@@ -13,6 +13,9 @@
 ### 최웅준
 #### Project Management
 > package directory management
+### data engineering
+> train data cleansing
+
 #### modeling
 > test with tiny dataset  
 > generation model error analysis  
