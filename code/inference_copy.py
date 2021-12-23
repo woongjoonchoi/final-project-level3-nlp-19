@@ -88,7 +88,7 @@ def main():
 
     # rue일 경우 : run passage retrieval
     if data_args.eval_retrieval:
-        datasets = run_retrieval(
+        datasets, _ = run_retrieval(
             tokenizer,
             datasets,
             training_args,
@@ -118,7 +118,8 @@ def run_retrieval(
     df_sparse = retriever_sparse.elastic_retrieve(datasets["validation"], topk=data_args.top_k_retrieval)
 
     df = df_sparse
-
+    df["context_list"] = df["context"]
+    
     for idx in range(len(df_sparse)):
         df["context"][idx] = " ".join(df_sparse["context"][idx])
 
@@ -154,7 +155,7 @@ def run_retrieval(
         )
 
     datasets = DatasetDict({"validation": Dataset.from_pandas(df, features=f)})
-    return datasets
+    return datasets, df
 
 
 def run_retrieval_date(

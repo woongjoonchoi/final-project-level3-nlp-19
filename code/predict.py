@@ -9,7 +9,7 @@ from datasets import load_dataset
 import numpy as np
 import re
 
-from .configure import configure_model
+from configure import configure_model
 from transformers import (
     DataCollatorWithPadding,
     HfArgumentParser,
@@ -21,9 +21,9 @@ from transformers import (
 # from .trainer_qa import QuestionAnsweringTrainer
 # from .sparse_retrieval import SparseRetrieval
 # from .postprocessing import post_processing_function
-from .run_mrc import run_combine_mrc
-from .arguments import ModelArguments, DataTrainingArguments
-from .run_retrieval import run_retrieval
+from run_mrc import run_combine_mrc
+from arguments import ModelArguments, DataTrainingArguments
+from run_retrieval import run_retrieval
 
 parser = HfArgumentParser(
     (ModelArguments, DataTrainingArguments, TrainingArguments)

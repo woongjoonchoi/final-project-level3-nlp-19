@@ -101,7 +101,7 @@ def get_prediction(model, tokenizer, sentence):
     datasets = load_dataset('json', data_files={'validation':os.path.join(data_args.dataset_name, 'sample_test.json')}, field='data')
 
     # Retrieval를 실행하여 관련 wiki news 가져오기
-    datasets = run_retrieval(
+    datasets, df = run_retrieval(
             tokenizer,
             datasets,
             training_args,
@@ -114,4 +114,4 @@ def get_prediction(model, tokenizer, sentence):
 
     predictions = run_combine_mrc(data_args, training_args, model_args, datasets, tokenizer, model)
 
-    return predictions
+    return predictions, df
