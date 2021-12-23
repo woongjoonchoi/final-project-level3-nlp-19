@@ -130,7 +130,7 @@ python inference_copy.py --output_dir ./outputs/test_dataset/ --dataset_name ../
 앱실행 방법
 streamlit run prototype.py --server.address=127.0.0.1 -- --output_dir ./outputs/test_dataset/ --model_name_or_path ./models/train_dataset/ --dataset_name ../data/test_dataset/ --do_predict
 
-python AIPaperboy.py --output_dir ./outputs/test_dataset/ --model_name_or_path wjc123/qa_finetuned --dataset_name ../data/test_dataset/ --do_predict
+python AIPaperboy.py --output_dir ./outputs/test_dataset/ --model_name_or_path ./models/train_dataset/ --dataset_name ../data/test_dataset/ --do_predict
 
 (model option : wjc123/qa_finetuned)
 '''
