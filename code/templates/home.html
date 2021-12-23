@@ -12,18 +12,6 @@
         <link href="{{ url_for('home', path='/styles.css') }}" rel="stylesheet" />
     </head>
     <body>
-        <div id="sidebar">
-            AI Paper Boy
-            <form action="/home/{{user_id}}">
-                <button class="btn main">기사 홈으로</button>
-            </form>
-            <form action="/scrap/{{user_id}}">
-                <button class="btn scrap">스크랩 박스로</button>
-            </form>
-            <form action="/aiscrap/{{user_id}}">
-                <button class="btn scrap">ai스크랩 박스로</button>
-            </form>
-        </div>
         <!-- Responsive navbar-->
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
             <div class="container">
@@ -31,10 +19,9 @@
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                        <li class="nav-item"><a class="nav-link" href="/home/">Home</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#!">About</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#!">Contact</a></li>
-
+                        <li class="nav-item"><a class="nav-link" href="/home/{{user_id}}">Home</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/scrap/{{user_id}}">My Scrap</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/aiscrap/{{user_id}}">AI Scrap</a></li>
                     </ul>
                 </div>
             </div>

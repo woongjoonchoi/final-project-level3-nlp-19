@@ -38,7 +38,7 @@ def get_scrap_page(request : Request ,  user_id, db : Session = Depends(get_db))
     # 로그인이 되어있으면 Scrappedboard Service 객체로 사용자가 스크랩한 뉴스기사 목록 불러오기
 
     # 로그인이 안되어있으면 로그인 화면으로 이동(로그인 기능이 구현되어 있다면)
-    return templates.TemplateResponse('myscrap.html', context={'request': request , 'my_news' : news , "news_list" : news_title_article})
+    return templates.TemplateResponse('myscrap.html', context={'request': request , 'my_news' : news , "news_list" : news_title_article, "user_id": user_id})
     pass
 
 if __name__ == '__main__':
