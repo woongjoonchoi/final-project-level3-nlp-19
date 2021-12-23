@@ -72,8 +72,14 @@
                     <input type="hidden" name="user_id" value = "{{ user_id }}"/>
                     <input type="submit" class="btn btn-dark btn-sm" value="스크랩 해제"/>
                 </form>
-                <div class="example" style="padding-top: 20px;">
-                    <h5>질문 예시 내용</h5>
+                <div class="alert alert-dark", style="width:920px; margin-top: 10px;">
+                    <strong>질문 예시 내용</strong>
+                    <ul class="list-group" style="margin-top: 10px;">
+                        <li class="list-group-item">오바마가 시행한 정책으로는 무엇이 있어? &#10140; 정답이 <strong>단답형</strong>일 경우 매우 잘 찾습니다.</li>
+                        <li class="list-group-item">도널드 트럼프와 김정은은 어떤 관계야? &#10140; 기사에선 <strong>언급되지 않을 법한 내용</strong>은 찾기 어렵습니다.</li>
+                        <li class="list-group-item">반도체 메모리 가격이 하락 또는 상승했던 시기와 이 때 삼성전자의 주식은 어땠는가? 
+                            <br />&#10140; <strong>조건이 여러 개일 경우</strong> 관련 기사를 찾을 수는 있으나 답을 찾기 어렵습니다.</li>
+                    </ul>
                 </div>
                 <form method="get" action="/news/{{ news_id }}/question">
                     <fieldset>
