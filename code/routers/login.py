@@ -17,7 +17,7 @@ from sqlalchemy.orm import Session
 
 
 router = APIRouter(prefix="/login", tags=["login"])
-templates = Jinja2Templates(directory='serving/templates')
+templates = Jinja2Templates(directory='templates')
 
 
 # 로그인 페이지로 이동
