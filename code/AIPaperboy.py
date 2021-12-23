@@ -5,7 +5,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import RedirectResponse
 import uvicorn
 from fastapi.templating import Jinja2Templates
-from routers import (news, aiscrap, upload,  ainews, login, home, scrap, scrapnews)
+from routers import (news, aiscrap, upload, login, home, scrap)
 from pathlib import Path
 
 app = FastAPI()
