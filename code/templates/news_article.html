@@ -70,8 +70,11 @@
                 <form method="get" action="/news/{{ news_id }}/delete">
                     <input type="hidden" name="news_id" value = "{{ news_id }}"/>
                     <input type="hidden" name="user_id" value = "{{ user_id }}"/>
-                    <input type="submit" class="btn btn-dark btn-sm" value="스크랩 해제" style="float: left;"/>
+                    <input type="submit" class="btn btn-dark btn-sm" value="스크랩 해제"/>
                 </form>
+                <div class="example" style="padding-top: 20px;">
+                    <h5>질문 예시 내용</h5>
+                </div>
                 <form method="get" action="/news/{{ news_id }}/question">
                     <fieldset>
                         <legend>궁금한 것을 알려주세요!</legend>
