@@ -1,26 +1,78 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <title>Sample Login Form</title>
+	<title>Sign In</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+	<link href="https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap" rel="stylesheet">
+
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+	<link rel="stylesheet" href="{{ url_for('home', path='/style.css') }}">
+
 </head>
+
 <body>
-<form method="post">
-    <h3>아이디</h3>
-    <input type="string" name="user_id" placeholder="아이디를 입력해주세요." value="{{ user_id }}"/>
-    <h3>비밀번호</h3>
-    <input type="password" name="password" placeholder="비밀번호를 입력해주세요." value="{{ password }}"/>
-    
-    <input type="submit" value="로그인">
-</form>
+	<section class="ftco-section">
+		<div class="container">
+			<div class="row justify-content-center">
+				<div class="col-md-6 text-center mb-5">
+					<h2 class="heading-section">AI Paperboy</h2>
+				</div>
+			</div>
+			<div class="row justify-content-center">
+				<div class="col-md-7 col-lg-5">
+					<div class="wrap">
+						<div class="img" style="background-image: url(../templates/css/images/bg-2.jpg);"></div>
+						<div class="login-wrap p-4 p-md-5">
+							<div class="d-flex">
+								<div class="w-100">
+									<h3 class="mb-4">Sign In</h3>
+								</div>
+							</div>
+							<form method="post" class="signin-form">
+								<div class="form-group mt-3">
+									<input type="text" name="user_id" value="{{ user_id }}" class="form-control"
+										required>
+									<label class="form-control-placeholder" for="username">Username</label>
+								</div>
+								<div class="form-group">
+									<input id="password-field" type="password" name="password" value="{{ password }}"
+										class="form-control" required>
+									<label class="form-control-placeholder" for="password">Password</label>
+									<span toggle="#password-field"
+										class="fa fa-fw fa-eye field-icon toggle-password"></span>
+								</div>
+								<div class="form-group">
+									<button type="submit" class="form-control btn btn-primary rounded submit px-3">Sign
+										In</button>
+								</div>
+							</form>
+							<div style="margin-left: 50px;">
+								<div style="float: left;">
+									<p class="text-center">Not a member?
+								</div>
 
-<form method="get" action="/login/signup">
-    <input type="submit" value="회원가입">
-</form>
+								<div style="float: left;">
+									<form method="get" action="/login/signup">
+										<button type="submit" class="submitLink">Sign
+											Up</button>
+									</form>
+								</div>
+							</div>
+							</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
 
-<!-- <form method="get" action="/login/delete_user">
-    <input type="submit" value="회원탈퇴">
-</form> -->
+	<script src="{{ url_for('home', path='js/jquery.min.js') }}"></script>
+	<script src="{{ url_for('home', path='js/popper.js') }}"></script>
+	<script src="{{ url_for('home', path='js/bootstrap.min.js') }}"></script>
+	<script src="{{ url_for('home', path='js/main.js') }}"></script>
 
 </body>
-</html>
