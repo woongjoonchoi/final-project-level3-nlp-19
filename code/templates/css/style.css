@@ -1596,7 +1596,7 @@ pre {
   font-size: 1rem;
   font-weight: 400;
   line-height: 1.5;
-  color: #495057;
+  color: #0e5caa;
   background-color: #fff;
   background-clip: padding-box;
   border: 1px solid #ced4da;
@@ -8231,7 +8231,7 @@ h1, h2, h3, h4, h5,
     outline: none !important;
     -webkit-box-shadow: none;
     box-shadow: none;
-    border: 1px solid #01d28e; }
+    border: 1px solid #0d6efd; }
 
 .field-icon {
   position: absolute;
@@ -8249,7 +8249,7 @@ h1, h2, h3, h4, h5,
   -webkit-transition: all 400ms;
   -o-transition: all 400ms;
   transition: all 400ms;
-  opacity: .6; }
+  opacity: .6;}
 
 .form-control:focus + .form-control-placeholder,
 .form-control:valid + .form-control-placeholder {
@@ -8260,7 +8260,7 @@ h1, h2, h3, h4, h5,
   text-transform: uppercase;
   font-size: 12px;
   letter-spacing: 1px;
-  color: #01d28e;
+  color: #0d6efd;
   font-weight: 700; }
 
 .social-media {
@@ -8348,18 +8348,36 @@ h1, h2, h3, h4, h5,
   .btn:hover, .btn:active, .btn:focus {
     outline: none; }
   .btn.btn-primary {
-    background: #01d28e !important;
-    border: 1px solid #01d28e !important;
+    background: #0d6efd !important;
+    border: 1px solid #0d6efd !important;
     color: #fff !important; }
     .btn.btn-primary:hover {
-      border: 1px solid #01d28e;
+      border: 1px solid #0d6efd;
       background: transparent;
-      color: #01d28e; }
+      color: #0d6efd; }
     .btn.btn-primary.btn-outline-primary {
-      border: 1px solid #01d28e;
+      border: 1px solid #0d6efd;
       background: transparent;
-      color: #01d28e; }
+      color: #0d6efd; }
       .btn.btn-primary.btn-outline-primary:hover {
         border: 1px solid transparent;
-        background: #01d28e;
+        background: #0d6efd;
         color: #fff; }
+
+.submitLink {
+  background-color: transparent;
+  text-decoration: underline;
+  border: none;
+  cursor: pointer;}
+
+.outer {
+  text-align: left;}
+
+.form-control-alram {
+  position: absolute;
+  top: 2px;
+  padding: 7px 0 0 15px;
+  -webkit-transition: all 400ms;
+  -o-transition: all 400ms;
+  transition: all 400ms;
+  opacity: .6;}
