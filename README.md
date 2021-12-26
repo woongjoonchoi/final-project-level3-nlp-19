@@ -24,6 +24,7 @@
 ### Responsibilities
 |                     | 박별이 | 이준수 | 최웅준 | 추창한 |
 | ------------------- | ------ | ------ | ------ | ------ |
+| Data collection <br> make test dataset <br> performance improvement with UI policy    | |
 | Code refactoring    | Retrieval | post_processing <br> train |extraction_pre_process <br>generation_pre_process <br>generation_compute_metrics <br>configuration  <br>building tiny dataset  | Retrieval |
 | User flow/Data flow |        | User Flow <br> Data Flow |    training pipeline    |  User Flow<br> Data Flow  |
 | Modeling            | Apply BM 25       | build train dataset <br> model training | train with tiny dataset <br>training reader model <br> error analysis on generation model         |   Apply BM 25   |
