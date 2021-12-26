@@ -26,7 +26,7 @@
 | ------------------- | ------ | ------ | ------ | ------ |
 | Code refactoring    | Retrieval | post_processing <br> train |extraction_pre_process <br>generation_pre_process <br>generation_compute_metrics <br>configuration  <br>building tiny dataset  | Retrieval |
 | User flow/Data flow |        | User Flow <br> Data Flow |    training pipeline    |  User Flow<br> Data Flow  |
-| Modeling            |        | build train dataset <br> model training | train with tiny dataset <br>training reader model <br> error analysis on generation model         |   Apply BM 25   |
+| Modeling            | Apply BM 25       | build train dataset <br> model training | train with tiny dataset <br>training reader model <br> error analysis on generation model         |   Apply BM 25   |
 | Prototyping         |        |        |  reader model demo      |  ODQA model / Batch Serving      |
 | Frontend            |  sign in <br> sign up <br> news scrap  | article_form |  homepage_news title list <br> ai scrap news title list <br>my scrap news title list   |        |
 | Backend             | sign in <br> sign up <br> news scrap | user_input |  homepage_news title list  with wiki_news_db<br> ai scrap news title list  with ai_scrap_db<br>my scrap news title list  with user_scrap_db     |  get article page and user_input with real time service <br> batch serving |
