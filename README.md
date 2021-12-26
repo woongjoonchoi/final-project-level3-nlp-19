@@ -73,6 +73,12 @@ code
 $ cd $ROOT/final-project-level3-nlp-19/code
 $ python AIPaperboy.py --output_dir ./outputs/test_dataset/ --model_name_or_path ./models/train_dataset/ --dataset_name ../data/test_dataset/ --do_predict
 ```
+### 3. Train
+```
+$ cd final-project-level3-nlp-19/code
+$ sh dd.sh
+```
 ## 📽 Demo
 * [AI Paperboy Demo Video](https://www.youtube.com/watch?v=n7oPu7vrQ8s)
 * [AI Paperboy Presentation](https://docs.google.com/presentation/d/1rpgp9knamiiqs4lITZMEiixSA8sfWyvv/edit?usp=sharing&ouid=110643334622897859461&rtpof=true&sd=true)
+
