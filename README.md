@@ -29,7 +29,7 @@
 | Modeling            |        | build train dataset <br> model training | train with tiny dataset <br>training reader model <br> error analysis on generation model         |   Apply BM 25   |
 | Prototyping         |        |        |  reader model demo      |  ODQA model / Batch Serving      |
 | Frontend            |  sign in <br> sign up <br> news scrap  | article_form |  homepage_news title list <br> ai scrap news title list <br>my scrap news title list   |        |
-| Backend             | sign in <br> sign up <br> news scrap | user_input |  homepage_news title list  with wiki_news_db<br> ai scrap news title list  with ai_scrap_db<br>my scrap news title list  with user_scrap_db     |  Build Elastic DB Index <br> get article page and user_input with real time service <br> batch serving |
+| Backend             | sign in <br> sign up <br> news scrap | user_input |  homepage_news title list  with wiki_news_db<br> ai scrap news title list  with ai_scrap_db<br>my scrap news title list  with user_scrap_db     |  get article page and user_input with real time service <br> batch serving |
 
 
 ### Collaboration tool
@@ -76,7 +76,10 @@ $ python AIPaperboy.py --output_dir ./outputs/test_dataset/ --model_name_or_path
 ### 3. Train
 ```
 $ cd final-project-level3-nlp-19/code
-$ sh dd.sh
+$ python train_copy.py --output_dir ./outputs  --run_extraction True --run_generation False --do_train --do_eval \
+--evaluation_strategy 'steps' --eval_steps 60 --logging_steps 60 --per_device_eval_batch_size 16 \
+ --per_device_train_batch_size 16 --save_strategy "no" --fp16 True --fp16_full_eval True --num_train_epochs 9 --report_to "wandb" \
+ --overwrite_output_dir
 ```
 ## 📽 Demo
 * [AI Paperboy Demo Video](https://www.youtube.com/watch?v=n7oPu7vrQ8s)
