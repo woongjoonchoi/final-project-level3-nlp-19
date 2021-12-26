@@ -68,19 +68,26 @@ code
 - **sevices**: Project's functions
 - **templates**: HTML & CSS file
 
-### 2. Execute
+### 2. Train
 ```
 $ cd $ROOT/final-project-level3-nlp-19/code
-$ python AIPaperboy.py --output_dir ./outputs/test_dataset/ --model_name_or_path ./models/train_dataset/ --dataset_name ../data/test_dataset/ --do_predict
-```
-### 3. Train
-```
-$ cd final-project-level3-nlp-19/code
 $ python train_copy.py --output_dir ./outputs  --run_extraction True --run_generation False --do_train --do_eval \
 --evaluation_strategy 'steps' --eval_steps 60 --logging_steps 60 --per_device_eval_batch_size 16 \
  --per_device_train_batch_size 16 --save_strategy "no" --fp16 True --fp16_full_eval True --num_train_epochs 9 --report_to "wandb" \
  --overwrite_output_dir
 ```
+
+### 3. Inference
+```
+$ python inference_copy.py --output_dir ./outputs/test_dataset/ --dataset_name ../data/test_dataset/ --model_name_or_path ./models/train_dataset/ --do_predict  --overwrite_cache --overwrite_output_dir
+```
+
+### 4. Execute
+```
+$ cd $ROOT/final-project-level3-nlp-19/code
+$ python AIPaperboy.py --output_dir ./outputs/test_dataset/ --model_name_or_path ./models/train_dataset/ --dataset_name ../data/test_dataset/ --do_predict
+```
+
 ## 📽 Demo
 * [AI Paperboy Demo Video](https://www.youtube.com/watch?v=n7oPu7vrQ8s)
 * [AI Paperboy Presentation](https://docs.google.com/presentation/d/1rpgp9knamiiqs4lITZMEiixSA8sfWyvv/edit?usp=sharing&ouid=110643334622897859461&rtpof=true&sd=true)
