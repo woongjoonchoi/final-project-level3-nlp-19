@@ -1,62 +1,40 @@
-# final-project-level3-nlp-19
-## Collaboration tool
-> Notion  
-> Microsoft Todo  
-> Google drive  
+# AI Paperboy
 
-## Responsibilities
+## 1. Project Abstract
 
-### 박별이
+### Purpose
 
-### 이준수
+* 사용자가 질문으로 요청하면 답변이 있는 뉴스 기사를 스크랩 해주는 서비스
 
-### 최웅준
-#### Project Management
-> package directory management
-### data engineering
-> train data cleansing
+### Function
+* 뉴스 스크랩 기능
+* 실시간 뉴스 추천 기능
+* AI 추천 스크랩 기능
 
-#### modeling
-> test with tiny dataset  
-> generation model error analysis  
-> extraction model overfitted to train set   
-> error analysis on generation model   
-> overfitted extraction model  to train set   
+## 2. 
+### Team Covit-19
 
-#### ml_pipeline code
-> extraction_pre_process  
-> generation_pre_process  
-> generation_compute_metrics  
-> configuration  
-> building tiny dataset 
-#### prototyping
-> reader model demo
-#### database
-> wiki_news db
-#### backend
-> homepage_news title list  with wiki_news_db  
-> ai scrap news title list  with ai_scrap_db  
-> my scrap news title list  with user_scrap_db  
-#### frontend
-> homepage_news title list  
-> ai scrap news title list  
-> my scrap news title list  
+#### 👨‍👨‍👧‍👦 Members
 
-### 추창한
+| <center>박별이</center> | <center>이준수</center> | <center>최웅준</center> | <center>추창한</center>
+| -------- | -------- | -------- | -------- |
+| [![](https://i.imgur.com/1zMaAt1.png)](https://github.com/ParkByeolYi) | [![](https://i.imgur.com/o3BFRGk.png)](https://github.com/JunsooLee) | [![](https://i.imgur.com/GzN3ZOv.png)](https://github.com/woongjoonchoi) | [![](https://i.imgur.com/S4cM768.png)](https://github.com/cnckdgks) |
+| <center>[github](https://github.com/ParkByeolYi)</center> | <center>[github](https://github.com/JunsooLee)</center> | <center>[github](https://github.com/woongjoonchoi)</center> | <center>[github](https://i.imgur.com/S4cM768.png)</center> |
 
-## Demo(Tracer Bullet)
-### login
-![12-22-08-31](https://user-images.githubusercontent.com/50165842/147010980-eed7db8f-66a3-416f-a734-a9d568be24cb.gif)
 
-### home
-![12-22-08-34](https://user-images.githubusercontent.com/50165842/147011118-e815425b-c799-45a2-aada-e20c271a0069.gif)
+#### ✊ Responsibilities
+|                     | 박별이 | 이준수 | 최웅준 | 추창한 |
+| ------------------- | ------ | ------ | ------ | ------ |
+| Code refactoring    | Retrieval |        |extraction_pre_process <br>generation_pre_process <br>generation_compute_metrics <br>configuration  <br>building tiny dataset  |        |
+| User flow/Data flow |        |        |    training pipeline    |        |
+| Modeling            |        |        | train with tiny dataset <br>training reader model <br> error analysis on generation model         |        |
+| Prototyping         |        |        |  reader model demo      |        |
+| Frontend            |  sign in <br> sign up <br> news scrap  |        |  homepage_news title list <br> ai scrap news title list <br>my scrap news title list   |        |
+| Backend             | sign in <br> sign up <br> news scrap |        |  homepage_news title list  with wiki_news_db<br> ai scrap news title list  with ai_scrap_db<br>my scrap news title list  with user_scrap_db     |        |
 
-### myscrap
-![12-22-08-35](https://user-images.githubusercontent.com/50165842/147011244-64db1c90-343a-42ee-87de-e940aaeb3d41.gif)
 
-### ai_scrap
-![12-22-08-37](https://user-images.githubusercontent.com/50165842/147011315-6e890362-57dd-4573-92e4-bb13c8c5432b.gif)
+### Collaboration tool
+<img src="https://img.shields.io/badge/Notion-000000?style=flat-square&logo=Notion&logoColor=white"/> <img src="https://img.shields.io/badge/MS ToDo-5E5E5E?style=flat-square&logo=Microsoft&logoColor=white"/> <img src="https://img.shields.io/badge/Google Drive-4285F4?style=flat-square&logo=Google Drive&logoColor=white"/>
 
-### side-bar
-![12-22-08-38](https://user-images.githubusercontent.com/50165842/147011357-10b3dfc2-1aaa-4364-96da-c2b93765491b.gif)
-
+## Demo
+https://www.youtube.com/watch?v=n7oPu7vrQ8s
