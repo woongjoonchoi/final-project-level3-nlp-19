@@ -34,7 +34,7 @@ def get_aiscrap_page(request : Request ,  user_id , db : Session = Depends(get_d
         news_title_article.append({"title" : title , "context" : context})
 
     # 로그인이 되어있으면 Aiscrappedboard Service 객체로 AI가 스크랩한 뉴스기사 목록 불러오기
-    return templates.TemplateResponse('aiscrap.html', context={'request': request , 'ai_news' : news , "news_list" : news_title_article})
+    return templates.TemplateResponse('aiscrap.html', context={'request': request , 'ai_news' : news , "news_list" : news_title_article, "user_id": user_id})
     # 로그인이 안되어있으면 로그인 화면으로 이동(로그인 기능이 구현되어 있다면)
     pass
 

@@ -1,0 +1,9 @@
+poetry add torch 
+poetry add elasticsearch 
+poetry add streamlit 
+poetry add transformers 
+poetry add datasets 
+poetry add wandb 
+poetry add faiss-gpu 
+poetry add sklearn 
+poetry add python-multipart 

@@ -1,3 +1,4 @@
+from typing import Optional
 from fastapi import FastAPI, APIRouter,Request,Form
 from fastapi.templating import Jinja2Templates
 import uvicorn
@@ -21,9 +22,12 @@ home_board= Homeboard()
 
 # 뉴스 홈페이지 화면이동(웅준)
 @router.get("/")
-def get_home_page(request : Request , user_id : str = None):
+def get_home_page(request : Request , user_id : str = None,query : Optional[str] =None):
     # Homeboard Service 객체로 뉴스 목록 가져오기
-    res = home_board.get_news_title()
+    if query is None :
+        res = home_board.get_news_title()
+    else :
+        res  = home_board.get_news_title(query)
     # if user_id is None :
     #     user_id = "wjc"
     # print(res['hits']['hits'][0])

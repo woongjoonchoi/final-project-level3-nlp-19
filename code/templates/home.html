@@ -5,25 +5,13 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
         <meta name="author" content="" />
-        <title>Blog Home - Start Bootstrap Template</title>
+        <title>AI Paperboy</title>
         <!-- Favicon-->
         <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
         <!-- Core theme CSS (includes Bootstrap)-->
         <link href="{{ url_for('home', path='/styles.css') }}" rel="stylesheet" />
     </head>
     <body>
-        <div id="sidebar">
-            AI Paper Boy
-            <form action="/home/{{user_id}}">
-                <button class="btn main">기사 홈으로</button>
-            </form>
-            <form action="/scrap/{{user_id}}">
-                <button class="btn scrap">스크랩 박스로</button>
-            </form>
-            <form action="/aiscrap/{{user_id}}">
-                <button class="btn scrap">ai스크랩 박스로</button>
-            </form>
-        </div>
         <!-- Responsive navbar-->
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
             <div class="container">
@@ -31,10 +19,9 @@
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                        <li class="nav-item"><a class="nav-link" href="/home/">Home</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#!">About</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#!">Contact</a></li>
-
+                        <li class="nav-item"><a class="nav-link" href="/home/{{user_id}}">Home</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/scrap/{{user_id}}">My Scrap</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/aiscrap/{{user_id}}">AI Scrap</a></li>
                     </ul>
                 </div>
             </div>
@@ -64,7 +51,10 @@
 
                             <input type="hidden" name="news_id" value =  "{{ res_news[0]['_id'] }}"/>
                             <input type="hidden" name="user_id" value =  "{{user_id}}"/>
+                            <input type="submit" class="btn btn-dark btn-sm" value="Readme"/>
+                            <!--
                             <input type = "submit" value = "Readme" >
+                            -->
                             </form>
                         </div>
                     </div>
@@ -73,7 +63,7 @@
                         <div class="col-lg-6">
                             <!-- Blog post-->
                             <div class="card mb-4">
-                                <a href="#!"><img class="card-img-top" src="https://dummyimage.com/700x350/dee2e6/6c757d.jpg" alt="..." /></a>
+                                <!-- <a href="#!"><img class="card-img-top" src="https://dummyimage.com/700x350/dee2e6/6c757d.jpg" alt="..." /></a> -->
                                 <div class="card-body">
                                     <div class="small text-muted">{{res_news[1]['_source']['date']}}</div>
                                     <h2 class="card-title h4">{{res_news[1]['_source']['title']}}</h2>
@@ -81,13 +71,13 @@
                                     <form name="myForm1" action="/news/{{ res_news[1]['_id'] }}" method="GET">
                                     <input type="hidden" name="news_id" value =  "{{ res_news[1]['_id'] }}"/>
                                     <input type="hidden" name="user_id" value =  "{{user_id}}"/>
-                                    <input type = "submit" value = "Readme" >
+                                    <input type="submit" class="btn btn-dark btn-sm" value="Readme"/>
                                     </form>
                                 </div>
                             </div>
                             <!-- Blog post-->
                             <div class="card mb-4">
-                                <a href="#!"><img class="card-img-top" src="https://dummyimage.com/700x350/dee2e6/6c757d.jpg" alt="..." /></a>
+                                <!-- <a href="#!"><img class="card-img-top" src="https://dummyimage.com/700x350/dee2e6/6c757d.jpg" alt="..." /></a> -->
                                 <div class="card-body">
                                     <div class="small text-muted">{{res_news[2]['_source']['date']}}</div>
                                     <h2 class="card-title h4">{{res_news[2]['_source']['title']}}</h2>
@@ -95,7 +85,7 @@
                                     <form name="myForm2" action="/news/{{ res_news[2]['_id'] }}" method="GET">
                                     <input type="hidden" name="user_id" value =  "{{user_id}}"/>
                                     <input type="hidden" name="news_id" value =  "{{ res_news[2]['_id'] }}"/>
-                                    <input type = "submit" value = "Readme" >
+                                    <input type="submit" class="btn btn-dark btn-sm" value="Readme"/>
                                     </form>
                                 </div>
                             </div>
@@ -103,7 +93,7 @@
                         <div class="col-lg-6">
                             <!-- Blog post-->
                             <div class="card mb-4">
-                                <a href="#!"><img class="card-img-top" src="https://dummyimage.com/700x350/dee2e6/6c757d.jpg" alt="..." /></a>
+                                <!-- <a href="#!"><img class="card-img-top" src="https://dummyimage.com/700x350/dee2e6/6c757d.jpg" alt="..." /></a> -->
                                 <div class="card-body">
                                     <div class="small text-muted">{{res_news[3]['_source']['date']}}</div>
                                     <h2 class="card-title h4">{{res_news[3]['_source']['title']}}</h2>
@@ -111,14 +101,14 @@
                                     <form name="myForm3" action="/news/{{ res_news[3]['_id'] }}" method="GET">
                                     <input type="hidden" name="user_id" value =  "{{user_id}}"/>
                                     <input type="hidden" name="news_id" value =  "{{ res_news[3]['_id'] }}"/>
-                                    <input type = "submit" value = "Readme" >
+                                    <input type="submit" class="btn btn-dark btn-sm" value="Readme"/>
                                     </form>
                                     
                                 </div>
                             </div>
                             <!-- Blog post-->
                             <div class="card mb-4">
-                                <a href="#!"><img class="card-img-top" src="https://dummyimage.com/700x350/dee2e6/6c757d.jpg" alt="..." /></a>
+                                <!-- <a href="#!"><img class="card-img-top" src="https://dummyimage.com/700x350/dee2e6/6c757d.jpg" alt="..." /></a> -->
                                 <div class="card-body">
                                     <div class="small text-muted">{{res_news[4]['_source']['date']}}</div>
                                     <h2 class="card-title h4">{{res_news[4]['_source']['title']}}</h2>
@@ -126,7 +116,7 @@
                                     <form name="myForm4" action="/news/{{ res_news[4]['_id'] }}" method="GET">
                                     <input type="hidden" name="user_id" value =  "{{user_id}}"/>
                                     <input type="hidden" name="news_id" value =  "{{ res_news[4]['_id'] }}"/>
-                                    <input type = "submit" value = "Readme" >
+                                    <input type="submit" class="btn btn-dark btn-sm" value="Readme"/>
                                     </form>
                                     
                                 </div>
@@ -134,7 +124,7 @@
                         </div>
                     </div>
                     <!-- Pagination-->
-                    <nav aria-label="Pagination">
+                    <!-- <nav aria-label="Pagination">
                         <hr class="my-0" />
                         <ul class="pagination justify-content-center my-4">
                             <li class="page-item disabled"><a class="page-link" href="#" tabindex="-1" aria-disabled="true">Newer</a></li>
@@ -145,7 +135,7 @@
                             <li class="page-item"><a class="page-link" href="#!">15</a></li>
                             <li class="page-item"><a class="page-link" href="#!">Older</a></li>
                         </ul>
-                    </nav>
+                    </nav> -->
                 </div>
                 <!-- Side widgets-->
                 <div class="col-lg-4">
@@ -154,8 +144,10 @@
                         <div class="card-header">Search</div>
                         <div class="card-body">
                             <div class="input-group">
-                                <input class="form-control" type="text" placeholder="Enter search term..." aria-label="Enter search term..." aria-describedby="button-search" />
-                                <button class="btn btn-primary" id="button-search" type="button">Go!</button>
+                                <form action="{{query}}" method="GET" >
+                                    <input class="text" id = "query" name="query" value="" type="search" placeholder="Enter search term..." aria-label="Enter search term..." aria-describedby="button-search" /> 
+                                    <button class="btn btn-dark" id="button-search"  type="submit">검색!</button><i class="fa fa-search"></i></button>
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -166,26 +158,26 @@
                             <div class="row">
                                 <div class="col-sm-6">
                                     <ul class="list-unstyled mb-0">
-                                        <li><a href="#!">Web Design</a></li>
-                                        <li><a href="#!">HTML</a></li>
-                                        <li><a href="#!">Freebies</a></li>
+                                        <li><a href="?query=정치" style="color: black;">정치</a></li>
+                                        <li><a href="?query=스포츠" style="color: black;">스포츠</a></li>
+                                        <li><a href="?query=연예" style="color: black;">연예</a></li>
                                     </ul>
                                 </div>
                                 <div class="col-sm-6">
                                     <ul class="list-unstyled mb-0">
-                                        <li><a href="#!">JavaScript</a></li>
-                                        <li><a href="#!">CSS</a></li>
-                                        <li><a href="#!">Tutorials</a></li>
+                                        <li><a href="?query=사회" style="color: black;">사회</a></li>
+                                        <li><a href="?query=과학" style="color: black;">과학</a></li>
+                                        <li><a href="?query=문화" style="color: black;">문화</a></li>
                                     </ul>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <!-- Side widget-->
+                    <!-- 
                     <div class="card mb-4">
                         <div class="card-header">Side Widget</div>
                         <div class="card-body">You can put anything you want inside of these side widgets. They are easy to use, and feature the Bootstrap 5 card component!</div>
-                    </div>
+                    </div>Side widget-->
                 </div>
             </div>
         </div>
