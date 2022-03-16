@@ -12,6 +12,10 @@
 * html
 * css
 
+## 📽 Demo
+* [AI Paperboy Demo Video](https://www.youtube.com/watch?v=n7oPu7vrQ8s)
+* [AI Paperboy Presentation](https://docs.google.com/presentation/d/1rpgp9knamiiqs4lITZMEiixSA8sfWyvv/edit?usp=sharing&ouid=110643334622897859461&rtpof=true&sd=true)
+
 ### Purpose
 
 * 사용자가 질문으로 요청하면 답변이 있는 뉴스 기사를 스크랩 해주는 서비스
@@ -99,7 +103,5 @@ cd $ROOT/final-project-level3-nlp-19/code
 python AIPaperboy.py --output_dir ./outputs/test_dataset/ --model_name_or_path ./models/train_dataset/ --dataset_name ../data/test_dataset/ --do_predict
 ```
 
-## 📽 Demo
-* [AI Paperboy Demo Video](https://www.youtube.com/watch?v=n7oPu7vrQ8s)
-* [AI Paperboy Presentation](https://docs.google.com/presentation/d/1rpgp9knamiiqs4lITZMEiixSA8sfWyvv/edit?usp=sharing&ouid=110643334622897859461&rtpof=true&sd=true)
+
 
