@@ -2,6 +2,16 @@
 
 ## 📋 Project Abstract
 
+### Technology
+* Python
+* Pytorch
+* Huggingface
+* Fastapi
+* poetry
+* sqlalchemy
+* html
+* css
+
 ### Purpose
 
 * 사용자가 질문으로 요청하면 답변이 있는 뉴스 기사를 스크랩 해주는 서비스
