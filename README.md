@@ -2,6 +2,10 @@
 
 ## 📋 Project Abstract
 
+### Purpose
+* 사용자가 질문으로 요청하면 답변이 있는 뉴스 기사를 스크랩 해주는 서비스
+* 4단계의 과정(뉴스에서 관심 주제 확인 , 관심 키워드 검색 , 기사 읽기 , 관심 내용 찾기)을 1단계(query를 입력)로 줄이는 system
+
 ### Technology
 * Python
 * Pytorch
@@ -16,9 +20,7 @@
 * [AI Paperboy Demo Video](https://www.youtube.com/watch?v=n7oPu7vrQ8s)
 * [AI Paperboy Presentation](https://docs.google.com/presentation/d/1rpgp9knamiiqs4lITZMEiixSA8sfWyvv/edit?usp=sharing&ouid=110643334622897859461&rtpof=true&sd=true)
 
-### Purpose
 
-* 사용자가 질문으로 요청하면 답변이 있는 뉴스 기사를 스크랩 해주는 서비스
 
 ### Functions
 * Query에 대한 Answer로 관련 기사 스크랩 기능을 Question Answering Model을 이용하여 구현
